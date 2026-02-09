@@ -1,49 +1,60 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="128" viewBox="0 0 512 128">
   <defs>
-    <linearGradient id="bg-grad-banner" x1="0%" y1="0%" x2="100%" y2="0%">
+    <linearGradient id="bg-grad-banner-sym" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%" style="stop-color:#ECEFF4;stop-opacity:1" />
       <stop offset="100%" style="stop-color:#D8DEE9;stop-opacity:1" />
     </linearGradient>
   </defs>
-  <rect width="512" height="128" rx="16" fill="url(#bg-grad-banner)" />
-  <path d="M-10,64 C100,10 200,118 300,64 C400,10 500,118 600,64" stroke="#E5E9F0" stroke-width="8" fill="none" opacity="0.5"/>
 
-  <g transform="translate(32, 32)">
-    <g transform="translate(0, 16)">
-        <circle cx="32" cy="32" r="8" fill="#81A1C1" />
-        <circle cx="12" cy="12" r="5" fill="#88C0D0" />
-        <circle cx="12" cy="52" r="5" fill="#88C0D0" />
-        <line x1="16" y1="16" x2="27" y2="27" stroke="#88C0D0" stroke-width="3"/>
-        <line x1="16" y1="48" x2="27" y2="37" stroke="#88C0D0" stroke-width="3"/>
-        <text x="32" y="68" font-family="sans-serif" font-size="12" fill="#81A1C1" text-anchor="middle" font-weight="bold">NETWORKS</text>
+  <rect width="512" height="128" rx="16" fill="url(#bg-grad-banner-sym)" />
+
+  <path d="M160,64 L256,64 L352,64" stroke="#D8DEE9" stroke-width="6" stroke-linecap="round" />
+
+  <g transform="translate(128, 64)">
+    <circle cx="0" cy="0" r="26" stroke="#A3BE8C" stroke-width="4" fill="none" opacity="0.3"/>
+    <circle cx="0" cy="0" r="16" fill="#A3BE8C" />
+    <g stroke="#A3BE8C" stroke-width="6" stroke-linecap="round">
+      <line x1="0" y1="-28" x2="0" y2="-22" />
+      <line x1="0" y1="28" x2="0" y2="22" />
+      <line x1="-28" y1="0" x2="-22" y2="0" />
+      <line x1="28" y1="0" x2="22" y2="0" />
+      <line x1="-20" y1="-20" x2="-15" y2="-15" />
+      <line x1="20" y1="20" x2="15" y2="15" />
+      <line x1="-20" y1="20" x2="-15" y2="15" />
+      <line x1="20" y1="-20" x2="15" y2="-15" />
     </g>
+    <circle cx="0" cy="0" r="6" fill="#ECEFF4" />
+  </g>
 
-    <path d="M70,48 C100,48 120,48 150,48" stroke="#8FBCBB" stroke-width="4" fill="none" marker-end="url(#arrowhead)"/>
-
-    <g transform="translate(160, 10)">
-        <path d="M24,36 C16,36 10,30 10,22 C10,16 14,11 19,10 C22,5 28,5 31,8 C34,2 42,2 46,8 C52,9 54,15 54,20 C54,29 47,36 38,36 Z" fill="#8FBCBB"/>
-        <rect x="16" y="32" width="32" height="10" rx="2" fill="#A3BE8C"/>
-        <rect x="16" y="46" width="32" height="10" rx="2" fill="#A3BE8C"/>
-        <circle cx="22" cy="37" r="2" fill="#ECEFF4"/>
-        <circle cx="22" cy="51" r="2" fill="#ECEFF4"/>
-        <text x="32" y="74" font-family="sans-serif" font-size="12" fill="#8FBCBB" text-anchor="middle" font-weight="bold">SERVICES</text>
+  <g transform="translate(256, 64)">
+    <circle cx="0" cy="0" r="14" fill="#5E81AC" /> <circle cx="0" cy="0" r="30" stroke="#88C0D0" stroke-width="2" fill="none" stroke-dasharray="4 4"/>
+    <circle cx="0" cy="0" r="42" stroke="#81A1C1" stroke-width="1" fill="none" opacity="0.5"/>
+    
+    <g fill="#88C0D0">
+      <circle cx="0" cy="-30" r="5" />
+      <circle cx="0" cy="30" r="5" />
+      <circle cx="-26" cy="-15" r="5" />
+      <circle cx="26" cy="-15" r="5" />
+      <circle cx="-26" cy="15" r="5" />
+      <circle cx="26" cy="15" r="5" />
     </g>
-
-    <path d="M230,48 C260,48 280,48 310,48" stroke="#B48EAD" stroke-width="4" fill="none" marker-end="url(#arrowhead)"/>
-
-    <g transform="translate(320, 10)">
-        <rect x="0" y="8" width="64" height="48" rx="4" fill="#B48EAD"/>
-        <rect x="0" y="8" width="64" height="12" rx="4" fill="#81A1C1" />
-        <circle cx="8" cy="14" r="2" fill="#ECEFF4"/>
-        <circle cx="16" cy="14" r="2" fill="#ECEFF4"/>
-        <text x="4" y="36" font-family="monospace" font-size="14" fill="#ECEFF4">>_ code</text>
-        <rect x="36" y="28" width="20" height="20" rx="2" fill="#A3BE8C" opacity="0.8"/>
-        <text x="32" y="74" font-family="sans-serif" font-size="12" fill="#B48EAD" text-anchor="middle" font-weight="bold">APPS</text>
+    
+    <g stroke="#81A1C1" stroke-width="2">
+      <line x1="0" y1="0" x2="0" y2="-30" />
+      <line x1="0" y1="0" x2="0" y2="30" />
+      <line x1="0" y1="0" x2="-26" y2="-15" />
+      <line x1="0" y1="0" x2="26" y2="-15" />
+      <line x1="0" y1="0" x2="-26" y2="15" />
+      <line x1="0" y1="0" x2="26" y2="15" />
     </g>
   </g>
-  <defs>
-    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-      <polygon points="0 0, 10 3.5, 0 7" fill="#8FBCBB" />
-    </marker>
-  </defs>
+
+  <g transform="translate(384, 64)">
+    <rect x="-28" y="-22" width="56" height="44" rx="4" fill="#B48EAD" />
+    <path d="M-28,-10 L28,-10" stroke="#ECEFF4" stroke-width="2" opacity="0.5"/>
+    <rect x="-20" y="-2" width="24" height="4" rx="2" fill="#ECEFF4" opacity="0.8"/>
+    <rect x="-20" y="8" width="16" height="4" rx="2" fill="#ECEFF4" opacity="0.6"/>
+    <circle cx="24" cy="-22" r="8" fill="#D08770" stroke="#ECEFF4" stroke-width="2"/>
+  </g>
+
 </svg>

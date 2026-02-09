@@ -1,24 +1,42 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
   <defs>
-    <linearGradient id="bg-grad-icon" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="bg-grad-icon-final" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" style="stop-color:#ECEFF4;stop-opacity:1" />
       <stop offset="100%" style="stop-color:#E5E9F0;stop-opacity:1" />
     </linearGradient>
   </defs>
-  <rect width="128" height="128" rx="24" fill="url(#bg-grad-icon)" />
-  <path d="M64 16 C37.49 16 16 37.49 16 64 C16 90.51 37.49 112 64 112 C90.51 112 112 90.51 112 64 C112 37.49 90.51 16 64 16 Z M64 24 C86.09 24 104 41.91 104 64 C104 86.09 86.09 104 64 104 C41.91 104 24 86.09 24 64 C24 41.91 41.91 24 64 24 Z" fill="#D8DEE9" opacity="0.3"/>
 
-  <circle cx="64" cy="64" r="10" fill="#81A1C1" />
-  <g stroke="#88C0D0" stroke-width="4" stroke-linecap="round">
-    <line x1="64" y1="54" x2="64" y2="36" />
-    <line x1="64" y1="74" x2="64" y2="92" />
-    <line x1="54" y1="64" x2="36" y2="64" />
-    <line x1="74" y1="64" x2="92" y2="64" />
-    <line x1="56.93" y1="56.93" x2="44.2" y2="44.2" />
-    <line x1="71.07" y1="71.07" x2="83.8" y2="83.8" />
+  <rect width="128" height="128" rx="24" fill="url(#bg-grad-icon-final)" />
+
+  <path d="M40,88 L64,64 L88,40" stroke="#D8DEE9" stroke-width="6" stroke-linecap="round"/>
+
+  <g transform="translate(36, 92)">
+     <circle cx="0" cy="0" r="14" stroke="#A3BE8C" stroke-width="3" fill="none" opacity="0.4"/>
+     <circle cx="0" cy="0" r="8" fill="#A3BE8C" />
+     <g stroke="#A3BE8C" stroke-width="4" stroke-linecap="round">
+        <line x1="0" y1="-16" x2="0" y2="-12" />
+        <line x1="0" y1="16" x2="0" y2="12" />
+        <line x1="-16" y1="0" x2="-12" y2="0" />
+        <line x1="16" y1="0" x2="12" y2="0" />
+     </g>
   </g>
-  <circle cx="36" cy="64" r="7" fill="#A3BE8C" />
-  <path d="M36 54 L36 58 M36 70 L36 74 M31 59 L33 61 M39 67 L41 69 M26 64 L30 64 M42 64 L46 64 M31 69 L33 67 M39 61 L41 59" stroke="#A3BE8C" stroke-width="3" stroke-linecap="round"/>
-  <circle cx="92" cy="64" r="7" fill="#B48EAD" />
-  <path d="M87 61 L92 66 L97 61 M87 67 L97 67" stroke="#B48EAD" stroke-width="3" stroke-linecap="round" fill="none"/>
+
+  <g transform="translate(64, 64)">
+    <circle cx="0" cy="0" r="22" stroke="#88C0D0" stroke-width="1.5" fill="none" stroke-dasharray="3 3"/>
+    <circle cx="0" cy="0" r="10" fill="#5E81AC" />
+    <circle cx="0" cy="-22" r="3" fill="#81A1C1" />
+    <circle cx="0" cy="22" r="3" fill="#81A1C1" />
+    <circle cx="-19" cy="-11" r="3" fill="#81A1C1" />
+    <circle cx="19" cy="11" r="3" fill="#81A1C1" />
+    <path d="M0,0 L0,-22 M0,0 L0,22 M0,0 L-19,-11 M0,0 L19,11" stroke="#81A1C1" stroke-width="1.5" opacity="0.6"/>
+  </g>
+
+  <g transform="translate(92, 36)">
+     <rect x="-14" y="-10" width="28" height="20" rx="3" fill="#B48EAD" />
+     <path d="M-14,-4 L14,-4" stroke="#ECEFF4" stroke-width="1" opacity="0.5"/>
+     <circle cx="12" cy="-10" r="4" fill="#D08770" stroke="#ECEFF4" stroke-width="1.5"/>
+     <rect x="-10" y="0" width="12" height="2" rx="1" fill="#ECEFF4" opacity="0.8"/>
+     <rect x="-10" y="4" width="8" height="2" rx="1" fill="#ECEFF4" opacity="0.6"/>
+  </g>
+
 </svg>
