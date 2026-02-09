@@ -41,7 +41,7 @@ header-includes:
 :::: column
 - **Name:** Óscar Pereira
 - **E-Mail:** [omp@ua.pt](mailto:omp@ua.pt)
-- **Office:** 19.2.15 (IT1)
+- **Office:** 19.1.24 (IT1)
 ::::
 
 :::: column

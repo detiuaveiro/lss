@@ -1,4 +1,4 @@
-# Laboratórios de Sistemas e Serviços (LSS)
+# ![lss logo](assets/logo.svg) Laboratórios de Sistemas e Serviços (LSS)
 
 # Systems and Services Laboratories
 
@@ -21,6 +21,8 @@ The previous objectives will be achieved by working in these topics:
 * C5. Representation and Communication of Digital Information
 * C6. Relational Databases and SQL
 
+For more details check [here](README_CLASS.md)
+
 ## Schedule
 
 Can find the spreadsheet [here](lss.ods).
@@ -42,6 +44,10 @@ Can find the spreadsheet [here](lss.ods).
 | 28-05-2026 | 26-05-2026 | 27-05-2026 | 18-05-2026 | C6       |
 |            | 02-06-2026 | 03-06-2026 | 25-05-2026 | Proj     |
 |            |            |            | 01-06-2026 | Proj     |
+
+## Classes
+
+[Class 00](classes/class_00): Setup
 
 ## Grading
 
