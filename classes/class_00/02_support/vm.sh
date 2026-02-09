@@ -1,40 +1,34 @@
 #!/usr/bin/env bash
 
-if [ "$1" = "arm" ]; then
-echo -e "Start ARM flavor..."
+# Image filename variable for easy changing
+IMAGE_FILE="vm.qcow2"
 
-qemu-system-aarch64 \
-  -m 4G \
-  -machine virt,gic-version=max,iommu=smmuv3 \
-  -accel tcg \
-  -cpu max \
-  -smp 4 \
-  -rtc base=utc \
-  -initrd "./boot_arm/initrd-from-guest.gz" \
-  -kernel "./boot_arm/vmlinuz-from-guest" \
-  -drive file="./vm_arm.qcow2",id=hd,if=none,media=disk \
-  -device virtio-scsi-device \
-  -device scsi-hd,drive=hd \
-  -device virtio-gpu-pci \
-  -display sdl \
-  -usb \
-  -device qemu-xhci,id=xhci \
-  -device usb-tablet \
-  -device usb-kbd \
-  
-else
+echo -e "🚀 Starting QEMU (Authoring Mode)..."
 
-echo -e "Start AMD64 flavor..."
 qemu-system-x86_64 \
--enable-kvm \
--cpu host \
--smp 4 \
--m 4G \
--display sdl \
--vga virtio \
--drive file=vm.qcow2 \
--boot c
-
-fi
-
-echo -e "Done."
+  -enable-kvm \
+  -cpu host \
+  -smp cores=4,threads=1 \
+  -m 4G \
+  \
+  # --- GRAPHICS & INPUT (Better than SDL) ---
+  # virtio-gpu-pci: Newer standard for 3D acceleration
+  # usb-tablet: Absolute pointing device (mouse doesn't get 'stuck' in window)
+  -device virtio-gpu-pci \
+  -display default,show-cursor=on \
+  -usb -device usb-tablet \
+  \
+  # --- DISK I/O (Optimized for Maintenance) ---
+  # if=virtio: Paravirtualized driver (faster than IDE/SATA emulation)
+  # discard=unmap: Allows the OS to mark deleted blocks as empty (CRITICAL for shrinking image)
+  # cache=writeback: Faster IO, slightly risky if host crashes, but fine for updates
+  -drive file="${IMAGE_FILE}",if=virtio,format=qcow2,discard=unmap,cache=writeback \
+  \
+  # --- NETWORKING ---
+  # virtio-net-pci: Faster networking
+  # hostfwd: Forward host port 2222 to guest 22 (allows you to SSH in: ssh -p 2222 student@localhost)
+  -device virtio-net-pci,netdev=net0 \
+  -netdev user,id=net0,hostfwd=tcp::2222-:22 \
+  \
+  # --- AUDIO (Optional, standard HDA) ---
+  -device intel-hda -device hda-duplex

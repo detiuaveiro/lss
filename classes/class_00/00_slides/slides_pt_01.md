@@ -1,9 +1,9 @@
 ---
 title: Configuração do Ambiente de Trabalho
-Subtitle: Introdução Engenharia Informática
+Subtitle: Laboratórios de Sistemas e Serviços
 author: Mário Antunes
 institute: Universidade de Aveiro
-date: September 15, 2025
+date: 09 de Fevereiro de 2026
 colorlinks: true
 highlight-style: tango
 mainfont: NotoSans
@@ -19,28 +19,6 @@ header-includes:
  - \AtBeginEnvironment{verbatim}{\tiny}
  - \setmonofont[Contextuals={Alternate}]{FiraCodeNerdFontMono-Retina}
 ---
-
-Claro. Aqui estão os slides sobre a configuração do ambiente de trabalho traduzidos para Português de Portugal (PT-PT).
-
------
-
-title: Configuração do Ambiente de Trabalho
-Subtitle: Introdução à Engenharia Informática
-author: Mário Antunes
-institute: Universidade de Aveiro
-date: 15 de Setembro de 2025
-mainfont: NotoSans
-mainfontfallback:
-
-  - "NotoColorEmoji:mode=harf"
-    header-includes:
-  - \\usetheme[sectionpage=none,numbering=fraction,progressbar=frametitle]{metropolis}
-  - \\usepackage{longtable,booktabs}
-  - \\usepackage{etoolbox}
-  - \\AtBeginEnvironment{longtable}{\\scriptsize}
-  - \\AtBeginEnvironment{cslreferences}{\\scriptsize}
-
------
 
 # Configurar o Seu Ambiente de Trabalho Digital
 
@@ -122,7 +100,7 @@ Estudantes que são aventureiros, à vontade com *hardware* de computador, ou qu
 
 ## **Passos de Configuração**
 
-1.  **Escolha uma distribuição:** Recomendamos o **Ubuntu 22.04 LTS** pelo seu excelente suporte.
+1.  **Escolha uma distribuição:** Recomendamos o **Ubuntu 24.04 LTS** ou **Debian 13.3** pelo seu excelente suporte.
 2.  **Crie uma pen USB de arranque:** Use ferramentas como [Rufus](https://rufus.ie/) ou [BalenaEtcher](https://www.balena.io/etcher/).
 3.  **Particione o seu disco rígido:** Este é o passo mais crítico se planeia fazer *dual-boot*. **FAÇA BACKUP DOS SEUS DADOS PRIMEIRO\!**
 4.  **Arranque a partir da pen USB** e siga as instruções do instalador.
@@ -145,49 +123,47 @@ A sua VM precisa de acesso à rede para descarregar *software* (`apt install`) o
   * **❌ Contra:** **Exigente em Recursos.** Requer uma quantidade significativa de RAM (8GB+ recomendado para todo o sistema) e poder de CPU, pois está a executar dois sistemas operativos ao mesmo tempo.
   * **❌ Contra:** **Desempenho Mais Lento.** Mais lento do que uma instalação nativa devido à sobrecarga da virtualização.
 
-## **Para quem é esta opção?**
-
-Quase todos\! É a opção mais segura, recomendada e consistente para esta unidade curricular.
+  > **⚠️ Utilizadores Mac (M1/M2/M3):** O VirtualBox tem fraco desempenho em Apple Silicon. Recomendamos o uso de **UTM** ou **VMware Fusion**.
 
 ## **Passos de Configuração**
 
-1.  **Instale o VirtualBox:** Descarregue e instale a versão mais recente do [VirtualBox](https://www.virtualbox.org/) e o seu "Extension Pack".
-2.  **Descarregue a Imagem da VM:** Obtenha o ficheiro `.ova` no site da unidade curricular.
-3.  **Importe a *Appliance*:** No VirtualBox, vá a `Ficheiro > Importar Appliance` e selecione o ficheiro `.ova` que descarregou. Siga as instruções no ecrã.
-4.  **Inicie a sua VM:** Selecione a máquina importada e clique em "Iniciar". É tudo\!
+  1.  **Instale o Hypervisor:** Descarregue o [VirtualBox](https://www.virtualbox.org/) (Windows/Intel Mac) ou **UTM** (Apple Silicon Mac).
+  2.  **Descarregue a Imagem da VM:** Obtenha o ficheiro no site da unidade curricular.
+  3.  **Importe a *Appliance*:** Selecione "Importar" no seu software e escolha o ficheiro descarregado.
+  4.  **Inicie a sua VM:** Selecione a máquina e clique em "Iniciar". É tudo!
 
 # Opção 3: Subsistema Windows para Linux (WSL) 🪟+🐧
 
-O WSL permite-lhe executar um *kernel* e ambiente Linux genuínos diretamente no Windows, sem a sobrecarga de uma VM completa. Proporciona uma poderosa integração entre os dois sistemas.
+O WSL permite-lhe executar um *kernel* e ambiente Linux genuínos diretamente no Windows, sem a sobrecarga de uma VM completa.
 
 ## **Como Funciona: Sistema de Ficheiros & Rede**
 
-  * **Rede:** O WSL partilha automaticamente a ligação de rede do seu anfitrião Windows. Simplesmente funciona\!
-  * **Integração de Sistema de Ficheiros:** As suas unidades do Windows (como `C:`) são montadas automaticamente dentro do Linux em `/mnt/`. Por exemplo, a sua pasta `C:\Users\OSeuNome` está acessível em `/mnt/c/Users/OSeuNome`.
+* **Rede:** O WSL partilha automaticamente a ligação de rede do seu anfitrião Windows.
+* **Integração de Sistema de Ficheiros:** As suas unidades do Windows (como `C:`) são montadas dentro do Linux em `/mnt/`.
 
-> **⚠️ Importante:** Para o melhor desempenho, trabalhe sempre com os seus ficheiros dentro do sistema de ficheiros do Linux (`/home/oseunome/`), e não nas unidades do Windows montadas (`/mnt/c/`).
+> **⚠️ Importante:** Para o melhor desempenho, trabalhe sempre com os seus ficheiros dentro do sistema de ficheiros do Linux (`/home/oseunome/`), e não nas unidades do Windows (`/mnt/c/`).
 
 ## **Prós & Contras**
 
-  * **✅ Pró:** **Excelente Desempenho.** Velocidade quase nativa para ferramentas de linha de comandos.
-  * **✅ Pró:** **Ótima Integração.** Chame facilmente ferramentas Linux a partir do Windows e vice-versa. Pode usar o VS Code no Windows para editar ficheiros diretamente no WSL.
-  * **❌ Contra:** **"Headless" (sem GUI) por defeito.** O WSL é principalmente uma ferramenta de linha de comandos. Executar aplicações Linux com GUI requer configuração extra (WSLg).
-  * **❌ Contra:** **Potencial para Complexidade.** Algum acesso avançado a redes ou *hardware* pode ser mais complexo do que numa VM ou instalação nativa.
+* **✅ Pró:** **Excelente Desempenho.** Velocidade quase nativa para ferramentas de linha de comandos.
+* **✅ Pró:** **Suporte Gráfico (GUI).** Execute aplicações gráficas (como gedit ou nautilus) diretamente ao lado das apps Windows.
+* **✅ Pró:** **Ótima Integração.** Chame facilmente ferramentas Linux a partir do Windows e vice-versa.
+* **❌ Contra:** **Complexidade.** Acesso avançado a redes ou hardware (como USB) pode ser mais complexo do que numa VM.
 
 ## **Para quem é esta opção?**
 
-Utilizadores de Windows que querem um ambiente de linha de comandos rápido e integrado e que se sentem confortáveis a trabalhar principalmente num terminal.
+Utilizadores de Windows que querem um ambiente rápido e integrado e que desejam usar ferramentas Linux em conjunto com o Windows.
 
 ## **Passos de Configuração**
 
-1.  **Ative o WSL:** Abra o PowerShell **como Administrador** e execute este único comando:
+1.  **Ative o WSL:** Abra o PowerShell **como Administrador** e execute:
     ```powershell
     wsl --install
     ```
-    Este comando irá ativar as funcionalidades necessárias do Windows, descarregar o *kernel* Linux mais recente e instalar o **Ubuntu** como a distribuição padrão.
+    Isto instala as funcionalidades necessárias e o **Ubuntu 24.04 LTS** (pode optar por **Debian 13.3**) por defeito.
 2.  **Reinicie** o seu computador quando solicitado.
-3.  **Crie uma Conta de Utilizador:** Após reiniciar, uma janela de terminal abrir-se-á para completar a instalação do Ubuntu. Ser-lhe-á pedido para criar um nome de utilizador e uma *password*. **Lembre-se desta password\!**
-4.  **Está Pronto\!** Pode iniciar o seu terminal Linux a partir do Menu Iniciar (procure por "Ubuntu").
+3.  **Crie uma Conta de Utilizador:** Uma janela de terminal abrir-se-á para completar a instalação. Crie o seu nome de utilizador e *password*.
+4.  **Está Pronto!** Inicie o "Ubuntu" a partir do Menu Iniciar.
 
 # Resumo & Próximos Passos ✅
 

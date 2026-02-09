@@ -1,9 +1,9 @@
 ---
 title: Setup
-Subtitle: Introdução Engenharia Informática
+Subtitle: Laboratórios de Sistemas e Serviços
 author: Mário Antunes
 institute: Universidade de Aveiro
-date: September 15, 2025
+date: February 09, 2026
 colorlinks: true
 highlight-style: tango
 mainfont: NotoSans
@@ -100,7 +100,7 @@ Students who are adventurous, comfortable with computer hardware, or have a spar
 
 ## **Setup Steps**
 
-1.  **Choose a distribution:** We recommend **Ubuntu 22.04 LTS** for its great support.
+1.  **Choose a distribution:** We recommend **Ubuntu 24.04 LTS** or **Debian 13.3**for its great support.
 2.  **Create a bootable USB drive:** Use tools like [Rufus](https://rufus.ie/) or [BalenaEtcher](https://www.balena.io/etcher/).
 3.  **Partition your hard drive:** This is the most critical step if you plan to dual-boot. **BACK UP YOUR DATA FIRST\!**
 4.  **Boot from the USB drive** and follow the installer instructions.
@@ -123,14 +123,16 @@ Your VM needs network access to download software (`apt install`) or use `git`.
   * **❌ Con:** **Resource Heavy.** Requires significant RAM (8GB+ recommended for your whole system) and CPU power, as you are running two operating systems at once.
   * **❌ Con:** **Slower Performance.** Slower than a native install due to the overhead of virtualization.
 
+> **⚠️ Mac Users (M1/M2/M3):** VirtualBox often has poor performance on Apple Silicon. We recommend using **UTM** or **VMware Fusion** instead.
+
 ## **Who is this for?**
 
 Almost everyone\! It's the safest, most recommended, and most consistent option for this course.
 
 ## **Setup Steps**
 
-1.  **Install VirtualBox:** Download and install the latest version of [VirtualBox](https://www.virtualbox.org/) and its "Extension Pack".
-2.  **Download the Course VM Image:** Get the `.ova` file from the course website.
+1.  **Install Hypervisor:** Download [VirtualBox](https://www.virtualbox.org/) (Windows/Intel Mac) or **UTM** (Apple Silicon Mac).
+2.  **Download the Course VM Image:** Get the file from the course website.
 3.  **Import the Appliance:** In VirtualBox, go to `File > Import Appliance` and select the `.ova` file you downloaded. Follow the on-screen prompts.
 4.  **Start your VM:** Select the imported machine and click "Start". That's it\!
 
@@ -148,24 +150,24 @@ WSL lets you run a genuine Linux kernel and environment directly on Windows, wit
 ## **Pros & Cons**
 
   * **✅ Pro:** **Excellent Performance.** Near-native speed for command-line tools.
-  * **✅ Pro:** **Great Integration.** Easily call Linux tools from Windows and vice-versa. You can use VS Code on Windows to edit files directly inside WSL.
-  * **❌ Con:** **"Headless" by Default.** WSL is primarily a command-line tool. Running Linux GUI apps requires extra setup (WSLg).
-  * **❌ Con:** **Potential for Complexity.** Some advanced networking or hardware access can be more complex than in a VM or native install.
+  * **✅ Pro:** **GUI Support.** Run Linux graphical apps (like gedit, nautilus, or IDEs) directly alongside Windows apps.
+  * **✅ Pro:** **Great Integration.** Easily call Linux tools from Windows and vice-versa.
+  * **❌ Con:** **Complexity.** Advanced networking or hardware access (like USB) can be more complex than in a VM.
 
 ## **Who is this for?**
 
-Windows users who want a fast, integrated command-line environment and are comfortable working primarily in a terminal.
+Windows users who want a fast, integrated environment and want to use Linux tools seamlessly with Windows.
 
 ## **Setup Steps**
 
-1.  **Enable WSL:** Open PowerShell **as an Administrator** and run this single command:
-    ```powershell
-    wsl --install
-    ```
-    This command will enable the required Windows features, download the latest Linux kernel, and install **Ubuntu** as the default distribution.
+1. **Enable WSL:** Open PowerShell **as an Administrator** and run:
+   ```powershell
+   wsl --install
+   ```
+   This installs the required features and **Ubuntu 24.04 LTS** (can also opt for **Debian 13.3**) by default.
 2.  **Reboot** your computer when prompted.
-3.  **Create a User Account:** After rebooting, a terminal window will open to complete the Ubuntu installation. You will be asked to create a username and password. **Remember this password\!**
-4.  **You're Ready\!** You can launch your Linux terminal from the Start Menu (search for "Ubuntu").
+3.  **Create a User Account:** A terminal window will open to complete the setup. Create your username and password.
+4.  **You're Ready!** Launch "Ubuntu" from the Start Menu.
 
 # Summary & Next Steps ✅
 
