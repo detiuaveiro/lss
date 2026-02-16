@@ -1,9 +1,9 @@
 ---
-title: Terminal de Linux 
-subtitle: Introdução Engenharia Informática
+title: Linux terminal
+subtitle: Laboratórios de Sistemas e Serviços
 author: Mário Antunes
 institute: Universidade de Aveiro
-date: September 22, 2025
+date: 16 de Fevereiro, 2026
 colorlinks: true
 highlight-style: tango
 geometry: a4paper,margin=2cm

@@ -8,10 +8,15 @@ highlight-style: tango
 mainfont: NotoSans
 mainfontfallback:
   - "NotoColorEmoji:mode=harf"
+theme: metropolis
+themeoptions:
+  - sectionpage=progressbar
+  - numbering=fraction
+  - progressbar=frametitle
 header-includes:
- - \usetheme[sectionpage=none,numbering=fraction,progressbar=frametitle]{metropolis}
- - \usepackage{booktabs}
+ - \usepackage{longtable,booktabs}
  - \usepackage{etoolbox}
+ - \AtBeginEnvironment{longtable}{\tiny}
  - \AtBeginEnvironment{cslreferences}{\tiny}
  - \AtBeginEnvironment{Shaded}{\tiny}
  - \AtBeginEnvironment{verbatim}{\tiny}
