@@ -359,8 +359,6 @@ To run one command with root privileges, use `sudo` (**S**uper**u**ser **do**).
 $ sudo apt update
 ```
 
-
-
 ## Managing Users
 
 As an administrator, you can manage user accounts from the command line.

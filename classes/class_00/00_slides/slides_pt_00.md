@@ -1,26 +1,5 @@
 ---
-title: Laboratórios de Sistemas e Serviços
-author: Mário Antunes
-institute: Universidade de Aveiro
-date: 09 de Fevereiro de 2026
-colorlinks: true
-highlight-style: tango
-mainfont: NotoSans
-mainfontfallback:
-  - "NotoColorEmoji:mode=harf"
-theme: metropolis
-themeoptions:
-  - sectionpage=progressbar
-  - numbering=fraction
-  - progressbar=frametitle
-header-includes:
- - \usepackage{longtable,booktabs}
- - \usepackage{etoolbox}
- - \AtBeginEnvironment{longtable}{\tiny}
- - \AtBeginEnvironment{cslreferences}{\tiny}
- - \AtBeginEnvironment{Shaded}{\tiny}
- - \AtBeginEnvironment{verbatim}{\tiny}
- - \setmonofont[Contextuals={Alternate}]{FiraCodeNerdFontMono-Retina}
+title: Visão Geral da Disciplina
 ---
 
 # Professores i
@@ -34,7 +13,7 @@ header-includes:
 ::::
 
 :::: column
-![](figures/mantunes.jpg)
+![\ ](figures/mantunes.jpg)
 ::::
 
 :::
@@ -50,7 +29,7 @@ header-includes:
 ::::
 
 :::: column
-![](figures/omp.jpg)
+![\ ](figures/omp.jpg)
 ::::
 
 :::
@@ -81,12 +60,12 @@ Vamos abordar os seguintes tópicos:
 P1/P2 & P3/P5 & P4 & P6 & Topics \\
 \midrule
 12-02-2026 & 10-02-2026 & 11-02-2026 & 09-02-2026 & C0 \\
-19-02-2026 & 24-02-2026 & 18-02-2026 & 16-02-2026 & C0 \\
-26-02-2026 & 03-03-2026 & 25-02-2026 & 23-02-2026 & C1 \\
-05-03-2026 & 10-03-2026 & 04-03-2026 & 02-03-2026 & C1 \\
-12-03-2026 & 17-03-2026 & 11-03-2026 & 09-03-2026 & C2 \\
-19-03-2026 & 24-03-2026 & 18-03-2026 & 16-03-2026 & C2 \\
-26-03-2026 & 31-03-2026 & 25-03-2026 & 23-03-2026 & C3 \\
+19-02-2026 & 24-02-2026 & 18-02-2026 & 23-02-2026 & C0 \\
+26-02-2026 & 03-03-2026 & 25-02-2026 & 02-03-2026 & C1 \\
+05-03-2026 & 10-03-2026 & 04-03-2026 & 09-03-2026 & C1 \\
+12-03-2026 & 17-03-2026 & 11-03-2026 & 16-03-2026 & C2 \\
+19-03-2026 & 24-03-2026 & 18-03-2026 & 23-03-2026 & C2 \\
+26-03-2026 & 31-03-2026 & 25-03-2026 & 30-03-2026 & C3 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -99,14 +78,13 @@ P1/P2 & P3/P5 & P4 & P6 & Topics \\
 \toprule
 P1/P2 & P3/P5 & P4 & P6 & Topics \\
 \midrule
-16-04-2026 & 14-04-2026 & 15-04-2026 & 30-03-2026 & C4 \\
-23-04-2026 & 21-04-2026 & 22-04-2026 & 13-04-2026 & C4 \\
-07-05-2026 & 05-05-2026 & 06-05-2026 & 20-04-2026 & C5 \\
-14-05-2026 & 12-05-2026 & 13-05-2026 & 04-05-2026 & C5 \\
-21-05-2026 & 19-05-2026 & 20-05-2026 & 11-05-2026 & C6 \\
-28-05-2026 & 26-05-2026 & 27-05-2026 & 18-05-2026 & C6 \\
-           & 02-06-2026 & 03-06-2026 & 25-05-2026 & Proj \\
-           &            &            & 01-06-2026 & Proj \\
+16-04-2026 & 14-04-2026 & 15-04-2026 & 13-04-2026 & C4 \\
+23-04-2026 & 21-04-2026 & 22-04-2026 & 20-04-2026 & C4 \\
+07-05-2026 & 05-05-2026 & 06-05-2026 & 04-05-2026 & C5 \\
+14-05-2026 & 12-05-2026 & 13-05-2026 & 11-05-2026 & C5 \\
+21-05-2026 & 19-05-2026 & 20-05-2026 & 18-05-2026 & C6 \\
+28-05-2026 & 26-05-2026 & 27-05-2026 & 25-05-2026 & C6 \\
+           & 02-06-2026 & 03-06-2026 & 01-06-2026 & Proj \\
 \bottomrule
 \end{tabular}
 \end{table}

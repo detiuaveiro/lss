@@ -8,7 +8,7 @@ all: $(ALL_PDF)
 pdf: $(ALL_PDF)
 
 %.pdf: %.md
-	pandoc -d build.yaml -t beamer -s --slide-level=2 --pdf-engine=lualatex -o $@ $<
+	pandoc -d build.yml -t beamer -s --slide-level=2 --pdf-engine=lualatex -o $@ $<
 
 clean:
 	rm -rf *.pdf

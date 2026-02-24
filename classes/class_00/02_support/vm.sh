@@ -1,34 +1,103 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
-# Image filename variable for easy changing
+# ============================================================
+# QEMU Launch Script (Authoring Mode)
+# ============================================================
+# Used by the instructor to maintain and update the class VM
+# image. Not intended for student use.
+# ============================================================
+
+# --- Configurable Parameters --------------------------------
 IMAGE_FILE="vm.qcow2"
+VM_MEMORY="4G"
+VM_CORES="4"
+SSH_HOST_PORT="2222"
+SSH_GUEST_PORT="22"
 
-echo -e "🚀 Starting QEMU (Authoring Mode)..."
+# --- Pre-flight Checks --------------------------------------
 
-qemu-system-x86_64 \
-  -enable-kvm \
+if [[ ! -f "${IMAGE_FILE}" ]]; then
+    echo "Error: Disk image '${IMAGE_FILE}' not found in $(pwd)." >&2
+    echo "Create one with: qemu-img create -f qcow2 ${IMAGE_FILE} 20G" >&2
+    exit 1
+fi
+
+if [[ ! -e /dev/kvm ]]; then
+    echo "Error: KVM is not available (/dev/kvm not found)." >&2
+    echo "Ensure VT-x/AMD-V is enabled in BIOS and the kvm module is loaded." >&2
+    exit 1
+fi
+
+if [[ ! -r /dev/kvm ]] || [[ ! -w /dev/kvm ]]; then
+    echo "Error: Insufficient permissions on /dev/kvm." >&2
+    echo "Add your user to the kvm group: sudo usermod -aG kvm \$(whoami)" >&2
+    exit 1
+fi
+
+# --- Detect best async I/O backend --------------------------
+# io_uring is fastest (kernel 5.1+), fall back to native/threads
+AIO_BACKEND="threads"
+if [[ -f /proc/version ]]; then
+    KERNEL_MAJOR=$(uname -r | cut -d. -f1)
+    KERNEL_MINOR=$(uname -r | cut -d. -f2)
+    if (( KERNEL_MAJOR > 5 || (KERNEL_MAJOR == 5 && KERNEL_MINOR >= 1) )); then
+        AIO_BACKEND="io_uring"
+    fi
+fi
+
+# ============================================================
+# Configuration Notes
+# ============================================================
+#
+# MACHINE
+#   q35: Modern PCIe-based chipset (replaces legacy i440FX).
+#        Native PCIe support improves virtio device performance.
+#
+# GRAPHICS & INPUT
+#   virtio-gpu-pci: Paravirtualized GPU with optional 3D accel.
+#   usb-tablet:     Absolute pointing device (seamless mouse).
+#
+# DISK I/O
+#   if=virtio:          Paravirtualized block driver (fastest).
+#   aio=io_uring:       Async I/O via io_uring (kernel 5.1+).
+#   discard=unmap:      TRIM support, marks deleted blocks as
+#                       free (critical for shrinking qcow2).
+#   detect-zeroes=unmap Treats zero-writes as discards, keeping
+#                       the image sparse and small.
+#   cache=writeback:    Faster I/O for non-critical workloads.
+#
+# NETWORKING
+#   virtio-net-pci: Paravirtualized NIC.
+#   hostfwd:        SSH access via localhost:${SSH_HOST_PORT}.
+#
+# BALLOON & RNG
+#   virtio-balloon: Allows dynamic memory reclaim by the host.
+#   virtio-rng:     Feeds guest /dev/random from host entropy,
+#                   prevents stalls during boot, apt, keygen.
+#
+# AUDIO
+#   intel-hda + hda-duplex: Standard HDA (optional).
+# ============================================================
+
+echo "Starting QEMU (Authoring Mode)..."
+echo "  Image:  ${IMAGE_FILE}"
+echo "  Memory: ${VM_MEMORY} | Cores: ${VM_CORES}"
+echo "  AIO:    ${AIO_BACKEND}"
+echo "  SSH:    ssh -p ${SSH_HOST_PORT} student@localhost"
+echo ""
+
+exec qemu-system-x86_64 \
+  -machine type=q35,accel=kvm \
   -cpu host \
-  -smp cores=4,threads=1 \
-  -m 4G \
-  \
-  # --- GRAPHICS & INPUT (Better than SDL) ---
-  # virtio-gpu-pci: Newer standard for 3D acceleration
-  # usb-tablet: Absolute pointing device (mouse doesn't get 'stuck' in window)
+  -smp cores="${VM_CORES}",threads=1,sockets=1 \
+  -m "${VM_MEMORY}" \
   -device virtio-gpu-pci \
-  -display default,show-cursor=on \
+  -display gtk,show-cursor=on \
   -usb -device usb-tablet \
-  \
-  # --- DISK I/O (Optimized for Maintenance) ---
-  # if=virtio: Paravirtualized driver (faster than IDE/SATA emulation)
-  # discard=unmap: Allows the OS to mark deleted blocks as empty (CRITICAL for shrinking image)
-  # cache=writeback: Faster IO, slightly risky if host crashes, but fine for updates
-  -drive file="${IMAGE_FILE}",if=virtio,format=qcow2,discard=unmap,cache=writeback \
-  \
-  # --- NETWORKING ---
-  # virtio-net-pci: Faster networking
-  # hostfwd: Forward host port 2222 to guest 22 (allows you to SSH in: ssh -p 2222 student@localhost)
+  -drive "file=${IMAGE_FILE},if=virtio,format=qcow2,aio=${AIO_BACKEND},discard=unmap,detect-zeroes=unmap,cache=writeback" \
   -device virtio-net-pci,netdev=net0 \
-  -netdev user,id=net0,hostfwd=tcp::2222-:22 \
-  \
-  # --- AUDIO (Optional, standard HDA) ---
+  -netdev "user,id=net0,hostfwd=tcp::${SSH_HOST_PORT}-:${SSH_GUEST_PORT}" \
+  -device virtio-balloon-pci \
+  -device virtio-rng-pci \
   -device intel-hda -device hda-duplex
