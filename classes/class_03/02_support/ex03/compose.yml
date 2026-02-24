@@ -1,7 +1,13 @@
+# Exercise 3: Live Development with Volumes
+# This compose file uses a bind mount to serve content directly
+# from the host filesystem. No Dockerfile is needed.
+
 services:
-  webserver:
-    image: nginx:alpine
-    ports:
-    - "8080:80"
-    volumes:
-    - ./my-website:/usr/share/nginx/html
+    webserver:
+        image: nginx:alpine
+        ports:
+            - "8080:80"
+        volumes:
+            # Mount the local folder as read-only (:ro) into the container.
+            # Changes to files on the host are reflected immediately.
+            - ./my-website:/usr/share/nginx/html:ro

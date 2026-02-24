@@ -1,5 +1,13 @@
+# Exercise 2: Building a Custom Web Server Image
+# This compose file uses a Dockerfile to build a custom NGINX image
+# that includes the website files baked into the image.
+#
+# Usage:
+#   docker compose up --build -d
+#   docker compose down
+
 services:
-  webserver:
-    build: .
-    ports:
-    - "8080:80"
+    webserver:
+        build: .
+        ports:
+            - "8080:80"

@@ -1,28 +1,10 @@
 ---
 title: Linux terminal
-subtitle: Laboratórios de Sistemas e Serviços
-author: Mário Antunes
-institute: Universidade de Aveiro
-date: February 16, 2026
-colorlinks: true
-highlight-style: tango
-geometry: a4paper,margin=2cm
-mainfont: NotoSans
-mainfontfallback:
-  - "NotoColorEmoji:mode=harf"
-header-includes:
- - \usepackage{longtable,booktabs}
- - \usepackage{etoolbox}
- - \AtBeginEnvironment{longtable}{\tiny}
- - \AtBeginEnvironment{cslreferences}{\tiny}
- - \AtBeginEnvironment{Shaded}{\normalsize}
- - \AtBeginEnvironment{verbatim}{\normalsize}
- - \setmonofont[Contextuals={Alternate}]{FiraCodeNerdFontMono-Retina}
 ---
 
 # Exercises
 
-## Exercise 1: Finding Your Way Around 🧭
+## Exercise 1: Finding Your Way Around
 
 This exercise covers **`pwd`**, **`ls`**, **`cd`**, and basic information commands.
 
@@ -52,7 +34,7 @@ This exercise covers **`pwd`**, **`ls`**, **`cd`**, and basic information comman
 
 -----
 
-## Exercise 2: Exploring Key System Directories 🗺️
+## Exercise 2: Exploring Key System Directories
 
 Reinforce your knowledge of the filesystem layout by visiting important system directories.
 
@@ -76,7 +58,7 @@ Reinforce your knowledge of the filesystem layout by visiting important system d
 
 -----
 
-## Exercise 3: Creating and Managing Files 📂
+## Exercise 3: Creating and Managing Files
 
 In this exercise, you'll create, copy, move, and delete files and directories.
 
@@ -113,7 +95,7 @@ In this exercise, you'll create, copy, move, and delete files and directories.
 
 -----
 
-## Exercise 4: Understanding Permissions 🔐
+## Exercise 4: Understanding Permissions
 
 This exercise focuses on reading and changing file permissions with **`chmod`**.
 
@@ -146,7 +128,7 @@ This exercise focuses on reading and changing file permissions with **`chmod`**.
 
 -----
 
-## Exercise 5: Finding Files and Content with `find` and `grep` 🔎
+## Exercise 5: Finding Files and Content with `find` and `grep`
 
 Learn to locate files by name and search for text within them.
 
@@ -166,7 +148,7 @@ Learn to locate files by name and search for text within them.
 
 -----
 
-## Exercise 6: Managing Processes ⚙️
+## Exercise 6: Managing Processes
 
 Learn how to view and stop running programs from the command line.
 
@@ -189,7 +171,7 @@ Learn how to view and stop running programs from the command line.
 
 -----
 
-## Exercise 7: Managing Software with APT 📦
+## Exercise 7: Managing Software with APT
 
 Let's install and remove a program using the **APT** package manager.
 
@@ -216,7 +198,7 @@ Let's install and remove a program using the **APT** package manager.
 
 -----
 
-## Exercise 8: Combining Commands 🔗
+## Exercise 8: Combining Commands
 
 Let's explore the power of the **pipe (`|`)** and **redirection (`>>`)**.
 
@@ -239,7 +221,7 @@ Let's explore the power of the **pipe (`|`)** and **redirection (`>>`)**.
 
 -----
 
-## Exercise 9: Customizing Your Environment ✨
+## Exercise 9: Customizing Your Environment
 
 Time to edit your **`.bashrc`** file to create a handy shortcut (an alias).
 
@@ -263,7 +245,7 @@ Time to edit your **`.bashrc`** file to create a handy shortcut (an alias).
 
 -----
 
-## Exercise 10: Understanding the `$PATH` Variable 🛣️
+## Exercise 10: Understanding the `$PATH` Variable
 
 Discover how the shell finds the commands you run.
 
@@ -294,7 +276,7 @@ Discover how the shell finds the commands you run.
 
 -----
 
-## Exercise 11: Scripting Challenge 🚀
+## Exercise 11: Scripting Challenge
 
 Let's create a script that automates creating a project structure.
 
@@ -331,7 +313,7 @@ Let's create a script that automates creating a project structure.
 
 -----
 
-## Exercise 12: Scheduling a Task with `cron` 🕒
+## Exercise 12: Scheduling a Task with `cron`
 
 Let's create a simple script and schedule it to run automatically every minute.
 
@@ -359,4 +341,243 @@ Let's create a simple script and schedule it to run automatically every minute.
 6.  **Clean Up:** It's very important to remove the cron job so it doesn't run forever. This command removes your entire crontab file.
     ```bash
     $ crontab -r
+    ```
+
+-----
+
+## Exercise 13: Viewing Files with `cat`, `less`, `head`, and `tail`
+
+Practice the different ways to inspect file contents without opening an editor.
+
+1.  Start by creating a file with several lines so you have something to work with.
+    ```bash
+    $ seq 1 100 > ~/IEI/numbers.txt
+    ```
+2.  Use `cat` to dump the entire file to the screen. Notice how it scrolls past quickly.
+    ```bash
+    $ cat ~/IEI/numbers.txt
+    ```
+3.  Now use `less` to open the same file in a scrollable viewer. Use the **Arrow Keys** to scroll and press **`q`** to quit.
+    ```bash
+    $ less ~/IEI/numbers.txt
+    ```
+4.  View only the **first 5 lines** of the file using `head`.
+    ```bash
+    $ head -n 5 ~/IEI/numbers.txt
+    ```
+5.  View only the **last 5 lines** of the file using `tail`.
+    ```bash
+    $ tail -n 5 ~/IEI/numbers.txt
+    ```
+6.  Combine `head` and `tail` with a pipe to extract **only lines 45 through 55** from the file.
+    ```bash
+    $ head -n 55 ~/IEI/numbers.txt | tail -n 11
+    ```
+7.  Use `wc` (word count) to count the total number of lines, words, and characters in the file.
+    ```bash
+    $ wc ~/IEI/numbers.txt
+    ```
+
+-----
+
+## Exercise 14: System Information Deep-Dive
+
+Use the terminal to gather detailed information about your system's hardware and resources.
+
+1.  Display your kernel version and system architecture.
+    ```bash
+    $ uname -a
+    ```
+2.  Check your CPU information by reading from the virtual `/proc` filesystem. Filter the output to show only the model name.
+    ```bash
+    $ cat /proc/cpuinfo | grep "model name"
+    ```
+3.  Display your current RAM and Swap usage in a human-readable format.
+    ```bash
+    $ free -h
+    ```
+4.  Check disk space usage across all mounted filesystems.
+    ```bash
+    $ df -h
+    ```
+5.  Check disk usage of your home directory specifically. The `-s` flag gives a summary and `-h` makes it human-readable.
+    ```bash
+    $ du -sh ~
+    ```
+6.  If you have `sudo` access, use `dmidecode` to query the system's BIOS information.
+    ```bash
+    $ sudo dmidecode -t bios
+    ```
+7.  View your network interfaces and their IP addresses.
+    ```bash
+    $ ip addr show
+    ```
+
+-----
+
+## Exercise 15: Wildcards and Globbing
+
+Learn to select multiple files at once using pattern matching.
+
+1.  Create a set of test files to work with inside a new directory.
+    ```bash
+    $ mkdir -p ~/IEI/wildcard_test
+    $ cd ~/IEI/wildcard_test
+    $ touch report1.txt report2.txt report3.txt
+    $ touch summary.txt data.csv output.csv
+    $ touch image1.png image2.png image10.png
+    ```
+2.  Use the `*` wildcard to list **all `.txt` files**.
+    ```bash
+    $ ls *.txt
+    ```
+3.  Use the `*` wildcard to list **all files starting with `report`**.
+    ```bash
+    $ ls report*
+    ```
+4.  Use the `?` wildcard to match files with **exactly one character** after `report`. Notice that `report10.txt` is **not** matched.
+    ```bash
+    $ ls report?.txt
+    ```
+5.  Use the `?` wildcard to match image files with a **single-digit** number. Notice that `image10.png` is excluded.
+    ```bash
+    $ ls image?.png
+    ```
+6.  List **all `.csv` files** and redirect the output to a file called `csv_list.txt`.
+    ```bash
+    $ ls *.csv > csv_list.txt
+    $ cat csv_list.txt
+    ```
+7.  Use wildcards to **delete all `.csv` files** at once, then verify they are gone.
+    ```bash
+    $ rm *.csv
+    $ ls
+    ```
+8.  Clean up the test directory.
+    ```bash
+    $ cd ~
+    $ rm -r ~/IEI/wildcard_test
+    ```
+
+-----
+
+## Exercise 16: I/O Streams and Error Redirection
+
+Understand how to control where standard output and standard error go.
+
+1.  Run a command that produces **normal output** (stdout). Redirect it to a file.
+    ```bash
+    $ echo "This is standard output" > ~/IEI/stdout_test.txt
+    $ cat ~/IEI/stdout_test.txt
+    ```
+2.  Run a command that will produce an **error** (stderr). Try to list a directory that doesn't exist.
+    ```bash
+    $ ls /nonexistent_directory
+    ```
+3.  Redirect **only the error** to a file using `2>`. The error message will go to the file instead of the screen.
+    ```bash
+    $ ls /nonexistent_directory 2> ~/IEI/errors.log
+    $ cat ~/IEI/errors.log
+    ```
+4.  Now run a command that produces **both** stdout and stderr. Use `find` to search `/etc` — some directories will produce "Permission denied" errors.
+    ```bash
+    $ find /etc -name "*.conf"
+    ```
+5.  Separate the two streams: save **results** to one file and **errors** to another.
+    ```bash
+    $ find /etc -name "*.conf" > ~/IEI/results.txt 2> ~/IEI/find_errors.log
+    $ wc -l ~/IEI/results.txt
+    $ cat ~/IEI/find_errors.log
+    ```
+6.  Combine **both streams** into a single file using `2>&1`.
+    ```bash
+    $ find /etc -name "*.conf" > ~/IEI/all_output.txt 2>&1
+    $ wc -l ~/IEI/all_output.txt
+    ```
+7.  Discard all output entirely by redirecting to `/dev/null` (the system's "black hole").
+    ```bash
+    $ find /etc -name "*.conf" > /dev/null 2>&1
+    ```
+
+-----
+
+## Exercise 17: User Management
+
+Practice creating, modifying, and removing user accounts. These commands require `sudo`.
+
+1.  Create a new user called `testuser`.
+    ```bash
+    $ sudo useradd testuser
+    ```
+2.  Verify the user was created by checking the `/etc/passwd` file.
+    ```bash
+    $ grep testuser /etc/passwd
+    ```
+3.  Set a password for the new user. You will be prompted to type the password twice.
+    ```bash
+    $ sudo passwd testuser
+    ```
+4.  Check what groups the new user belongs to.
+    ```bash
+    $ groups testuser
+    ```
+5.  Add the user to the `sudo` group so they have administrator privileges.
+    ```bash
+    $ sudo usermod -aG sudo testuser
+    $ groups testuser
+    ```
+6.  Switch to the new user's account temporarily using `su`. Type `exit` to return to your own account.
+    ```bash
+    $ su - testuser
+    $ whoami
+    $ pwd
+    $ exit
+    ```
+7.  Delete the user and their home directory to clean up.
+    ```bash
+    $ sudo userdel -r testuser
+    $ grep testuser /etc/passwd
+    ```
+
+-----
+
+## Exercise 18: Numeric (Octal) Permissions with `chmod`
+
+Learn to use the numeric notation for setting permissions, which is faster than symbolic notation for complex changes.
+
+The permission values are: **Read (4)**, **Write (2)**, **Execute (1)**. Add them together for each group: **Owner | Group | Others**.
+
+1.  Create a test file and a test script inside `~/IEI`.
+    ```bash
+    $ echo "Sensitive data" > ~/IEI/config_file.txt
+    $ echo '#!/bin/bash' > ~/IEI/run_me.sh
+    $ echo 'echo "Script executed!"' >> ~/IEI/run_me.sh
+    ```
+2.  View the current permissions of both files.
+    ```bash
+    $ ls -l ~/IEI/config_file.txt ~/IEI/run_me.sh
+    ```
+3.  Set `config_file.txt` to permission **`644`** (owner: read+write, group: read, others: read). This is the standard permission for configuration files.
+    ```bash
+    $ chmod 644 ~/IEI/config_file.txt
+    $ ls -l ~/IEI/config_file.txt
+    ```
+4.  Set `run_me.sh` to permission **`755`** (owner: read+write+execute, group: read+execute, others: read+execute). This is the standard permission for scripts.
+    ```bash
+    $ chmod 755 ~/IEI/run_me.sh
+    $ ls -l ~/IEI/run_me.sh
+    ```
+5.  Run the script to confirm it works.
+    ```bash
+    $ ~/IEI/run_me.sh
+    ```
+6.  Set `config_file.txt` to **`600`** (owner: read+write, everyone else: nothing). This is appropriate for private files like SSH keys.
+    ```bash
+    $ chmod 600 ~/IEI/config_file.txt
+    $ ls -l ~/IEI/config_file.txt
+    ```
+7.  **Challenge:** What permission number would give the owner full access, the group read-only access, and others no access at all? Set it on `run_me.sh` and verify.
+    ```bash
+    $ chmod 740 ~/IEI/run_me.sh
+    $ ls -l ~/IEI/run_me.sh
     ```

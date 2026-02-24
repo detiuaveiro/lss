@@ -1,16 +1,21 @@
+# Exercise 5: Deploying a Real-World Application
+# This example deploys Jellyfin, a free media server.
+# Adapt PUID, PGID, and TZ to match your system.
+# Find your values by running: id
+# Find your timezone at: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+
 services:
-  jellyfin:
-    image: lscr.io/linuxserver/jellyfin:latest
-    container_name: jellyfin 
-    environment: 
-      - PUID=1000 
-      - PGID=1000 
-      - TZ=Europe/Lisbon 
-    volumes: 
-      - ./config:/config 
-      - ./tvshows:/data/tvshows 
-      - ./movies:/data/movies 
-    ports: 
-      - "8096:8096" 
-    restart: unless-stopped
-    
+    jellyfin:
+        image: lscr.io/linuxserver/jellyfin:latest
+        container_name: jellyfin
+        environment:
+            - PUID=1000
+            - PGID=1000
+            - TZ=Europe/Lisbon
+        volumes:
+            - ./config:/config
+            - ./tvshows:/data/tvshows
+            - ./movies:/data/movies
+        ports:
+            - "8096:8096"
+        restart: unless-stopped

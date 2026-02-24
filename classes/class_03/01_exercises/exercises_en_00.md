@@ -1,35 +1,17 @@
 ---
 title: Containers
-subtitle: Laboratórios de Sistemas e Serviços
-author: Mário Antunes
-institute: Universidade de Aveiro
-date: March 02, 2026
-colorlinks: true
-highlight-style: tango
-geometry: a4paper,margin=2cm
-mainfont: NotoSans
-mainfontfallback:
-  - "NotoColorEmoji:mode=harf"
-header-includes:
- - \usepackage{longtable,booktabs}
- - \usepackage{etoolbox}
- - \AtBeginEnvironment{longtable}{\tiny}
- - \AtBeginEnvironment{cslreferences}{\tiny}
- - \AtBeginEnvironment{Shaded}{\normalsize}
- - \AtBeginEnvironment{verbatim}{\normalsize}
- - \setmonofont[Contextuals={Alternate}]{FiraCodeNerdFontMono-Retina}
 ---
 
 # Exercises
 
 ## Practical Lab: Working with Docker Compose
 
-**Objective:** This lab will guide you through the fundamentals of creating, managing, and deploying applications using Docker (with focus on Compose files). You will apply the concepts of images, containers, volumes, and networking to build and run single and multi-service applications.
+**Objective:** This lab will guide you through the fundamentals of creating, managing, and deploying applications using Docker Compose. You will apply the concepts of images, containers, volumes, and networking to build and run single and multi-service applications.
 
 **Prerequisites:**
 
   * A computer with a modern web browser and a text editor.
-  * Docker and Docker Compose installed.
+  * Docker and Docker Compose installed (see installation section below).
 
 -----
 
@@ -47,7 +29,7 @@ If you are using a Linux host, follow these steps in your terminal to install th
     sudo apt update
     sudo apt install ca-certificates curl
 
-    # Add Docker’s official GPG key
+    # Add Docker's official GPG key
     sudo install -m 0755 -d /etc/apt/keyrings
     sudo curl -fsSL https://download.docker.com/linux/debian/gpg \
     -o /etc/apt/keyrings/docker.asc
@@ -71,7 +53,15 @@ If you are using a Linux host, follow these steps in your terminal to install th
     ```bash
     sudo usermod -aG docker $USER
     ```
-    **Important:** You must log out and log back in for this change to take effect.
+    **Important:** You must log out and log back in for this change to take effect. You can verify it worked by running `docker ps` without `sudo`.
+4.  **Verify the installation:**
+    ```bash
+    docker --version
+    docker compose version
+    ```
+    Both commands should print version information without errors.
+
+**Tip:** If you encounter a "permission denied" error when running `docker` commands, make sure you completed step 3 and logged out/in again. As a quick workaround you can prefix commands with `sudo`, but configuring the group is the recommended approach.
 
 -----
 
@@ -79,22 +69,29 @@ If you are using a Linux host, follow these steps in your terminal to install th
 
 **Goal:** Understand the basic structure of a `compose.yml` file and run a pre-built image.
 
-1.  Create a new folder for this exercise (e.g., `ex1-helloworld`).
+1.  Create a new folder for this exercise and navigate into it:
+    ```bash
+    mkdir ex1-helloworld && cd ex1-helloworld
+    ```
 2.  Inside the folder, create a new file named `compose.yml` with the following content:
     ```yaml
     services:
       hello:
         image: hello-world
     ```
-3.  Open your terminal in this folder and run the application.
+3.  Run the application:
     ```bash
-    $ docker compose up
+    docker compose up
     ```
 4.  Observe the output. The `hello-world` container will start, print its message, and then exit.
-5.  Clean up the created container.
+5.  Clean up the created container:
     ```bash
-    $ docker compose down
+    docker compose down
     ```
+
+**Verification:** You should see the Docker welcome message that starts with "Hello from Docker!" in the terminal output after step 3. After step 5, running `docker compose ps` should show no containers.
+
+**Tip:** The `compose.yml` file (previously called `docker-compose.yml`) is the standard filename that Docker Compose looks for. You can use a different filename with the `-f` flag: `docker compose -f myfile.yml up`.
 
 -----
 
@@ -102,7 +99,10 @@ If you are using a Linux host, follow these steps in your terminal to install th
 
 **Goal:** Use a `Dockerfile` with Docker Compose to create a self-contained application image.
 
-1.  Create a new folder (`ex2-build`) and a subfolder inside it named `my-website`.
+1.  Create the folder structure:
+    ```bash
+    mkdir -p ex2-build/my-website && cd ex2-build
+    ```
 2.  Inside `my-website`, create a file named `index.html`:
     ```html
     <!DOCTYPE html>
@@ -117,7 +117,7 @@ If you are using a Linux host, follow these steps in your terminal to install th
     FROM nginx:alpine
     COPY ./my-website /usr/share/nginx/html
     ```
-4.  Finally, create your `compose.yml` file:
+4.  In the same folder, create your `compose.yml` file:
     ```yaml
     services:
       webserver:
@@ -125,20 +125,46 @@ If you are using a Linux host, follow these steps in your terminal to install th
         ports:
           - "8080:80"
     ```
-5.  Build and start the service. The `-d` flag runs it in the background.
+5.  Build and start the service. The `-d` flag runs it in the background (detached mode):
     ```bash
-    $ docker compose up --build -d
+    docker compose up --build -d
     ```
 6.  Open your browser to `http://localhost:8080`. You should see your custom webpage.
+
+**Verification:**
+
+  * Run `docker compose ps` to confirm the container is running and healthy.
+  * Run `docker compose images` to see the image that was built.
+  * Use `curl http://localhost:8080` as an alternative to the browser.
+
+**Tip:** The `--build` flag forces Compose to rebuild the image before starting. Without it, Compose reuses the previously built image. Always use `--build` after changing the `Dockerfile` or any files that are copied into the image.
+
+**Cleanup:** When you are done, stop and remove everything with:
+
+```bash
+docker compose down
+```
 
 -----
 
 ## Exercise 3: Live Development with Volumes
 
-**Goal:** Understand how volumes allow you to change your website's content without rebuilding the image.
+**Goal:** Understand how bind-mount volumes allow you to change your website's content without rebuilding the image.
 
-1.  Create a new folder (`ex3-volumes`) with the same `my-website/index.html` structure as the previous exercise.
-2.  Create a `compose.yml` file. This time, we will use the standard `nginx:alpine` image and mount our local folder as a volume. **No `Dockerfile` is needed.**
+1.  Create the folder structure:
+    ```bash
+    mkdir -p ex3-volumes/my-website && cd ex3-volumes
+    ```
+2.  Create a `my-website/index.html` file:
+    ```html
+    <!DOCTYPE html>
+    <html>
+    <body>
+        <h1>Hello from a volume mount!</h1>
+    </body>
+    </html>
+    ```
+3.  Create a `compose.yml` file. This time, we use the standard `nginx:alpine` image and mount our local folder as a volume. **No `Dockerfile` is needed.**
     ```yaml
     services:
       webserver:
@@ -146,22 +172,44 @@ If you are using a Linux host, follow these steps in your terminal to install th
         ports:
           - "8080:80"
         volumes:
-          - ./my-website:/usr/share/nginx/html
+          - ./my-website:/usr/share/nginx/html:ro
     ```
-3.  Start the service: `docker compose up -d`.
-4.  Open your browser to `http://localhost:8080` to confirm it's working.
-5.  **Live Update:** While the container is running, **edit the `index.html` file** on your host machine. Change the heading to `<h1>Live update with a Volume!</h1>`.
-6.  Save the file and **refresh your browser**. The change appears instantly\!
+4.  Start the service:
+    ```bash
+    docker compose up -d
+    ```
+5.  Open your browser to `http://localhost:8080` to confirm it is working.
+6.  **Live Update:** While the container is running, **edit the `index.html` file** on your host machine. Change the heading to `<h1>Live update with a Volume!</h1>`.
+7.  Save the file and **refresh your browser**. The change appears instantly.
+
+**Verification:** After editing `index.html`, you can verify the change from the command line:
+
+```bash
+curl http://localhost:8080
+```
+
+**Tip:** Notice the `:ro` (read-only) flag at the end of the volume mount. This is a best practice when the container should only read files from the host and never write to them. It prevents the container from accidentally modifying your source files.
+
+**Key Concept -- Build vs. Volume:** Compare Exercise 2 (build) with Exercise 3 (volume). Building creates a portable, self-contained image ideal for **production**. Volumes create a live link ideal for **development**. Understanding when to use each approach is fundamental.
+
+**Cleanup:**
+
+```bash
+docker compose down
+```
 
 -----
 
-## Exercise 4: Caching Rich Content with Varnish & NGINX ⚡
+## Exercise 4: Caching Rich Content with Varnish and NGINX
 
-**Goal:** Build a two-tier web application with a Varnish cache serving a rich webpage from an NGINX backend.
+**Goal:** Build a two-tier web application with a Varnish HTTP cache serving a rich webpage from an NGINX backend. This exercise introduces multi-service compose files, service dependencies, and internal networking.
 
 1.  **Create the File Structure:**
-      * Create a new folder (e.g., `ex4-varnish-cache`).
-      * Inside, create two subfolders: `varnish` and `my-dynamic-website`.
+    ```bash
+    mkdir -p ex4-varnish-cache/varnish \
+             ex4-varnish-cache/my-dynamic-website
+    cd ex4-varnish-cache
+    ```
 2.  **Create the Web Content:**
       * Find a fun animated GIF online and save it inside `my-dynamic-website` as `animation.gif`.
       * Inside `my-dynamic-website`, create an `index.html` file to display the GIF:
@@ -180,7 +228,7 @@ If you are using a Linux host, follow these steps in your terminal to install th
         </html>
         ```
 3.  **Create the Varnish Configuration:**
-      * Inside the `varnish` folder, create a file named `default.vcl`. This tells Varnish where to find the NGINX server.
+      * Inside the `varnish` folder, create a file named `default.vcl`. This tells Varnish where to find the NGINX backend server:
         ```vcl
         vcl 4.1;
         backend default {
@@ -188,6 +236,8 @@ If you are using a Linux host, follow these steps in your terminal to install th
             .port = "80";
         }
         ```
+      * **Tip:** The `.host = "nginx"` line uses the service name from the compose file. Docker Compose automatically creates a DNS entry so that services can reach each other by name.
+
 4.  **Create the Compose File:**
       * In the root of your `ex4-varnish-cache` folder, create the `compose.yml`:
         ```yaml
@@ -195,31 +245,59 @@ If you are using a Linux host, follow these steps in your terminal to install th
           cache:
             image: varnish:stable
             volumes:
-              - ./varnish:/etc/varnish
+              - ./varnish:/etc/varnish:ro
             ports:
               - "8080:80"
             depends_on:
               - nginx
+            restart: unless-stopped
 
           nginx:
             image: nginx:alpine
             volumes:
-              - ./my-dynamic-website:/usr/share/nginx/html
+              - ./my-dynamic-website:/usr/share/nginx/html:ro
+            # No ports exposed: nginx is only accessible
+            # from within the Docker network
         ```
 5.  **Run and Verify:**
-      * Start the services: `docker compose up -d`.
-      * Open your browser to `http://localhost:8080`. You should see your webpage with the GIF. The key here is that **Varnish** served you the page, not NGINX directly.
-      * **See the cache in action:** Check the NGINX logs for the first request.
+      * Start the services:
         ```bash
-        $ docker compose logs nginx
+        docker compose up -d
         ```
-      * Now, refresh your browser page several times. Check the `nginx` logs again. You should see **no new log entries**, because Varnish is serving the content from its cache without contacting the NGINX backend.
+      * Check that both services are running:
+        ```bash
+        docker compose ps
+        ```
+        You should see two containers listed, both in a "running" state.
+      * Open your browser to `http://localhost:8080`. You should see your webpage with the GIF. The key here is that **Varnish** served you the page, not NGINX directly.
+      * **See the cache in action:** Check the NGINX logs for the first request:
+        ```bash
+        docker compose logs nginx
+        ```
+      * Now, refresh your browser page several times. Check the `nginx` logs again:
+        ```bash
+        docker compose logs nginx
+        ```
+        You should see **no new log entries**, because Varnish is serving the content from its cache without contacting the NGINX backend.
+      * **Bonus -- inspect the HTTP headers** to confirm caching:
+        ```bash
+        curl -I http://localhost:8080
+        ```
+        Look for headers like `X-Varnish` and `Age`. An `Age` value greater than `0` confirms the response was served from cache.
+
+**Key Concept -- Service Discovery:** Docker Compose places all services on a shared network by default. Services can reach each other using their service name as a hostname (e.g., `nginx`). Only services with `ports` mappings are accessible from the host machine.
+
+**Cleanup:**
+
+```bash
+docker compose down
+```
 
 -----
 
 ## Exercise 5: Deploying a Real-World Application
 
-**Goal:** Learn to read official documentation and deploy a complex, self-hosted service of your choice.
+**Goal:** Learn to read official documentation and deploy a complex, self-hosted service of your choice using Docker Compose.
 
 1.  **Choose a Service:** Go to [LinuxServer.io](https://www.linuxserver.io/) and browse their list of popular images. Choose one that interests you, for example:
 
@@ -227,10 +305,13 @@ If you are using a Linux host, follow these steps in your terminal to install th
       * **Nextcloud:** A personal cloud for files, contacts, and calendars.
       * **Home Assistant:** An open-source home automation platform.
 
-2.  **Read the Documentation:** On the page for your chosen image, find the "Docker Compose" section. Read it carefully, paying close attention to the required **volumes** and **environment variables**.
+2.  **Read the Documentation:** On the page for your chosen image, find the "Docker Compose" section. Read it carefully, paying close attention to:
 
-      * **Volumes (`- ./config:/config`):** This is where the application's configuration will be stored on your host.
-      * **Environment Variables (`PUID`, `PGID`, `TZ`):** These are critical. `TZ` sets your timezone (e.g., `Europe/Lisbon`). `PUID` and `PGID` ensure that files created by the container have the correct ownership. On Linux/macOS, find your ID by running the `id` command in your terminal. A common value is `1000`.
+      * **Volumes (`- ./config:/config`):** This is where the application's configuration and data will be stored on your host machine. This ensures your data persists even if the container is removed.
+      * **Environment Variables (`PUID`, `PGID`, `TZ`):** These are critical for correct operation.
+          * `TZ` sets your timezone (e.g., `Europe/Lisbon`). You can find your timezone string at [Wikipedia: List of tz database time zones](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
+          * `PUID` and `PGID` ensure that files created by the container have the correct ownership on the host. Find your values by running `id` in your terminal. A common value is `1000`.
+      * **Ports:** Note which port the application listens on so you know where to access it in your browser.
 
 3.  **Create Your `compose.yml`:** Based on the documentation, create the file. Here is an example for **Jellyfin**:
 
@@ -254,7 +335,93 @@ If you are using a Linux host, follow these steps in your terminal to install th
 
 4.  **Prepare and Deploy:**
 
-      * Create the local folders you defined in your volumes (e.g., `mkdir config tvshows movies`).
-      * Run the application: `docker compose up -d`.
+      * Create the local folders you defined in your volumes:
+        ```bash
+        mkdir -p config tvshows movies
+        ```
+      * Start the application:
+        ```bash
+        docker compose up -d
+        ```
+      * Monitor the startup logs to check for errors:
+        ```bash
+        docker compose logs -f
+        ```
+        Press `Ctrl+C` to stop following the logs (the container keeps running).
 
-5.  **Explore:** Check the documentation for the default port number. For Jellyfin, it's `8096`. Open your browser to `http://localhost:8096` and follow the setup wizard for your new service\!
+5.  **Explore:** Check the documentation for the default port number. For Jellyfin, it is `8096`. Open your browser to `http://localhost:8096` and follow the setup wizard for your new service.
+
+**Verification:**
+
+  * Run `docker compose ps` to confirm the container is running.
+  * Run `docker compose logs` to check for any error messages during startup.
+  * If the web interface does not load, wait a minute -- some applications take time to initialize on first launch.
+
+**Tip:** The `restart: unless-stopped` policy means the container will automatically restart if it crashes or if the Docker daemon restarts (e.g., after a reboot), unless you explicitly stop it with `docker compose down` or `docker compose stop`.
+
+**Cleanup:**
+
+```bash
+docker compose down
+```
+
+Note: this only stops and removes the containers. Your data in the volume folders (`config`, `tvshows`, `movies`) is preserved on the host and will be reused if you start the service again.
+
+-----
+
+## Quick Reference: Essential Docker Compose Commands
+
+The following table summarizes the most useful Docker Compose commands you will need throughout these exercises and beyond.
+
+| Command | Description |
+|---|---|
+| `docker compose up -d` | Start all services in detached (background) mode |
+| `docker compose up --build -d` | Rebuild images and start all services |
+| `docker compose down` | Stop and remove all containers and networks |
+| `docker compose down -v` | Same as above, but also remove named volumes |
+| `docker compose ps` | List running services and their status |
+| `docker compose logs` | Show logs from all services |
+| `docker compose logs -f <service>` | Follow (tail) logs for a specific service |
+| `docker compose exec <service> sh` | Open a shell inside a running container |
+| `docker compose stop` | Stop services without removing containers |
+| `docker compose start` | Start previously stopped services |
+| `docker compose restart` | Restart all services |
+| `docker compose pull` | Pull the latest images for all services |
+| `docker compose config` | Validate and display the resolved compose file |
+
+-----
+
+## Troubleshooting Tips
+
+If you run into problems during the exercises, try these steps:
+
+1.  **Port already in use:** If you see an error like "port is already allocated", another service (or a previous exercise) is using that port. Stop it first with `docker compose down` in the other exercise folder, or choose a different host port (e.g., change `"8080:80"` to `"8081:80"`).
+
+2.  **Container exits immediately:** Check the logs to understand why:
+    ```bash
+    docker compose logs <service-name>
+    ```
+
+3.  **Changes to files not reflected:** If you modified a `Dockerfile` or files copied with `COPY`, you must rebuild:
+    ```bash
+    docker compose up --build -d
+    ```
+    If you are using volumes (bind mounts), changes should appear immediately -- try a hard refresh in your browser (`Ctrl+Shift+R`).
+
+4.  **Cannot connect to Docker daemon:** Make sure the Docker service is running:
+    ```bash
+    sudo systemctl start docker
+    sudo systemctl status docker
+    ```
+
+5.  **Disk space issues:** Docker images and containers can accumulate over time. Clean up unused resources with:
+    ```bash
+    docker system prune
+    ```
+    Add the `-a` flag to also remove unused images (not just dangling ones).
+
+6.  **Inspecting a container:** To explore what is happening inside a running container, open a shell:
+    ```bash
+    docker compose exec <service-name> sh
+    ```
+    This is useful for checking file contents, testing network connectivity (`ping`, `wget`), or reading logs inside the container.

@@ -1,28 +1,10 @@
 ---
 title: Linux terminal
-subtitle: Laboratórios de Sistemas e Serviços
-author: Mário Antunes
-institute: Universidade de Aveiro
-date: 16 de Fevereiro, 2026
-colorlinks: true
-highlight-style: tango
-geometry: a4paper,margin=2cm
-mainfont: NotoSans
-mainfontfallback:
-  - "NotoColorEmoji:mode=harf"
-header-includes:
- - \usepackage{longtable,booktabs}
- - \usepackage{etoolbox}
- - \AtBeginEnvironment{longtable}{\tiny}
- - \AtBeginEnvironment{cslreferences}{\tiny}
- - \AtBeginEnvironment{Shaded}{\normalsize}
- - \AtBeginEnvironment{verbatim}{\normalsize}
- - \setmonofont[Contextuals={Alternate}]{FiraCodeNerdFontMono-Retina}
 ---
 
 # Exercícios
 
-## Exercício 1: A Orientar-se 🧭
+## Exercício 1: A Orientar-se
 
 Este exercício abrange os comandos **`pwd`**, **`ls`**, **`cd`** e comandos básicos de informação.
 
@@ -52,7 +34,7 @@ Este exercício abrange os comandos **`pwd`**, **`ls`**, **`cd`** e comandos bá
 
 -----
 
-## Exercício 2: A Explorar Diretórios Chave do Sistema 🗺️
+## Exercício 2: A Explorar Diretórios Chave do Sistema
 
 Reforce o seu conhecimento da estrutura do sistema de ficheiros visitando diretórios importantes do sistema.
 
@@ -76,7 +58,7 @@ Reforce o seu conhecimento da estrutura do sistema de ficheiros visitando diret�
 
 -----
 
-## Exercício 3: A Criar e Gerir Ficheiros 📂
+## Exercício 3: A Criar e Gerir Ficheiros
 
 Neste exercício, irá criar, copiar, mover e apagar ficheiros e diretórios.
 
@@ -113,7 +95,7 @@ Neste exercício, irá criar, copiar, mover e apagar ficheiros e diretórios.
 
 -----
 
-## Exercício 4: A Compreender Permissões 🔐
+## Exercício 4: A Compreender Permissões
 
 Este exercício foca-se na leitura e alteração de permissões de ficheiros com o comando **`chmod`**.
 
@@ -146,7 +128,7 @@ Este exercício foca-se na leitura e alteração de permissões de ficheiros com
 
 -----
 
-## Exercício 5: A Encontrar Ficheiros e Conteúdo com `find` e `grep` 🔎
+## Exercício 5: A Encontrar Ficheiros e Conteúdo com `find` e `grep`
 
 Aprenda a localizar ficheiros por nome e a procurar por texto dentro deles.
 
@@ -166,7 +148,7 @@ Aprenda a localizar ficheiros por nome e a procurar por texto dentro deles.
 
 -----
 
-## Exercício 6: A Gerir Processos ⚙️
+## Exercício 6: A Gerir Processos
 
 Aprenda a ver e a parar programas em execução a partir da linha de comandos.
 
@@ -189,7 +171,7 @@ Aprenda a ver e a parar programas em execução a partir da linha de comandos.
 
 -----
 
-## Exercício 7: A Gerir Software com APT 📦
+## Exercício 7: A Gerir Software com APT
 
 Vamos instalar e remover um programa usando o gestor de pacotes **APT**.
 
@@ -216,7 +198,7 @@ Vamos instalar e remover um programa usando o gestor de pacotes **APT**.
 
 -----
 
-## Exercício 8: A Combinar Comandos 🔗
+## Exercício 8: A Combinar Comandos
 
 Vamos explorar o poder do **pipe (`|`)** e do **redirecionamento (`>>`)**.
 
@@ -239,7 +221,7 @@ Vamos explorar o poder do **pipe (`|`)** e do **redirecionamento (`>>`)**.
 
 -----
 
-## Exercício 9: A Personalizar o Seu Ambiente ✨
+## Exercício 9: A Personalizar o Seu Ambiente
 
 É hora de editar o seu ficheiro **`.bashrc`** para criar um atalho útil (um *alias*).
 
@@ -263,7 +245,7 @@ Vamos explorar o poder do **pipe (`|`)** e do **redirecionamento (`>>`)**.
 
 -----
 
-## Exercício 10: A Compreender a Variável `$PATH` 🛣️
+## Exercício 10: A Compreender a Variável `$PATH`
 
 Descubra como a *shell* encontra os comandos que executa.
 
@@ -294,7 +276,7 @@ Descubra como a *shell* encontra os comandos que executa.
 
 -----
 
-## Exercício 11: Desafio de Scripting 🚀
+## Exercício 11: Desafio de Scripting
 
 Vamos criar um *script* que automatiza a criação de uma estrutura de projeto.
 
@@ -331,7 +313,7 @@ Vamos criar um *script* que automatiza a criação de uma estrutura de projeto.
 
 -----
 
-## Exercício 12: A Agendar uma Tarefa com `cron` 🕒
+## Exercício 12: A Agendar uma Tarefa com `cron`
 
 Vamos criar um *script* simples e agendá-lo para ser executado automaticamente a cada minuto.
 
@@ -359,4 +341,243 @@ Vamos criar um *script* simples e agendá-lo para ser executado automaticamente 
 6.  **Limpeza:** É muito importante remover o *cron job* para que não corra para sempre. Este comando remove todo o seu ficheiro *crontab*.
     ```bash
     $ crontab -r
+    ```
+
+-----
+
+## Exercício 13: Ver Ficheiros com `cat`, `less`, `head` e `tail`
+
+Pratique as diferentes formas de inspecionar o conteúdo de ficheiros sem abrir um editor.
+
+1.  Comece por criar um ficheiro com várias linhas para ter algo com que trabalhar.
+    ```bash
+    $ seq 1 100 > ~/IEI/numbers.txt
+    ```
+2.  Use o `cat` para despejar todo o ficheiro no ecrã. Repare como passa rapidamente.
+    ```bash
+    $ cat ~/IEI/numbers.txt
+    ```
+3.  Agora use o `less` para abrir o mesmo ficheiro num visualizador com *scroll*. Use as **Setas** para navegar e pressione **`q`** para sair.
+    ```bash
+    $ less ~/IEI/numbers.txt
+    ```
+4.  Veja apenas as **primeiras 5 linhas** do ficheiro usando `head`.
+    ```bash
+    $ head -n 5 ~/IEI/numbers.txt
+    ```
+5.  Veja apenas as **últimas 5 linhas** do ficheiro usando `tail`.
+    ```bash
+    $ tail -n 5 ~/IEI/numbers.txt
+    ```
+6.  Combine `head` e `tail` com um *pipe* para extrair **apenas as linhas 45 a 55** do ficheiro.
+    ```bash
+    $ head -n 55 ~/IEI/numbers.txt | tail -n 11
+    ```
+7.  Use `wc` (*word count*) para contar o número total de linhas, palavras e caracteres no ficheiro.
+    ```bash
+    $ wc ~/IEI/numbers.txt
+    ```
+
+-----
+
+## Exercício 14: Mergulho na Informação do Sistema
+
+Use o terminal para recolher informação detalhada sobre o *hardware* e os recursos do seu sistema.
+
+1.  Exiba a versão do *kernel* e a arquitetura do sistema.
+    ```bash
+    $ uname -a
+    ```
+2.  Verifique a informação do CPU lendo do sistema de ficheiros virtual `/proc`. Filtre o *output* para mostrar apenas o nome do modelo.
+    ```bash
+    $ cat /proc/cpuinfo | grep "model name"
+    ```
+3.  Exiba a utilização atual da RAM e Swap num formato legível por humanos.
+    ```bash
+    $ free -h
+    ```
+4.  Verifique a utilização de espaço em disco em todos os sistemas de ficheiros montados.
+    ```bash
+    $ df -h
+    ```
+5.  Verifique a utilização de disco do seu diretório pessoal especificamente. A *flag* `-s` dá um resumo e `-h` torna-o legível.
+    ```bash
+    $ du -sh ~
+    ```
+6.  Se tiver acesso `sudo`, use o `dmidecode` para consultar a informação da BIOS do sistema.
+    ```bash
+    $ sudo dmidecode -t bios
+    ```
+7.  Veja as suas interfaces de rede e os seus endereços IP.
+    ```bash
+    $ ip addr show
+    ```
+
+-----
+
+## Exercício 15: Wildcards e Globbing
+
+Aprenda a selecionar múltiplos ficheiros de uma vez usando correspondência de padrões.
+
+1.  Crie um conjunto de ficheiros de teste para trabalhar dentro de um novo diretório.
+    ```bash
+    $ mkdir -p ~/IEI/wildcard_test
+    $ cd ~/IEI/wildcard_test
+    $ touch report1.txt report2.txt report3.txt
+    $ touch summary.txt data.csv output.csv
+    $ touch image1.png image2.png image10.png
+    ```
+2.  Use o *wildcard* `*` para listar **todos os ficheiros `.txt`**.
+    ```bash
+    $ ls *.txt
+    ```
+3.  Use o *wildcard* `*` para listar **todos os ficheiros que começam por `report`**.
+    ```bash
+    $ ls report*
+    ```
+4.  Use o *wildcard* `?` para corresponder a ficheiros com **exatamente um caracter** depois de `report`. Repare que `report10.txt` **não** é correspondido.
+    ```bash
+    $ ls report?.txt
+    ```
+5.  Use o *wildcard* `?` para corresponder a ficheiros de imagem com um número de **um único dígito**. Repare que `image10.png` é excluído.
+    ```bash
+    $ ls image?.png
+    ```
+6.  Liste **todos os ficheiros `.csv`** e redirecione o *output* para um ficheiro chamado `csv_list.txt`.
+    ```bash
+    $ ls *.csv > csv_list.txt
+    $ cat csv_list.txt
+    ```
+7.  Use *wildcards* para **apagar todos os ficheiros `.csv`** de uma vez e depois verifique que desapareceram.
+    ```bash
+    $ rm *.csv
+    $ ls
+    ```
+8.  Limpe o diretório de teste.
+    ```bash
+    $ cd ~
+    $ rm -r ~/IEI/wildcard_test
+    ```
+
+-----
+
+## Exercício 16: Fluxos de E/S e Redirecionamento de Erros
+
+Compreenda como controlar para onde vão a saída padrão e o erro padrão.
+
+1.  Execute um comando que produz **output normal** (stdout). Redirecione-o para um ficheiro.
+    ```bash
+    $ echo "Isto é a saída padrão" > ~/IEI/stdout_test.txt
+    $ cat ~/IEI/stdout_test.txt
+    ```
+2.  Execute um comando que irá produzir um **erro** (stderr). Tente listar um diretório que não existe.
+    ```bash
+    $ ls /diretorio_inexistente
+    ```
+3.  Redirecione **apenas o erro** para um ficheiro usando `2>`. A mensagem de erro irá para o ficheiro em vez do ecrã.
+    ```bash
+    $ ls /diretorio_inexistente 2> ~/IEI/errors.log
+    $ cat ~/IEI/errors.log
+    ```
+4.  Agora execute um comando que produz **tanto** stdout como stderr. Use o `find` para pesquisar em `/etc` — alguns diretórios irão produzir erros de "Permission denied".
+    ```bash
+    $ find /etc -name "*.conf"
+    ```
+5.  Separe os dois fluxos: guarde os **resultados** num ficheiro e os **erros** noutro.
+    ```bash
+    $ find /etc -name "*.conf" > ~/IEI/results.txt 2> ~/IEI/find_errors.log
+    $ wc -l ~/IEI/results.txt
+    $ cat ~/IEI/find_errors.log
+    ```
+6.  Combine **ambos os fluxos** num único ficheiro usando `2>&1`.
+    ```bash
+    $ find /etc -name "*.conf" > ~/IEI/all_output.txt 2>&1
+    $ wc -l ~/IEI/all_output.txt
+    ```
+7.  Descarte todo o *output* redirecionando para `/dev/null` (o "buraco negro" do sistema).
+    ```bash
+    $ find /etc -name "*.conf" > /dev/null 2>&1
+    ```
+
+-----
+
+## Exercício 17: Gestão de Utilizadores
+
+Pratique a criação, modificação e remoção de contas de utilizador. Estes comandos requerem `sudo`.
+
+1.  Crie um novo utilizador chamado `testuser`.
+    ```bash
+    $ sudo useradd testuser
+    ```
+2.  Verifique se o utilizador foi criado consultando o ficheiro `/etc/passwd`.
+    ```bash
+    $ grep testuser /etc/passwd
+    ```
+3.  Defina uma *password* para o novo utilizador. Ser-lhe-á pedido para escrever a *password* duas vezes.
+    ```bash
+    $ sudo passwd testuser
+    ```
+4.  Verifique a que grupos o novo utilizador pertence.
+    ```bash
+    $ groups testuser
+    ```
+5.  Adicione o utilizador ao grupo `sudo` para que tenha privilégios de administrador.
+    ```bash
+    $ sudo usermod -aG sudo testuser
+    $ groups testuser
+    ```
+6.  Mude temporariamente para a conta do novo utilizador usando `su`. Escreva `exit` para regressar à sua conta.
+    ```bash
+    $ su - testuser
+    $ whoami
+    $ pwd
+    $ exit
+    ```
+7.  Apague o utilizador e o seu diretório pessoal para limpar.
+    ```bash
+    $ sudo userdel -r testuser
+    $ grep testuser /etc/passwd
+    ```
+
+-----
+
+## Exercício 18: Permissões Numéricas (Octais) com `chmod`
+
+Aprenda a usar a notação numérica para definir permissões, que é mais rápida do que a notação simbólica para alterações complexas.
+
+Os valores de permissão são: **Leitura (4)**, **Escrita (2)**, **Execução (1)**. Some-os para cada grupo: **Proprietário | Grupo | Outros**.
+
+1.  Crie um ficheiro de teste e um *script* de teste dentro de `~/IEI`.
+    ```bash
+    $ echo "Dados sensíveis" > ~/IEI/config_file.txt
+    $ echo '#!/bin/bash' > ~/IEI/run_me.sh
+    $ echo 'echo "Script executado!"' >> ~/IEI/run_me.sh
+    ```
+2.  Veja as permissões atuais de ambos os ficheiros.
+    ```bash
+    $ ls -l ~/IEI/config_file.txt ~/IEI/run_me.sh
+    ```
+3.  Defina `config_file.txt` com a permissão **`644`** (proprietário: leitura+escrita, grupo: leitura, outros: leitura). Esta é a permissão padrão para ficheiros de configuração.
+    ```bash
+    $ chmod 644 ~/IEI/config_file.txt
+    $ ls -l ~/IEI/config_file.txt
+    ```
+4.  Defina `run_me.sh` com a permissão **`755`** (proprietário: leitura+escrita+execução, grupo: leitura+execução, outros: leitura+execução). Esta é a permissão padrão para *scripts*.
+    ```bash
+    $ chmod 755 ~/IEI/run_me.sh
+    $ ls -l ~/IEI/run_me.sh
+    ```
+5.  Execute o *script* para confirmar que funciona.
+    ```bash
+    $ ~/IEI/run_me.sh
+    ```
+6.  Defina `config_file.txt` com a permissão **`600`** (proprietário: leitura+escrita, todos os outros: nada). Isto é apropriado para ficheiros privados como chaves SSH.
+    ```bash
+    $ chmod 600 ~/IEI/config_file.txt
+    $ ls -l ~/IEI/config_file.txt
+    ```
+7.  **Desafio:** Que número de permissão daria ao proprietário acesso total, ao grupo acesso de leitura apenas, e aos outros nenhum acesso? Defina-o em `run_me.sh` e verifique.
+    ```bash
+    $ chmod 740 ~/IEI/run_me.sh
+    $ ls -l ~/IEI/run_me.sh
     ```

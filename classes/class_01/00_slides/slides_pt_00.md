@@ -1,32 +1,10 @@
 ---
 title: Terminal de Linux
-subtitle: Laboratórios de Sistemas e Serviços
-author: Mário Antunes
-institute: Universidade de Aveiro
-date: 16 de Fevereiro, 2026
-colorlinks: true
-highlight-style: tango
-mainfont: NotoSans
-mainfontfallback:
-  - "NotoColorEmoji:mode=harf"
-theme: metropolis
-themeoptions:
-  - sectionpage=progressbar
-  - numbering=fraction
-  - progressbar=frametitle
-header-includes:
- - \usepackage{longtable,booktabs}
- - \usepackage{etoolbox}
- - \AtBeginEnvironment{longtable}{\tiny}
- - \AtBeginEnvironment{cslreferences}{\tiny}
- - \AtBeginEnvironment{Shaded}{\tiny}
- - \AtBeginEnvironment{verbatim}{\tiny}
- - \setmonofont[Contextuals={Alternate}]{FiraCodeNerdFontMono-Retina}
 ---
 
 # Linha de Comandos
 
-## Bem-vindo à Linha de Comandos! 🐧
+## Bem-vindo à Linha de Comandos!
 
 O **Terminal** é a sua ligação direta, baseada em texto, ao sistema operativo.
 
@@ -82,7 +60,6 @@ Ao contrário do Windows (que usa `C:\`, `D:\`), o Linux usa uma árvore única 
   │       ├── Documents
   │       └── Downloads
   └── var (Logs e Dados Variáveis)
-
 ```
 
 ## Visualizar a Árvore do Sistema de Ficheiros ii
@@ -94,7 +71,9 @@ Ao contrário do Windows (que usa `C:\`, `D:\`), o Linux usa uma árvore única 
 3. Entrar em student
 4. Está em Documents
 
-## Visualizar a Árvore do Sistema de Ficheiros ii
+## Visualizar a Árvore do Sistema de Ficheiros iii
+
+![FHS Moderno do Linux](FHS.png)
 
 ## Ficheiros & Diretórios Ocultos
 
@@ -105,8 +84,6 @@ No seu diretório pessoal (`~`), muitos ficheiros de configuração estão "ocul
 * `~/.config`: Um diretório comum para configurações de aplicações.
 * `~/.themes` ou `~/.local/share/themes`: Para temas do *desktop*.
 * `~/.gitconfig`: A sua configuração do Git.
-
-
 
 ## Caminhos Absolutos vs. Relativos
 
@@ -122,8 +99,6 @@ Compreender a sua "morada" na árvore do sistema de ficheiros é vital para a na
 * `..` (Dois pontos) representa o diretório pai (um nível acima).
 * `.` (Um ponto) representa o próprio diretório atual.
 
-
-
 # Navegação Básica
 
 ## Navegação Básica: `pwd` e `cd`
@@ -134,18 +109,13 @@ Dois comandos fundamentais para se mover no sistema.
 ```bash
 $ pwd
 /home/student
-
 ```
-
 
 * `cd`: **C**hange **D**irectory. Move-o para um caminho absoluto ou relativo.
 ```bash
 $ cd /var/log      # Mover para um caminho absoluto
 $ cd Documents     # Mover para um subdiretório
-
 ```
-
-
 
 ## Atalhos Especiais de Navegação com `cd`
 
@@ -154,25 +124,18 @@ O `cd` tem vários atalhos úteis para uma navegação mais rápida.
 * Subir um nível:
 ```bash
 $ cd ..
-
 ```
-
 
 * Ir diretamente para o seu diretório pessoal a partir de qualquer lugar:
 ```bash
 $ cd ~
-
 ```
-
 
 (Ou apenas `cd` sem argumentos)
 * Voltar ao último diretório onde esteve:
 ```bash
 $ cd -
-
 ```
-
-
 
 ## A Tecla Mágica: Completar com Tab i
 
@@ -191,7 +154,6 @@ Para entrar em `Documents`, basta escrever `cd Doc` e pressionar `Tab`.
 $ cd Doc<TAB>
 # Torna-se:
 $ cd Documents/
-
 ```
 
 ## Listar Conteúdo de Diretórios: `ls`
@@ -205,9 +167,7 @@ $ ls -l
 Sep 19 2025 o_meu_doc.txt
 drwxr-xr-x 2 student student 4096 \
 Sep 17 2025 Scripts
-
 ```
-
 
 Isto mostra permissões, proprietário, tamanho e data de modificação.
 
@@ -219,7 +179,6 @@ Como podemos ver aqueles ficheiros de configuração ocultos?
 ```bash
 $ ls -a
 .  ..  .bashrc  .profile  Documents  Downloads
-
 ```
 
 
@@ -234,17 +193,13 @@ Use o comando `mkdir` para **m**a**k**e a **dir**ectory (criar um diretório).
 * **Criar um único diretório:**
 ```bash
 $ mkdir o_meu_projeto
-
 ```
 
 
 * **Criar uma estrutura aninhada:** A *flag* `-p` (**p**arents) cria todo o caminho de diretórios, mesmo que os diretórios pais ainda não existam.
 ```bash
 $ mkdir -p Documentos/Trabalho/2025/Relatorios
-
 ```
-
-
 
 ## Ver Conteúdo de Ficheiros: `cat`, `less`, `head`
 
@@ -253,29 +208,20 @@ Nem sempre precisa de um editor (`nano`) apenas para ler um ficheiro.
 * **`cat`**: Despeja **todo** o conteúdo do ficheiro no ecrã. Bom para ficheiros curtos.
 ```bash
 $ cat /etc/hostname
-
 ```
-
 
 * **`less`**: Abre um visualizador com *scroll*. **Essencial para ficheiros longos!**
 * Pressione `q` para sair.
 * Use as `Setas` para fazer *scroll*.
 
-
 ```bash
 $ less /var/log/syslog
-
 ```
-
 
 * **`head`**: Vê apenas as primeiras linhas de um ficheiro.
 ```bash
 $ head -n 5 system.log
-
-
 ```
-
-
 
 ## Criar & Editar Ficheiros: `touch` & `nano`
 
@@ -284,22 +230,16 @@ Depois de ter os diretórios, precisa de ficheiros para colocar neles.
 * **`touch`:** A forma mais rápida de criar um ficheiro novo e vazio.
 ```bash
 $ touch as_minhas_notas.txt
-
 ```
-
 
 * **`nano`:** Um editor de texto simples e amigável para o terminal.
 ```bash
 $ nano as_minhas_notas.txt
-
 ```
-
 
 * Escreva o seu texto diretamente na janela.
 * Pressione `Ctrl+X` para sair.
 * Pressione `Y` (Sim) para confirmar que deseja guardar e, de seguida, `Enter`.
-
-
 
 ## O Editor Pro: `Vim`
 
@@ -320,17 +260,13 @@ Assim que souber criar ficheiros, precisa de saber como gerir o seu ciclo de vid
 * `$ cp ficheiro.txt backup.txt`
 * Use `-r` para copiar diretórios recursivamente.
 
-
 * **`mv` (Mover/Renomear):** Move um ficheiro para um novo local ou renomeia-o.
 * `$ mv nome_antigo.txt nome_novo.txt` (Renomear)
 * `$ mv ficheiro.txt Documents/` (Mover)
 
-
 * **`rm` (Remover):** Apaga ficheiros ou diretórios.
 * **Aviso:** Não existe "Lixo/Reciclagem" no terminal; a eliminação é permanente.
 * Use `rm -r` para apagar uma pasta e todo o seu conteúdo.
-
-
 
 # Obter Informação do Utilizador & Sistema
 
@@ -348,13 +284,12 @@ O terminal é excelente para verificar rapidamente o estado do sistema.
 Enquanto o `top` é o padrão, o `htop` fornece uma interface muito mais amigável, colorida e interativa.
 
 * **Barras Visuais:** Veja o uso de CPU por núcleo, uso de memória e swap num relance.
-* **Interatividade:** Faça *scroll* vertical e horizontal; termine processos () sem escrever PIDs.
-* **Pesquisa/Filtro:** Encontre facilmente processos específicos ( ou ).
+* **Interatividade:** Faça *scroll* vertical e horizontal; termine processos ($F9$) sem escrever PIDs.
+* **Pesquisa/Filtro:** Encontre facilmente processos específicos ($F3$ ou $F4$).
 
 ```bash
 $ sudo apt install htop  # Se não estiver instalado
 $ htop
-
 ```
 
 ## Mergulho no Hardware: `dmidecode`
@@ -371,7 +306,6 @@ O `dmidecode` despeja o conteúdo da tabela DMI (SMBIOS) do computador num forma
 $ sudo dmidecode -t memory
 # Obter o número de série do sistema
 $ sudo dmidecode -s system-serial-number
-
 ```
 
 ## O CPU através do Sistema de Ficheiros: `/proc/cpuinfo`
@@ -383,9 +317,8 @@ O diretório `/proc` é um sistema de ficheiros virtual que atua como uma janela
 
 ```bash
 # Ver o modelo do CPU, núcleos e tamanho da cache
-$cat /proc/cpuinfo | grep "model name"
+$ cat /proc/cpuinfo | grep "model name"
 $ cat /proc/cpuinfo | grep "cpu MHz"
-
 ```
 
 ## Memória e Swap: `free`
@@ -400,7 +333,6 @@ $ free -h
       total  used   free shared buff/cache available
 Mem:   30Gi  10Gi  2.6Gi  606Mi       18Gi      19Gi
 Swap: 4.0Gi 768Ki  4.0Gi
-
 ```
 
 * **`buff/cache`:** Memória usada pelo *kernel* para otimização; é libertada se as aplicações precisarem.
@@ -417,7 +349,6 @@ Para executar um único comando com privilégios de *root*, use `sudo` (**S**upe
 ```bash
 # Isto precisa de direitos de administrador, por isso usamos sudo
 $ sudo apt update
-
 ```
 
 ## Gerir Utilizadores
@@ -441,7 +372,7 @@ O comando `ls -l` mostra as permissões como uma cadeia de 10 caracteres, como `
 
 ## Compreender Permissões de Ficheiros ii
 
-{ width=256px }
+![File Permissions](linux_permissions.png){ width=256px }
 
 ## Gerir Permissões com `chmod`
 
@@ -459,7 +390,7 @@ $ chmod u+x o_meu_script.sh
 
 # Gestor de Pacotes
 
-## O que é um Gestor de Pacotes? 📦
+## O que é um Gestor de Pacotes?
 
 Um gestor de pacotes é uma ferramenta que automatiza o processo de instalar, atualizar e remover *software*.
 
@@ -532,7 +463,7 @@ $ sudo apt purge htop
 
 # Cron & Crontab
 
-## Introdução ao `cron` & `crontab` 🕒
+## Introdução ao `cron` & `crontab`
 
 O ***cron*** é um *daemon* do sistema (um processo em *background*) que executa tarefas agendadas. Estas tarefas agendadas são conhecidas como **"cron jobs."**
 
@@ -557,7 +488,6 @@ Um *cron job* consiste em duas partes: o **horário** e o **comando**. O horári
 │ │ │ │ ┌───────────── dia da semana (0 - 6) (Domingo a Sábado)
 │ │ │ │ │
 * * * * * /caminho/para/o/comando
-
 ```
 
 ## Compreender a Sintaxe do `crontab` ii
@@ -619,7 +549,6 @@ Não quer ver o *output* no ecrã? Guarde-o num ficheiro com `>`.
 
 ```bash
 $ ls -l ~ > os_meus_ficheiros.txt
-
 ```
 
 ## Redirecionamento: Anexar Output com `>>`
@@ -632,7 +561,6 @@ Para **adicionar** *output* ao final de um ficheiro sem apagar o seu conteúdo, 
 
 ```bash
 $ echo "Sistema reiniciado às $(date)" >> system.log
-
 ```
 
 ## O Poder do Pipe `|`
@@ -647,7 +575,6 @@ O ***pipe*** é um dos conceitos mais poderosos da *shell*. Ele envia o *output*
 # O output de 'ls' é "canalizado" para o
 # 'grep' para ser filtrado.
 $ ls /var/log | grep .log
-
 ```
 
 ## Fluxos de E/S: Stdin, Stdout e Stderr
@@ -658,15 +585,11 @@ Cada comando em Linux usa três fluxos de dados padrão.
 * **`stdout` (1):** Saída Padrão. Normalmente o seu ecrã.
 * Redirecione com `>` (sobrescrever) ou `>>` (anexar).
 
-
 * **`stderr` (2):** Erro Padrão. Para onde as mensagens de erro são enviadas.
 * Pode redirecionar erros separadamente: `comando 2> erros.log`.
 
-
 * **Combinar ambos:** Para guardar tanto o *output* como os erros num ficheiro, use `2>&1`.
 * `$ ./script.sh > todo_output.log 2>&1`
-
-
 
 ## O Seu Ambiente: Variáveis
 
@@ -682,7 +605,6 @@ A *shell* usa variáveis para armazenar informação. Por convenção, estão em
 $ echo $PATH
 /usr/local/sbin:/usr/local/bin:\
 /usr/sbin:/usr/bin:/sbin:/bin
-
 ```
 
 ## Personalizar a Sua Shell: `.bashrc`
@@ -693,7 +615,6 @@ Pode editá-lo com um editor de texto:
 
 ```bash
 $ nano ~/.bashrc
-
 ```
 
 **Lembre-se:** As alterações não serão aplicadas até que abra um novo terminal ou execute `source ~/.bashrc`.
@@ -706,17 +627,13 @@ Os *wildcards* permitem-lhe selecionar grupos de ficheiros baseados em padrões.
 * `*.txt`: Todos os ficheiros terminados em `.txt`.
 * `dados_*`: Todos os ficheiros começados por `dados_`.
 
-
 * **`?` (Ponto de Interrogação):** Corresponde exatamente a **um** caracter.
 * `ficheiro?.txt`: Corresponde a `ficheiro1.txt`, `ficheiroA.txt`, mas *não* a `ficheiro10.txt`.
-
-
 
 **Exemplo:** Listar todas as imagens JPG.
 
 ```bash
 $ ls *.jpg
-
 ```
 
 ## Exemplo de Personalização: Aliases
@@ -726,7 +643,6 @@ Um ***alias*** é um atalho ou uma alcunha para um comando mais longo. Poupa-lhe
 * Adicione esta linha ao seu ficheiro `~/.bashrc`:
 ```bash
 alias ll='ls -alF'
-
 ```
 
 
@@ -753,7 +669,6 @@ Este *script* usa uma variável e o comando `echo`. É o "Olá, Mundo!" do *scri
 
 NOME="Estudante"
 echo "Olá, $NOME!"
-
 ```
 
 **Para executá-lo:**
@@ -761,7 +676,6 @@ echo "Olá, $NOME!"
 ```bash
 $ chmod +x ola.sh
 $ ./ola.sh
-
 ```
 
 ## Exemplo de Script 2: Usar `if`
@@ -783,7 +697,6 @@ if [ -f "$FICHEIRO" ]; then
 else
   echo "Aviso: $FICHEIRO não encontrado."
 fi
-
 ```
 
 ## Exemplo de Script 3: Ciclo Sobre Ficheiros
@@ -804,10 +717,9 @@ do
   fi
 done
 echo "Renomeação em lote concluída."
-
 ```
 
-## Exemplo de Script 4: Script Complexo
+## Exemplo de Script 5: Script Complexo
 
 ```bash
 #!/bin/bash
@@ -825,10 +737,9 @@ echo "A criar arquivo..."
 # "$@" contém todos os argumentos da linha de comandos.
 tar -czf "$ARQUIVO" "$@"
 echo "Backup concluído: $ARQUIVO"
-
 ```
 
-## Exemplo de Script 4: Automatizar Relatórios de Sistema
+## Exemplo de Script 6: Automatizar Relatórios de Sistema
 
 Pode combinar comandos de informação do sistema num único *script* Bash para relatórios fáceis.
 
@@ -854,7 +765,6 @@ echo -e "\n[ESPAÇO EM DISCO]" >> "$REPORT_FILE"
 df -h >> "$REPORT_FILE"
 
 echo "Relatório guardado em $REPORT_FILE"
-
 ```
 
 ## Da Teoria à Prática
@@ -868,7 +778,7 @@ Agora já viu os conceitos centrais da linha de comandos do Linux:
 
 Agora, vamos aplicar este conhecimento na parte prática da aula.
 
-## Apoio & Mais Recursos 📚
+## Apoio & Mais Recursos
 
 Guarde estas páginas nos seus favoritos. São referências incrivelmente úteis.
 

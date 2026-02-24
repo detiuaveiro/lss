@@ -1,3 +1,12 @@
+# Exercise 1: "Hello, World" with Docker Compose
+# This is the simplest possible compose file.
+# It pulls and runs the hello-world image, which prints
+# a welcome message and exits.
+#
+# Usage:
+#   docker compose up
+#   docker compose down
+
 services:
-  hello:
-    image: hello-world
+    hello:
+        image: hello-world

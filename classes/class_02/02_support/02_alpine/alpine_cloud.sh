@@ -1,86 +1,179 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
-# Set variables
+# =============================================================================
+# Alpine Linux Cloud-Init QEMU Helper Script
+# Launches a pre-built Alpine Linux cloud image with cloud-init configuration.
+# Uses modern QEMU options: q35 machine type, virtio devices.
+# =============================================================================
+
+# Default variables
+DISK="alpine_cloud.qcow2"
+CONFIG_IMG="config.img"
 IMAGE_URL="https://dl-cdn.alpinelinux.org/alpine/v3.22/releases/cloud/generic_alpine-3.22.1-x86_64-bios-cloudinit-r0.qcow2"
 RESTART=false
 
-############################################################
-# Help                                                     #
-############################################################
-Help()
-{
-   # Display Help
-   echo "Helper script to emulate freedos using qemu"
-   echo
-   echo "Syntax: freedos [-h]"
-   echo "options:"
-   echo "h     Print this Help."
-   echo
+# -----------------------------------------------------------------------------
+# Pre-flight checks
+# -----------------------------------------------------------------------------
+preflight() {
+    local missing=()
+
+    for cmd in qemu-system-x86_64 qemu-img curl dd mkfs.vfat; do
+        if ! command -v "$cmd" &>/dev/null; then
+            missing+=("$cmd")
+        fi
+    done
+
+    if [[ ${#missing[@]} -gt 0 ]]; then
+        echo "ERROR: The following required commands are not installed: ${missing[*]}"
+        echo "On Debian/Ubuntu, try:  sudo apt install qemu-system-x86 qemu-utils curl dosfstools"
+        exit 1
+    fi
 }
 
-############################################################
-# Help                                                     #
-############################################################
-Setup()
-{
-    echo -e "Download Alpine Cloud..."
-    curl -L $IMAGE_URL --output alpine_cloud.qcow2 --progress-bar
+# -----------------------------------------------------------------------------
+# Help
+# -----------------------------------------------------------------------------
+Help() {
+    echo "Helper script to run Alpine Linux (cloud image) using QEMU"
+    echo
+    echo "Usage: $(basename "$0") [-h] [-r]"
+    echo
+    echo "Options:"
+    echo "  -h    Print this help message"
+    echo "  -r    Restart: delete the disk and cloud-init image, then re-download"
+    echo
+    echo "This script downloads an Alpine Linux cloud image and boots it with"
+    echo "a cloud-init configuration that creates a 'student' user with SSH access."
+    echo
+    echo "NAT port forward:"
+    echo "  Host :2222  ->  Guest :22  (SSH)"
+    echo
+    echo "After boot, connect with:  ssh -p 2222 student@localhost"
+    echo
 }
 
+# -----------------------------------------------------------------------------
+# Detect KVM availability
+# -----------------------------------------------------------------------------
+accel_flag() {
+    if [[ -r /dev/kvm ]]; then
+        echo "kvm"
+    else
+        echo "tcg"
+    fi
+}
 
-############################################################
-############################################################
-# Main program                                             #
-############################################################
-############################################################
-############################################################
-# Process the input options. Add options as needed.        #
-############################################################
-# Get the options
+# -----------------------------------------------------------------------------
+# Setup: Download Alpine cloud image
+# -----------------------------------------------------------------------------
+Setup() {
+    echo "[*] Downloading Alpine Linux cloud image..."
+    echo "[*] URL: $IMAGE_URL"
+    curl -L "$IMAGE_URL" --output "$DISK" --progress-bar
+
+    # Resize the disk to give more space for packages
+    echo "[*] Resizing cloud image to 4G..."
+    qemu-img resize "$DISK" 4G
+}
+
+# -----------------------------------------------------------------------------
+# Create cloud-init config drive
+# -----------------------------------------------------------------------------
+CreateConfigDrive() {
+    local script_dir
+    script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+    if [[ ! -f "$script_dir/user-data" ]]; then
+        echo "ERROR: user-data file not found in $script_dir"
+        echo "Please create a user-data file with your cloud-init configuration."
+        exit 1
+    fi
+
+    if [[ ! -f "$script_dir/meta-data" ]]; then
+        echo "ERROR: meta-data file not found in $script_dir"
+        echo "Please create a meta-data file with your instance metadata."
+        exit 1
+    fi
+
+    echo "[*] Creating cloud-init config drive..."
+
+    # Create empty FAT image with cidata label
+    dd if=/dev/zero of="$CONFIG_IMG" bs=1 count=0 seek=2M >/dev/null 2>&1
+    mkfs.vfat -n cidata "$CONFIG_IMG" >/dev/null 2>&1
+
+    # Mount and copy cloud-init files
+    local mnt_dir
+    mnt_dir=$(mktemp -d)
+
+    sudo mount "$CONFIG_IMG" "$mnt_dir"
+    sudo cp -f "$script_dir/user-data" "$mnt_dir/user-data"
+    sudo cp -f "$script_dir/meta-data" "$mnt_dir/meta-data"
+    sudo umount "$mnt_dir"
+    rmdir "$mnt_dir"
+
+    echo "[*] Cloud-init config drive created successfully."
+}
+
+# -----------------------------------------------------------------------------
+# Main program
+# -----------------------------------------------------------------------------
+preflight
+
+# Process options
 while getopts "rh" option; do
-   case $option in
-        h) # display Help
+    case $option in
+        h)
             Help
-            exit;;
-        r) # restart: deletes the disk and start the setup again
+            exit 0
+            ;;
+        r)
             RESTART=true
             ;;
-        \?) # Invalid option
-            echo -e "Invalid option: -${OPTARG}."
-            exit;;
-   esac
+        \?)
+            echo "ERROR: Invalid option: -${OPTARG}."
+            Help
+            exit 1
+            ;;
+    esac
 done
 
-if [ $RESTART = true ]; then
-    echo -e "Restart, by deleting alpine_cloud.qcow2"
-    rm -rf alpine_cloud.qcow2
-    rm -rf config.img
+# Handle restart
+if [[ "$RESTART" == true ]]; then
+    echo "[*] Restarting: deleting $DISK and $CONFIG_IMG"
+    rm -f "$DISK" "$CONFIG_IMG"
 fi
 
-if [ ! -f alpine_cloud.qcow2 ]; then
-    echo -e "Alpine Cloud disk not found, initiate setup..."
+# Download cloud image if not present
+if [[ ! -f "$DISK" ]]; then
+    echo "[*] Alpine cloud disk not found, initiating setup..."
     Setup
 fi
 
-if [ ! -f config.img ]; then
-    echo -e "Setup Cloud-init"
-    # Create empty virtual hard drive file
-    dd if=/dev/zero of=config.img bs=1 count=0 seek=2M > /dev/null 2>&1
-    # put correct filesystem and disk label on
-    /sbin/mkfs.vfat -n cidata config.img > /dev/null 2>&1
-    # mount it somewhere so you can put the config data on
-    mkdir -p mnt/cloud-init/
-    sudo mount config.img mnt/cloud-init/
-    sudo cp -vf user-data mnt/cloud-init/user-data
-    sudo cp -vf meta-data mnt/cloud-init/meta-data
-    sudo umount mnt/cloud-init/
-    rm -rf mnt/cloud-init/
+# Create config drive if not present
+if [[ ! -f "$CONFIG_IMG" ]]; then
+    CreateConfigDrive
 fi
 
-#echo -e "Start Alpine"
-qemu-system-x86_64 -machine accel=kvm:tcg -m 4G -smp 4 -cpu host \
-    -k pt-pt -rtc base=localtime -display gtk -hda alpine_cloud.qcow2 \
-    -net user,hostfwd=tcp::5555-:22 -net nic \
-    -drive file=config.img,format=raw 
+# Launch the VM
+accel=$(accel_flag)
+echo "[*] Starting Alpine Linux cloud image (accel=$accel)"
+echo "[*] SSH: ssh -p 2222 student@localhost"
+echo "[*] Cloud-init will run on first boot (may take a minute)."
 
-echo -e "Done..."
+qemu-system-x86_64 \
+    -machine "q35,accel=$accel:tcg" \
+    -m 4G \
+    -smp 4 \
+    -cpu host \
+    -k pt \
+    -rtc base=localtime \
+    -display gtk \
+    -drive "file=$DISK,format=qcow2,if=virtio,aio=threads,cache=writeback,detect-zeroes=unmap" \
+    -drive "file=$CONFIG_IMG,format=raw,if=virtio" \
+    -device virtio-rng-pci \
+    -device virtio-balloon-pci \
+    -nic user,model=virtio-net-pci,hostfwd=tcp::2222-:22
+
+echo "[*] Done."

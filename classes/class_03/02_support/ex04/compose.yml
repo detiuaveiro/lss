@@ -1,14 +1,27 @@
-services:
-  cache:
-    image: varnish:stable
-    volumes:
-      - ./varnish:/etc/varnish
-    ports:
-      - "8080:80"
-    depends_on:
-      - nginx
+# Exercise 4: Varnish Cache in front of NGINX
+#
+# Architecture:
+#   Browser --> Host:8080 --> Varnish (cache) --> NGINX (origin)
+#
+# The NGINX service has no ports exposed to the host;
+# it is only reachable from within the Docker network.
+# Varnish uses Docker's internal DNS to find the 'nginx'
+# service by name (configured in varnish/default.vcl).
 
-  nginx:
-    image: nginx:alpine
-    volumes:
-      - ./my-dynamic-website:/usr/share/nginx/html
+services:
+    cache:
+        image: varnish:stable
+        volumes:
+            - ./varnish:/etc/varnish:ro
+        ports:
+            - "8080:80"
+        depends_on:
+            - nginx
+        restart: unless-stopped
+
+    nginx:
+        image: nginx:alpine
+        volumes:
+            - ./my-dynamic-website:/usr/share/nginx/html:ro
+        # No ports: only accessible from within the Docker network
+        restart: unless-stopped

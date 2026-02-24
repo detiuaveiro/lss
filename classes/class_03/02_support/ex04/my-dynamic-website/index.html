@@ -1,12 +1,37 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Varnish Cache Test</title>
-    <style> body { font-family: sans-serif; text-align: center; } </style>
-</head>
-<body>
-    <h1>This page is being cached by Varnish!</h1>
-    <img src="banana-dance.gif" alt="Cached animation">
-</body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Varnish Cache Test</title>
+        <style>
+            body {
+                font-family: sans-serif;
+                text-align: center;
+                padding: 2em;
+                background-color: #f5f5f5;
+                color: #333;
+            }
+            h1 {
+                margin-bottom: 0.5em;
+            }
+            p {
+                color: #666;
+                margin-bottom: 1.5em;
+            }
+            img {
+                max-width: 400px;
+                border-radius: 8px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            }
+        </style>
+    </head>
+    <body>
+        <h1>This page is being cached by Varnish!</h1>
+        <p>
+            The content below is served by NGINX and cached by Varnish. Refresh
+            the page and check the NGINX logs to see caching in action.
+        </p>
+        <img src="banana-dance.gif" alt="Cached animation" />
+    </body>
 </html>

@@ -1,32 +1,10 @@
 ---
 title: Linux terminal
-subtitle: Laboratórios de Sistemas e Serviços
-author: Mário Antunes
-institute: Universidade de Aveiro
-date: February 16, 2026
-colorlinks: true
-highlight-style: tango
-mainfont: NotoSans
-mainfontfallback:
-  - "NotoColorEmoji:mode=harf"
-theme: metropolis
-themeoptions:
-  - sectionpage=progressbar
-  - numbering=fraction
-  - progressbar=frametitle
-header-includes:
- - \usepackage{longtable,booktabs}
- - \usepackage{etoolbox}
- - \AtBeginEnvironment{longtable}{\tiny}
- - \AtBeginEnvironment{cslreferences}{\tiny}
- - \AtBeginEnvironment{Shaded}{\scriptsize}
- - \AtBeginEnvironment{verbatim}{\scriptsize}
- - \setmonofont[Contextuals={Alternate}]{FiraCodeNerdFontMono-Retina}
 ---
 
 # Command Line
 
-## Welcome to the Command Line! 🐧
+## Welcome to the Command Line!
 
 The **Terminal** is your direct, text-based connection to the operating system.
 
@@ -94,7 +72,7 @@ Unlike Windows (which uses `C:\`, `D:\`), Linux uses a single unified tree start
 3. Go into student
 4. You are in Documents
 
-## Visualizing the Filesystem Tree ii
+## Visualizing the Filesystem Tree iii
 
 ![Modern Linux FHS](FHS.png)
 
@@ -325,7 +303,7 @@ The `/proc` directory is a virtual filesystem that acts as a window into the ker
 
 ```bash
 # View your CPU model, cores, and cache size
-$cat /proc/cpuinfo | grep "model name"
+$ cat /proc/cpuinfo | grep "model name"
 $ cat /proc/cpuinfo | grep "cpu MHz"
 ```
 
@@ -397,7 +375,7 @@ $ chmod u+x my_script.sh
 
 # Package Manager
 
-## What is a Package Manager? 📦
+## What is a Package Manager?
 
 A package manager is a tool that automates the process of installing, updating, and removing software.
 
@@ -406,8 +384,6 @@ A package manager is a tool that automates the process of installing, updating, 
   * For Debian and Ubuntu-based systems, the primary package manager is **APT** (Advanced Package Tool).
 
 **Analogy:** Think of `apt` as an App Store for your terminal.
-
-
 
 ## Updating Package Lists (`apt update`)
 
@@ -423,8 +399,6 @@ Before you install or search for anything, you should synchronize your local pac
 $ sudo apt update
 ```
 
-
-
 ## Searching for Packages (`apt search`)
 
 If you're not sure of the exact name of a program, you can search for it.
@@ -437,8 +411,6 @@ If you're not sure of the exact name of a program, you can search for it.
 ```bash
 $ apt search htop
 ```
-
-
 
 ## Installing Packages (`apt install`)
 
@@ -476,7 +448,7 @@ $ sudo apt purge htop
 
 # Cron & Crontab
 
-## Introduction to `cron` & `crontab` 🕒
+## Introduction to `cron` & `crontab`
 
 **`cron`** is a system daemon (a background process) that runs scheduled tasks. These scheduled tasks are known as **"cron jobs."**
 
@@ -664,7 +636,8 @@ A script is simply a text file containing a sequence of commands.
 
 ## Scripting Example 1: Hello World
 
-This script uses a variable and the `echo` command. It's the "Hello, World\!" of scripting.
+This script uses a variable and the `echo` command.
+It's the "Hello, World\!" of scripting.
 
 **File: `hello.sh`**
 
@@ -724,7 +697,7 @@ done
 echo "Batch rename complete."
 ```
 
-## Scripting Example 4: Complex Script
+## Scripting Example 5: Complex Script
 
 ```bash
 #!/bin/bash
@@ -744,7 +717,7 @@ tar -czf "$ARCHIVE" "$@"
 echo "Backup complete: $ARCHIVE"
 ```
 
-## Scripting Example 4: Automating System Reports
+## Scripting Example 6: Automating System Reports
 
 You can combine system information commands into a single Bash script for easy reporting.
 
@@ -783,7 +756,7 @@ You've now seen the core concepts of the Linux command line:
 
 Now, let's apply this knowledge in the practical part of the class.
 
-## Support & Further Resources 📚
+## Support & Further Resources
 
 Bookmark these pages. They are incredibly useful references.
 
