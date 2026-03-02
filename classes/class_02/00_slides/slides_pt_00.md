@@ -4,7 +4,7 @@ title: Virtualização
 
 # Introdução
 
-## O que é a Virtualização?
+## O que é a Virtualização? i
 
 A **Virtualização** cria uma versão baseada em software, ou "virtual", de um computador. Esta Máquina Virtual (VM) corre como uma aplicação no seu computador físico, mas comporta-se como uma máquina completamente separada.
 
@@ -12,7 +12,9 @@ A **Virtualização** cria uma versão baseada em software, ou "virtual", de um 
 * **Convidado (Guest):** A máquina virtual e o SO que ela executa.
 * **Hipervisor:** O software que cria e gere as VMs.
 
-<!-- TODO: Adicionar figura — diagrama de camadas host/guest/hipervisor (assets/figures/virtualization_overview.png) -->
+## O que é a Virtualização? ii
+
+![\ ](virtualization_overview_type2.png)
 
 ## O Desafio: Instruções Privilegiadas
 

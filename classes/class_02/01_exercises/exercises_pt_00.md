@@ -8,9 +8,7 @@ title: Virtualização
 
 Este guia irá acompanhá-lo através de diferentes formas de virtualização, desde a emulação ligeira até à gestão completa de servidores. Irá usar o **VirtualBox** (para Windows/macOS) ou o **QEMU** (para Linux) como a sua ferramenta principal.
 
-> **Antes de começar:** Certifique-se de que tem pelo menos **50 GB de espaço livre em disco** e uma ligação estável à internet. Alguns downloads são grandes e as imagens de disco das VMs podem crescer rapidamente.
-
-
+ **Antes de começar:** Certifique-se de que tem pelo menos **50 GB de espaço livre em disco** e uma ligação estável à internet. Alguns downloads são grandes e as imagens de disco das VMs podem crescer rapidamente.
 
 ### Parte 1: Configuração do Anfitrião -- A Sua Ferramenta de Virtualização
 
@@ -24,16 +22,16 @@ Primeiro, instale a ferramenta correta para o seu sistema operativo.
 
 2.  **Instalar o VirtualBox:**
       * **Windows:** Execute o instalador `.exe`. Aceite as opções predefinidas. O Windows pode pedir-lhe para aprovar a instalação de drivers de rede --- clique **Sim**.
-      * **macOS:** Abra o ficheiro `.dmg` e execute o instalador. **Tem de** ir a `Definições do Sistema > Privacidade e Segurança` e clicar **Permitir** para aprovar a extensão de sistema da Oracle. Pode ser necessário reiniciar.
+      * **macOS:** Abra o ficheiro `.dmg` e execute o instalador. **Tem de** ir a `Definições do Sistema  Privacidade e Segurança` e clicar **Permitir** para aprovar a extensão de sistema da Oracle. Pode ser necessário reiniciar.
 
 3.  **Instalar o Extension Pack:**
-      * Abra o VirtualBox. Vá a **Ficheiro > Ferramentas > Gestor de Extension Packs** (ou **Preferências > Extensões** em versões mais antigas).
+      * Abra o VirtualBox. Vá a **Ficheiro  Ferramentas  Gestor de Extension Packs** (ou **Preferências  Extensões** em versões mais antigas).
       * Clique no ícone **Instalar** e selecione o ficheiro do Extension Pack que descarregou.
       * Aceite o acordo de licença.
 
 4.  **Verificar a Instalação:**
       * Abra o VirtualBox. Deverá ver a janela principal do gestor com uma lista de VMs vazia.
-      * Vá a **Ajuda > Sobre o VirtualBox** e confirme que o número da versão corresponde ao da versão do Extension Pack.
+      * Vá a **Ajuda  Sobre o VirtualBox** e confirme que o número da versão corresponde ao da versão do Extension Pack.
       * Se aparecerem avisos sobre drivers ou módulos do kernel, siga as instruções no ecrã antes de prosseguir.
 
 #### Para Anfitriões Linux: QEMU/KVM
@@ -66,8 +64,20 @@ Primeiro, instale a ferramenta correta para o seu sistema operativo.
         ```bash
         $ qemu-system-x86_64 --version
         ```
-        Deverá ser apresentado o número de versão do QEMU.
+69:         Deverá ser apresentado o número de versão do QEMU.
 
+#### Preparação para automação com cloud-init:
+
+Para usar o cloud-init na configuração automática da VM (Alpine, Ubuntu, etc.), você precisa da ferramenta `cloud-localds`:
+
+- **Debian/Ubuntu:**
+  ```bash
+  sudo apt update
+  sudo apt install cloud-utils
+  ```
+
+Isso fornece o utilitário `cloud-localds` para criar um ISO “seed” do cloud-init usando os seus ficheiros de configuração YAML.  
+_(Só é necessário se quiser automação via cloud-init; pode ignorar caso vá configurar tudo manualmente na VM.)_
 
 
 ### Parte 2: Emulação Ligeira com FreeDOS
@@ -96,7 +106,7 @@ Neste exercício exploramos um sistema operativo simples e mono-tarefa (FreeDOS)
       * **Tamanho:** `512 MB`
       * Escolha **Tamanho fixo** para melhor desempenho.
 5.  Clique em **Criar** para terminar o assistente.
-6.  Com a nova VM `FreeDOS` selecionada, clique em **Definições > Armazenamento**.
+6.  Com a nova VM `FreeDOS` selecionada, clique em **Definições  Armazenamento**.
 7.  Em **Controlador: IDE**, clique no ícone do disco **Vazio**.
 8.  No lado direito, clique no pequeno ícone de CD e escolha **Escolher um ficheiro de disco...**.
 9.  Selecione o ficheiro `FD14LIVE.iso` que extraiu anteriormente.
@@ -118,7 +128,7 @@ Neste exercício exploramos um sistema operativo simples e mono-tarefa (FreeDOS)
         -cdrom FD14LIVE.iso -boot d
     ```
 
-> **Nota:** As flags `-device adlib -device sb16` emulam placas de som clássicas para que os jogos de DOS possam produzir áudio.
+ **Nota:** As flags `-device adlib -device sb16` emulam placas de som clássicas para que os jogos de DOS possam produzir áudio.
 
 #### Passo 3 -- Instalar o FreeDOS
 
@@ -130,7 +140,7 @@ Neste exercício exploramos um sistema operativo simples e mono-tarefa (FreeDOS)
       * Selecione os pacotes que deseja instalar (as predefinições são adequadas).
 4.  Aguarde que a instalação termine. Será pedido que reinicie.
 5.  **Antes de reiniciar, remova o ISO:**
-      * **VirtualBox:** Vá a **Definições > Armazenamento**, clique no ISO sob o controlador IDE, clique no ícone de CD à direita e escolha **Remover disco da unidade virtual**. Em seguida, reinicie a VM.
+      * **VirtualBox:** Vá a **Definições  Armazenamento**, clique no ISO sob o controlador IDE, clique no ícone de CD à direita e escolha **Remover disco da unidade virtual**. Em seguida, reinicie a VM.
       * **QEMU:** Feche a janela do QEMU. Re-inicie sem `-cdrom` e `-boot d`:
         ```bash
         $ qemu-system-i386 -machine accel=kvm:tcg -m 128 -cpu host \
@@ -138,8 +148,20 @@ Neste exercício exploramos um sistema operativo simples e mono-tarefa (FreeDOS)
             -device adlib -device sb16 \
             -device cirrus-vga -display gtk \
             -hda freedos.qcow2 -boot c
-        ```
-6.  **Verificar:** A VM deverá arrancar no FreeDOS a partir do disco rígido e apresentar o prompt `C:\>`.
+            ```
+6.  **Verificar:** A VM deverá arrancar no FreeDOS a partir do disco rígido e apresentar o prompt `C:\`.
+
+> **Nota importante sobre o ciclo de boot:**  
+> É necessário fazer o boot da VM **duas vezes** para instalar o FreeDOS:
+> 1. O **primeiro boot** é com o ISO do FreeDOS. Selecione “Install to harddisk”, particione/formate e instale os pacotes conforme instruções.
+> 2. Quando terminar e pedir para reiniciar, **remova o ISO da unidade virtual antes de reiniciar**.
+> 3. O **segundo boot** deverá iniciar a partir do disco rígido virtual que acabou de instalar.
+> Se não remover o ISO, irá reiniciar o instalador e não o SO instalado!
+
+> **Dica:**  
+> Após confirmar que o FreeDOS arranca do disco rígido (prompt C:\), **desligue a VM**.  
+> Troque o ISO de instalação do FreeDOS pelo ISO com os ficheiros do jogo DOOM (`doom.iso`).  
+> Reinicie a VM; o novo ISO aparecerá como unidade de CD (normalmente D:), permitindo transferir os ficheiros do jogo.
 
 #### Passo 4 -- Transferir o Jogo para a VM
 
@@ -148,7 +170,7 @@ Como o FreeDOS não tem pilha de rede por predefinição, vamos usar uma unidade
 **VirtualBox:**
 
 1.  Use uma ferramenta gratuita como o **AnyBurn** (Windows) ou **Brasero** (Linux) para criar um ficheiro ISO a partir da sua pasta `doom/`. Nomeie-o `doom.iso`.
-2.  No VirtualBox, vá a **Definições > Armazenamento** da VM FreeDOS.
+2.  No VirtualBox, vá a **Definições  Armazenamento** da VM FreeDOS.
 3.  Clique no ícone **Adicionar Unidade Ótica** no Controlador IDE e selecione o seu `doom.iso`.
 4.  Inicie a VM. O ISO aparecerá como unidade `D:`.
 
@@ -171,23 +193,23 @@ O conteúdo da pasta `doom/` aparecerá como unidade `D:` dentro do FreeDOS.
 
 1.  No prompt do FreeDOS, mude para a unidade do jogo:
     ```
-    C:\> D:
-    D:\> dir
+    C:\ D:
+    D:\ dir
     ```
     Deverá ver os ficheiros do DOOM listados.
 2.  Copie os ficheiros para o disco rígido (opcional mas recomendado):
     ```
-    D:\> mkdir C:\DOOM
-    D:\> copy *.* C:\DOOM
+    D:\ mkdir C:\DOOM
+    D:\ copy *.* C:\DOOM
     ```
 3.  Execute o jogo:
     ```
-    D:\> DOOM.EXE
+    D:\ DOOM.EXE
     ```
     Ou, se copiou:
     ```
-    C:\> cd DOOM
-    C:\DOOM> DOOM.EXE
+    C:\ cd DOOM
+    C:\DOOM DOOM.EXE
     ```
 4.  **Verificar:** Deverá ver o ecrã de título do DOOM e ouvir efeitos sonoros através das placas de som emuladas. Use as teclas de setas e `Ctrl` para jogar.
 
@@ -198,8 +220,6 @@ Responda a estas perguntas nas suas notas de laboratório:
 * Que tipo de virtualização está a ser usado aqui (emulação, virtualização completa ou paravirtualização)?
 * Porque é que o FreeDOS só precisa de 64 MB de RAM?
 * Qual é o papel da flag `-device sb16`? O que acontece se a remover?
-
-
 
 ### Parte 3: Virtualização Ligeira com Alpine Linux
 
@@ -225,8 +245,18 @@ O Alpine Linux é uma distribuição Linux leve e orientada para segurança. É 
 3.  Defina a **Memória** para `1024 MB` (1 GB).
 4.  Para o **Disco Rígido**, crie um novo VDI com **8 GB** (dinamicamente alocado é adequado).
 5.  Clique em **Criar**.
-6.  Vá a **Definições > Armazenamento** e anexe o ISO do Alpine à unidade de CD vazia (tal como fez para o FreeDOS).
-7.  Clique em **OK**.
+6.  Vá a **Definições  Armazenamento** e anexe o ISO do Alpine à unidade de CD vazia (tal como fez para o FreeDOS).
+229:     7.  Clique em **OK**.
+
+>  **Automação com cloud-init para Alpine Linux (Opcional/Avançado):**  
+>  O Alpine suporta automação via cloud-init usando uma “config drive” com sua configuração.
+>  1. Use o utilitário `cloud-localds` para criar um ISO seed com seus ficheiros `user-data` e `meta-data` (YAML):
+    ```bash
+    cloud-localds seed.iso user-data meta-data
+    ```
+>  2. No VirtualBox, anexe este ISO seed como segunda unidade de CD-ROM antes do primeiro boot da VM Alpine.
+>  3. No primeiro boot, o cloud-init do Alpine (se instalado) irá descobrir e aplicar estas configurações.
+>  Para detalhes e exemplos, veja a [documentação cloud-init do Alpine](https://alpinelinux.org/cloud/).
 
 **QEMU (Linux):**
 
@@ -244,7 +274,7 @@ O Alpine Linux é uma distribuição Linux leve e orientada para segurança. É 
         -nic user,model=virtio-net-pci,hostfwd=tcp::2222-:22,hostfwd=tcp::8080-:80
     ```
 
-> **Nota:** A flag `-nic user,...,hostfwd=tcp::2222-:22,hostfwd=tcp::8080-:80` configura a rede NAT e redireciona a porta 2222 do anfitrião para a porta 22 do convidado (SSH) e a porta 8080 do anfitrião para a porta 80 do convidado (HTTP).
+ **Nota:** A flag `-nic user,...,hostfwd=tcp::2222-:22,hostfwd=tcp::8080-:80` configura a rede NAT e redireciona a porta 2222 do anfitrião para a porta 22 do convidado (SSH) e a porta 8080 do anfitrião para a porta 80 do convidado (HTTP).
 
 #### Passo 3 -- Instalar o Alpine Linux
 
@@ -269,7 +299,7 @@ O Alpine Linux é uma distribuição Linux leve e orientada para segurança. É 
 5.  Aguarde que a instalação termine.
 6.  Quando terminar, escreva `poweroff` para desligar a VM.
 7.  **Remova o ISO:**
-      * **VirtualBox:** Vá a **Definições > Armazenamento**, selecione o ISO e remova-o da unidade.
+      * **VirtualBox:** Vá a **Definições  Armazenamento**, selecione o ISO e remova-o da unidade.
       * **QEMU:** Re-inicie sem as flags `-cdrom` e `-boot d`.
 
 #### Passo 4 -- Arrancar e Verificar
@@ -293,7 +323,7 @@ Com NAT, a VM consegue aceder à internet através do anfitrião, mas o anfitri�
 
 Para aceder à VM a partir do anfitrião em modo NAT, tem de configurar o **reencaminhamento de portas**:
 
-* **VirtualBox:** Vá a **Definições > Rede > Avançado > Reencaminhamento de Portas**. Adicione duas regras:
+* **VirtualBox:** Vá a **Definições  Rede  Avançado  Reencaminhamento de Portas**. Adicione duas regras:
 
   | Nome | Protocolo | Porta Anfitrião | Porta Convidado |
   |------|-----------|-----------------|-----------------|
@@ -312,7 +342,7 @@ Para aceder à VM a partir do anfitrião em modo NAT, tem de configurar o **reen
 Com uma rede bridge, a VM obtém o seu próprio endereço IP da sua rede local (p. ex., `192.168.1.x`), como se fosse outro computador físico na rede.
 
 1.  Desligue a VM.
-2.  **VirtualBox:** Vá a **Definições > Rede**. Mude **Ligada a:** de `NAT` para `Placa em modo Bridge (Bridged Adapter)`. Selecione a interface de rede do anfitrião no dropdown.
+2.  **VirtualBox:** Vá a **Definições  Rede**. Mude **Ligada a:** de `NAT` para `Placa em modo Bridge (Bridged Adapter)`. Selecione a interface de rede do anfitrião no dropdown.
 3.  **QEMU:** Isto requer a criação de uma bridge de rede no anfitrião, o que necessita de acesso root. Consulte o script `alpine.sh` fornecido nos materiais de suporte para um exemplo funcional.
 4.  Inicie a VM e verifique o novo IP:
     ```bash
@@ -337,15 +367,15 @@ Com uma rede bridge, a VM obtém o seu próprio endereço IP da sua rede local (
 3.  Crie uma página HTML simples:
     ```bash
     # mkdir -p /var/www/localhost/htdocs
-    # cat > /var/www/localhost/htdocs/index.html << 'EOF'
-    <!DOCTYPE html>
-    <html>
-    <head><title>Alpine VM</title></head>
-    <body>
-      <h1>Olá do Alpine Linux!</h1>
-      <p>Esta página é servida a partir de uma máquina virtual.</p>
-    </body>
-    </html>
+    # cat  /var/www/localhost/htdocs/index.html << 'EOF'
+    <!DOCTYPE html
+    <html
+    <head<titleAlpine VM</title</head
+    <body
+      <h1Olá do Alpine Linux!</h1
+      <pEsta página é servida a partir de uma máquina virtual.</p
+    </body
+    </html
     EOF
     ```
 4.  Inicie o servidor web:
@@ -359,7 +389,7 @@ Com uma rede bridge, a VM obtém o seu próprio endereço IP da sua rede local (
     Deverá ver o conteúdo HTML que acabou de criar.
 6.  **Aceder a partir da máquina anfitriã:**
       * **Modo NAT (VirtualBox com reencaminhamento de portas ou QEMU):** Abra o navegador web e navegue para `http://localhost:8080`.
-      * **Modo Bridge:** Navegue para `http://<IP_DA_VM>` (p. ex., `http://192.168.1.123`).
+      * **Modo Bridge:** Navegue para `http://<IP_DA_VM` (p. ex., `http://192.168.1.123`).
 7.  **Verificar:** Deverá ver a página "Olá do Alpine Linux!" no seu navegador.
 
 #### Passo 7 -- Ativar o Servidor Web no Arranque (Opcional)
@@ -381,14 +411,12 @@ Responda a estas perguntas nas suas notas de laboratório:
 * Porque é que o Alpine Linux é tão popular para contentores e VMs?
 * Qual é o tamanho do ISO do Alpine comparado com um ISO típico do Ubuntu ou Windows?
 
-
-
 ### Parte 4: Gestão de Servidores com Proxmox VE
 
 O Proxmox Virtual Environment (VE) é uma plataforma profissional e open-source de virtualização de servidores. Combina KVM (para VMs) e LXC (para contentores) com uma interface de gestão web. Neste exercício irá instalar o Proxmox dentro de uma VM para explorar as suas capacidades.
 
-> **Cuidado: Virtualização Aninhada.**
-> Irá executar um hipervisor (Proxmox) dentro de outro hipervisor (VirtualBox/QEMU). Isto chama-se **virtualização aninhada**. É muito exigente em termos de recursos e será lento. Este exercício é para fins de aprendizagem.
+ **Cuidado: Virtualização Aninhada.**
+ Irá executar um hipervisor (Proxmox) dentro de outro hipervisor (VirtualBox/QEMU). Isto chama-se **virtualização aninhada**. É muito exigente em termos de recursos e será lento. Este exercício é para fins de aprendizagem.
 
 #### Passo 1 -- Descarregar o Proxmox
 
@@ -409,9 +437,9 @@ Esta VM precisa de significativamente mais recursos do que os exercícios anteri
 3.  Defina **Processadores** para `2` ou mais.
 4.  Crie um disco rígido de pelo menos **32 GB** (dinamicamente alocado).
 5.  Antes de iniciar, vá a **Definições** e aplique estas alterações:
-      * **Sistema > Processador:** Marque **Ativar VT-x/AMD-V Aninhado** (isto permite ao Proxmox executar VMs dentro de si mesmo).
-      * **Rede > Adaptador 1:** Defina **Ligada a:** `NAT`.
-      * **Rede > Adaptador 1 > Avançado > Reencaminhamento de Portas:** Adicione uma regra:
+      * **Sistema  Processador:** Marque **Ativar VT-x/AMD-V Aninhado** (isto permite ao Proxmox executar VMs dentro de si mesmo).
+      * **Rede  Adaptador 1:** Defina **Ligada a:** `NAT`.
+      * **Rede  Adaptador 1  Avançado  Reencaminhamento de Portas:** Adicione uma regra:
 
         | Nome    | Protocolo | Porta Anfitrião | Porta Convidado |
         |---------|-----------|-----------------|-----------------|
@@ -436,7 +464,7 @@ Esta VM precisa de significativamente mais recursos do que os exercícios anteri
         -nic user,model=virtio-net-pci,hostfwd=tcp::8006-:8006
     ```
 
-> **Nota:** A flag `-cpu host` é crítica. Passa as capacidades de virtualização da CPU do anfitrião (VT-x/AMD-V) para o convidado, que o Proxmox necessita para criar VMs aninhadas.
+ **Nota:** A flag `-cpu host` é crítica. Passa as capacidades de virtualização da CPU do anfitrião (VT-x/AMD-V) para o convidado, que o Proxmox necessita para criar VMs aninhadas.
 
 #### Passo 3 -- Instalar o Proxmox
 
@@ -479,14 +507,14 @@ Dedique alguns minutos a explorar:
 
 1.  Clique no nome do seu nó (p. ex., `proxmox`) na barra lateral esquerda.
 2.  Examine o separador **Summary**: utilização de CPU, RAM, uptime.
-3.  Vá a **Datacenter > Storage**: veja o armazenamento predefinido (`local` e `local-lvm`).
-4.  Vá a **Datacenter > Network**: veja as interfaces de rede configuradas.
+3.  Vá a **Datacenter  Storage**: veja o armazenamento predefinido (`local` e `local-lvm`).
+4.  Vá a **Datacenter  Network**: veja as interfaces de rede configuradas.
 
 #### Passo 6 -- Criar uma VM Convidada dentro do Proxmox (Desafio)
 
 Este é um objetivo avançado. Tente criar uma VM Alpine Linux dentro do Proxmox:
 
-1.  **Carregar o ISO do Alpine:** Na interface web do Proxmox, vá ao seu nó > **local (storage)** > **ISO Images** > **Upload**. Carregue o ISO do Alpine que descarregou anteriormente.
+1.  **Carregar o ISO do Alpine:** Na interface web do Proxmox, vá ao seu nó  **local (storage)**  **ISO Images**  **Upload**. Carregue o ISO do Alpine que descarregou anteriormente.
 2.  **Criar uma VM:** Clique no botão **Create VM** no canto superior direito.
       * **General:** Dê-lhe um nome (p. ex., `alpine-nested`).
       * **OS:** Selecione o ISO do Alpine carregado.
@@ -498,7 +526,7 @@ Este é um objetivo avançado. Tente criar uma VM Alpine Linux dentro do Proxmox
 4.  Abra o separador **Console** para ver o processo de arranque do Alpine.
 5.  **Verificar:** Consegue fazer login como `root` na VM Alpine aninhada? Consegue aceder à internet?
 
-> **Nota:** As VMs aninhadas serão muito lentas devido à sobrecarga da dupla virtualização. Este é o comportamento esperado.
+ **Nota:** As VMs aninhadas serão muito lentas devido à sobrecarga da dupla virtualização. Este é o comportamento esperado.
 
 #### Passo 7 -- Reflexão
 
@@ -524,7 +552,7 @@ A melhor forma de emular o Android num PC é usando as ferramentas oficiais da G
 #### Passo 2 -- Criar um Dispositivo Virtual
 
 1.  Abra o Android Studio. **Não** precisa de criar um projeto.
-2.  No ecrã de boas-vindas, clique em **More Actions > Virtual Device Manager** (ou no menu **Tools** se tiver um projeto aberto).
+2.  No ecrã de boas-vindas, clique em **More Actions  Virtual Device Manager** (ou no menu **Tools** se tiver um projeto aberto).
 3.  Clique em **Create Virtual Device**.
 4.  Escolha um perfil de hardware de telemóvel (p. ex., **Pixel 7**) e clique **Next**.
 5.  Selecione uma imagem de sistema para descarregar:

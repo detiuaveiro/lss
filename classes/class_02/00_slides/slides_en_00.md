@@ -4,21 +4,26 @@ title: Virtualization
 
 # Introduction
 
-## What is Virtualization?
+## What is Virtualization? i
 
-**Virtualization** creates a software-based, or "virtual," version of a computer. This Virtual Machine (VM) runs as an application on your physical computer but behaves like a completely separate machine.
+**Virtualization** creates a software-based, or "virtual," version of a computer. 
+This Virtual Machine (VM) runs as an application on your physical computer but behaves like a completely separate machine.
 
 * **Host:** Your physical machine and its Operating System (OS).
 * **Guest:** The virtual machine and the OS it runs.
 * **Hypervisor:** The software that creates and manages the VMs.
 
-<!-- TODO: Add figure — host/guest/hypervisor layer diagram (assets/figures/virtualization_overview.png) -->
+## What is Virtualization? ii
+
+![\ ](virtualization_overview_type2.png)
 
 ## The Challenge: Privileged Instructions
 
-A normal application cannot access hardware directly; it must ask the Host OS. But a Guest OS *expects* to have full control. How do we solve this conflict safely?
+A normal application cannot access hardware directly; it must ask the Host OS. But a Guest OS **expects** to have full control. 
+How do we solve this conflict safely?
 
-The hypervisor's main job is to intercept and safely manage the guest's requests for privileged hardware access. The way it does this defines the difference between emulation and virtualization.
+The hypervisor's main job is to intercept and safely manage the guest's requests for privileged hardware access. 
+The way it does this defines the difference between emulation and virtualization.
 
 # Virtualization Types
 
@@ -137,9 +142,13 @@ This is slow, tedious, and prone to human error. It simply does not scale for cl
 
 * **Analogy:** Think of Cloud-Init as an automated setup script that configures your new server for you before you ever log in for the first time.
 
-## Cloud-Init in Practice: User Data
+## Cloud-Init in Practice: User Data i
 
-The configuration for Cloud-Init is typically written in **YAML**. This file, often named `user-data`, contains a set of directives. With this single file, a new VM can boot up fully configured with no manual intervention.
+The configuration for Cloud-Init is typically written in **YAML**. 
+This file, often named `user-data`, contains a set of directives. 
+With this single file, a new VM can boot up fully configured with no manual intervention.
+
+## Cloud-Init in Practice: User Data ii
 
 ```yaml
 #cloud-config
@@ -314,7 +323,8 @@ For this class, we use a pre-built `.vdi` file with dynamic allocation.
 
 ## VirtualBox: VBoxManage CLI
 
-For advanced users, VirtualBox provides the `VBoxManage` command-line tool. It exposes every feature available in the GUI and more.
+For advanced users, VirtualBox provides the `VBoxManage` command-line tool. 
+It exposes every feature available in the GUI and more.
 
 **Useful examples:**
 

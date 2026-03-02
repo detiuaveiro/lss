@@ -10,8 +10,6 @@ This guide will walk you through different forms of virtualization, from lightwe
 
 > **Before you begin:** Make sure you have at least **50 GB of free disk space** and a stable internet connection. Some downloads are large and VM disk images can grow quickly.
 
-
-
 ### Part 1: Host Setup -- Your Virtualization Tool
 
 First, install the correct tool for your operating system.
@@ -68,9 +66,34 @@ First, install the correct tool for your operating system.
         ```
         This should print the QEMU version number.
 
+#### Preparing for cloud-init automation:
+
+To use cloud-init for automated VM setup (Debian, Ubuntu, etc.), you need the `cloud-localds` utility:
+
+- **Debian/Ubuntu:**
+  ```bash
+  sudo apt update
+  sudo apt install cloud-utils
+  ```
+
+This provides the `cloud-localds` tool to create a cloud-init “seed” ISO from your YAML configuration files.
+_(You only need this if doing cloud-init automation; skip if doing all setup manually inside the VM.)_
+
 ### Part 2: Lightweight Emulation with FreeDOS
 
 In this exercise we explore a simple, single-tasking operating system (FreeDOS) to understand basic machine emulation. FreeDOS is an open-source implementation of MS-DOS and can run classic DOS software, including games.
+
+> **Important Boot Sequence Note:**
+> You must boot your VM twice for FreeDOS installation:
+> 1. The **first boot** uses the FreeDOS ISO. Select “Install to harddisk,” partition/format, and install packages as instructed.
+> 2. When installation completes and you are prompted to reboot, **remove the ISO from your virtual drive before rebooting**.
+> 3. The **second boot** will start from the virtual hard disk you just installed FreeDOS on.
+> If you forget to remove the ISO, you may inadvertently restart the installer instead of booting into your newly-installed OS!
+
+> **Tip:**
+> After verifying FreeDOS boots from the hard disk, **power down the VM**.
+> Replace the FreeDOS install ISO (in your virtual CD drive) with the ISO containing the DOOM game files (`doom.iso`).
+> Then start the VM again; the new ISO will appear as a CD drive (usually D:), allowing you to transfer game files.
 
 #### Step 1 -- Download Resources
 
@@ -224,7 +247,17 @@ Alpine Linux is a security-oriented, lightweight Linux distribution. It is widel
 4.  For the **Hard Disk**, create a new VDI with **8 GB** (dynamically allocated is fine).
 5.  Click **Create**.
 6.  Go to **Settings > Storage** and attach the Alpine ISO to the empty CD drive (just like you did for FreeDOS).
-7.  Click **OK**.
+228:     7.  Click **OK**.
+
+> **Cloud-init Automation for Alpine Linux (Optional/Advanced):**
+> Alpine Linux supports cloud-init automation using a “config drive” seeded with your configuration.
+> 1. Use the `cloud-localds` tool to create a seed ISO containing your `user-data` and `meta-data` YAML files:
+>    ```bash
+>    cloud-localds seed.iso user-data meta-data
+>    ```
+> 2. In VirtualBox, attach this seed ISO as a second CD-ROM drive before first Alpine boot.
+> 3. On first boot, Alpine’s cloud-init (if included) will discover and apply these settings.
+> For examples and details, see [Alpine cloud-init documentation](https://alpinelinux.org/cloud/).
 
 **QEMU (Linux):**
 
