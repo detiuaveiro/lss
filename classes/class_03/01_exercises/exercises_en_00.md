@@ -69,9 +69,10 @@ If you are using a Linux host, follow these steps in your terminal to install th
 
 **Goal:** Understand the basic structure of a `compose.yml` file and run a pre-built image.
 
-1.  Create a new folder for this exercise and navigate into it:
+1.  From your working directory, create a new folder for this exercise:
     ```bash
-    mkdir ex1-helloworld && cd ex1-helloworld
+    mkdir ex01
+    cd ex01
     ```
 2.  Inside the folder, create a new file named `compose.yml` with the following content:
     ```yaml
@@ -99,9 +100,10 @@ If you are using a Linux host, follow these steps in your terminal to install th
 
 **Goal:** Use a `Dockerfile` with Docker Compose to create a self-contained application image.
 
-1.  Create the folder structure:
+1.  From your working directory, create the folder structure:
     ```bash
-    mkdir -p ex2-build/my-website && cd ex2-build
+    mkdir -p ex02/my-website
+    cd ex02
     ```
 2.  Inside `my-website`, create a file named `index.html`:
     ```html
@@ -112,7 +114,7 @@ If you are using a Linux host, follow these steps in your terminal to install th
     </body>
     </html>
     ```
-3.  In the root of the `ex2-build` folder, create a `Dockerfile`:
+3.  In the root of the `ex02` folder, create a `Dockerfile`:
     ```dockerfile
     FROM nginx:alpine
     COPY ./my-website /usr/share/nginx/html
@@ -151,9 +153,10 @@ docker compose down
 
 **Goal:** Understand how bind-mount volumes allow you to change your website's content without rebuilding the image.
 
-1.  Create the folder structure:
+1.  From your working directory, create the folder structure:
     ```bash
-    mkdir -p ex3-volumes/my-website && cd ex3-volumes
+    mkdir -p ex03/my-website
+    cd ex03
     ```
 2.  Create a `my-website/index.html` file:
     ```html
@@ -204,29 +207,28 @@ docker compose down
 
 **Goal:** Build a two-tier web application with a Varnish HTTP cache serving a rich webpage from an NGINX backend. This exercise introduces multi-service compose files, service dependencies, and internal networking.
 
-1.  **Create the File Structure:**
+1.  From your working directory, create the File Structure:
     ```bash
-    mkdir -p ex4-varnish-cache/varnish \
-             ex4-varnish-cache/my-dynamic-website
-    cd ex4-varnish-cache
+    mkdir -p ex04\my-dynamic-website
+    cd ex04
     ```
-2.  **Create the Web Content:**
-      * Find a fun animated GIF online and save it inside `my-dynamic-website` as `animation.gif`.
-      * Inside `my-dynamic-website`, create an `index.html` file to display the GIF:
-        ```html
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <title>Varnish Cache Test</title>
-            <style> body { font-family: sans-serif; text-align: center; } </style>
-        </head>
-        <body>
-            <h1>This page is being cached by Varnish!</h1>
-            <img src="animation.gif" alt="Cached animation">
-        </body>
-        </html>
-        ```
+2.  Create the Web Content:
+    * Find a fun animated GIF online and save it inside `my-dynamic-website` as `animation.gif`. For example, you can use this one: [docker.gif]().
+    * Inside `my-dynamic-website`, create an `index.html` file to display the GIF:
+      ```html
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+          <meta charset="UTF-8">
+          <title>Varnish Cache Test</title>
+          <style> body { font-family: sans-serif; text-align: center; } </style>
+      </head>
+      <body>
+          <h1>This page is being cached by Varnish!</h1>
+          <img src="animation.gif" alt="Cached animation">
+      </body>
+      </html>
+      ```
 3.  **Create the Varnish Configuration:**
       * Inside the `varnish` folder, create a file named `default.vcl`. This tells Varnish where to find the NGINX backend server:
         ```vcl
