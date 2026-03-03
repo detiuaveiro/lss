@@ -11,98 +11,63 @@ title: Containers
 **Pré-requisitos:**
 
   * Um computador com um navegador web moderno e um editor de texto.
-  * Docker e Docker Compose instalados (o plugin Compose já vem incluído nas instalações recentes do Docker).
+  * Docker e Docker Compose instalados (consulte a secção de instalação abaixo).
 
 -----
 
 ## Instalar o Docker no Debian
 
-Se estiver a usar um anfitrião Linux, siga estes passos no seu terminal para instalar a versão mais recente do Docker. Baseado nestas [instruções](https://docs.docker.com/engine/install/debian/).
+Se estiver a usar um anfitrião Linux, siga estes passos no seu terminal para instalar a versão mais recente do Docker (para a instalação manual pode segui estas [instruções](https://docs.docker.com/engine/install/debian/)).
 
-1.  **Configurar o repositório `apt` do Docker:**
-    ```bash
-    # Remover pacotes não oficiais do docker
-    sudo apt remove docker.io docker-doc \
-    docker-compose podman-docker containerd runc
+Para simplificar o processo de instalação, pode executar o seguinte script bash (funciona em Ubuntu e Debian). Este irá configurar o repositório Docker, instalar o Docker Engine e configurar as permissões do seu utilizador:
 
-    # Atualizar o índice de pacotes e instalar pré-requisitos
-    sudo apt update
-    sudo apt install ca-certificates curl
+```bash
+./classes/class_03/02_support/docker_setup.sh
+```
 
-    # Adicionar a chave GPG oficial do Docker
-    sudo install -m 0755 -d /etc/apt/keyrings
-    sudo curl -fsSL https://download.docker.com/linux/debian/gpg \
-    -o /etc/apt/keyrings/docker.asc
-    sudo chmod a+r /etc/apt/keyrings/docker.asc
+**Dica:** Se encontrar um erro de "permissão negada" (permission denied) ao executar comandos `docker`, certifique-se de que concluiu a instalação e terminou/iniciou a sessão novamente. Como solução rápida, pode colocar `sudo` antes dos comandos, mas configurar o grupo é a abordagem recomendada.
 
-    # Adicionar o repositório às fontes do Apt:
-    echo \
-      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] \
-      https://download.docker.com/linux/debian \
-      $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-      sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-    sudo apt update
-    ```
-2.  **Instalar os pacotes Docker:**
-    ```bash
-    sudo apt install docker-ce docker-ce-cli containerd.io \
-    docker-buildx-plugin docker-compose-plugin
-    ```
-3.  **Gerir o Docker como um utilizador não-root (Recomendado):**
-    Para executar comandos `docker` sem `sudo`, adicione o seu utilizador ao grupo `docker`.
-    ```bash
-    sudo usermod -aG docker $USER
-    ```
-    **Importante:** Tem de fazer logout e login novamente para que esta alteração tenha efeito. Pode verificar executando `groups` no terminal -- o grupo `docker` deverá aparecer na lista.
-
-4.  **Verificar a instalação:**
-    ```bash
-    docker --version
-    docker compose version
-    ```
-    Ambos os comandos devem devolver informação de versão sem erros.
-
-> **Dica:** Se obtiver erros de permissão ao executar comandos `docker`, certifique-se de que fez logout e login após adicionar o seu utilizador ao grupo `docker`. Em alternativa, pode reiniciar a sessão com `newgrp docker`.
-
------
+---
 
 ## Exercício 1: "Hello, World" com Docker Compose
 
 **Objetivo:** Compreender a estrutura básica de um ficheiro `compose.yml` e executar uma imagem pré-construída.
 
-1.  Crie uma nova pasta para este exercício e entre nela:
+1.  A partir do seu diretório de trabalho, crie uma nova pasta para este exercício:
     ```bash
-    mkdir ex1-helloworld && cd ex1-helloworld
+    mkdir ex01
+    cd ex01
     ```
 2.  Dentro da pasta, crie um novo ficheiro chamado `compose.yml` com o seguinte conteúdo:
     ```yaml
     services:
       hello:
-        image: hello-world
+          image: hello-world
     ```
 3.  Execute a aplicação:
     ```bash
     docker compose up
     ```
-4.  Observe o resultado. O contentor `hello-world` irá arrancar, imprimir a sua mensagem e depois terminar automaticamente.
-5.  Limpe o contentor criado pela execução:
+4.  Observe o resultado. O contentor `hello-world` irá arrancar, imprimir a sua mensagem e depois terminar.
+5.  Limpe o contentor criado:
     ```bash
     docker compose down
     ```
 
-**Verificação:** Deve ver a mensagem `Hello from Docker!` na saída do terminal. Após `docker compose down`, execute `docker compose ps -a` para confirmar que não restam contentores.
+**Verificação:** Deverá ver a mensagem de boas-vindas do Docker que começa com "Hello from Docker!" na saída do terminal após o passo 3. Após o passo 5, executar `docker compose ps` não deverá mostrar nenhum contentor.
 
-> **Dica:** O comando `docker compose up` descarrega automaticamente a imagem se ela não existir localmente. Pode verificar as imagens locais com `docker images`.
+**Dica:** O ficheiro `compose.yml` (anteriormente chamado `docker-compose.yml`) é o nome de ficheiro padrão que o Docker Compose procura. Pode usar um nome diferente com a flag `-f`: `docker compose -f meuficheiro.yml up`.
 
------
+---
 
 ## Exercício 2: Construir uma Imagem de Servidor Web Personalizada
 
 **Objetivo:** Usar um `Dockerfile` com o Docker Compose para criar uma imagem de aplicação autónoma.
 
-1.  Crie a estrutura de pastas necessária:
+1.  A partir do seu diretório de trabalho, crie a estrutura de pastas:
     ```bash
-    mkdir -p ex2-build/my-website && cd ex2-build
+    mkdir -p ex02/my-website
+    cd ex02
     ```
 2.  Dentro de `my-website`, crie um ficheiro chamado `index.html`:
     ```html
@@ -113,12 +78,12 @@ Se estiver a usar um anfitrião Linux, siga estes passos no seu terminal para in
     </body>
     </html>
     ```
-3.  Na raiz da pasta `ex2-build`, crie um `Dockerfile`:
+3.  Na raiz da pasta `ex02`, crie um `Dockerfile`:
     ```dockerfile
     FROM nginx:alpine
     COPY ./my-website /usr/share/nginx/html
     ```
-4.  Crie o seu ficheiro `compose.yml`:
+4.  Na mesma pasta, crie o seu ficheiro `compose.yml`:
     ```yaml
     services:
       webserver:
@@ -126,42 +91,47 @@ Se estiver a usar um anfitrião Linux, siga estes passos no seu terminal para in
         ports:
           - "8080:80"
     ```
-5.  Construa e inicie o serviço. A flag `-d` executa-o em segundo plano (modo *detached*):
+5.  Construa e inicie o serviço. A flag `-d` executa-o em segundo plano (modo detached):
     ```bash
     docker compose up --build -d
     ```
-6.  Abra o seu navegador e navegue para `http://localhost:8080`. Deverá ver a sua página web personalizada.
-7.  Quando terminar, pare e remova os contentores:
-    ```bash
-    docker compose down
-    ```
+6. Abra o seu navegador em `http://localhost:8080`. Deverá ver a sua página web personalizada.
 
-**Verificação:** Após o passo 5, execute `docker compose ps` para confirmar que o serviço `webserver` está no estado `Up`. Verifique no navegador que a página é apresentada corretamente.
+**Verificação:**
 
-> **Dica:** Se a porta `8080` já estiver em uso, pode alterá-la no `compose.yml` (por exemplo, `"8081:80"`) e aceder em `http://localhost:8081`. Verifique portas ocupadas com `ss -tlnp | grep 8080`.
+* Execute `docker compose ps` para confirmar que o contentor está a correr e saudável.
+* Execute `docker compose images` para ver a imagem que foi construída.
+* Use `curl http://localhost:8080` como alternativa ao navegador.
 
-> **Dica:** O `--build` força a reconstrução da imagem. Se alterar o `Dockerfile` ou os ficheiros copiados, use sempre esta flag para garantir que as alterações são aplicadas.
+**Dica:** A flag `--build` força o Compose a reconstruir a imagem antes de iniciar. Sem ela, o Compose reutiliza a imagem construída anteriormente. Use sempre `--build` após alterar o `Dockerfile` ou quaisquer ficheiros que sejam copiados para a imagem.
 
------
+**Limpeza:** Quando terminar, pare e remova tudo com:
+
+```bash
+docker compose down
+```
+
+---
 
 ## Exercício 3: Desenvolvimento em Tempo Real com Volumes
 
 **Objetivo:** Compreender como os volumes (bind mounts) permitem alterar o conteúdo do seu site sem reconstruir a imagem.
 
-1.  Crie a estrutura de pastas:
+1.  A partir do seu diretório de trabalho, crie a estrutura de pastas:
     ```bash
-    mkdir -p ex3-volumes/my-website && cd ex3-volumes
+    mkdir -p ex03/my-website
+    cd ex03
     ```
-2.  Dentro de `my-website`, crie um ficheiro `index.html`:
+2.  Crie um ficheiro `my-website/index.html`:
     ```html
     <!DOCTYPE html>
     <html>
     <body>
-        <h1>Pagina original servida com volumes</h1>
+        <h1>Ola a partir de um volume mount!</h1>
     </body>
     </html>
     ```
-3.  Crie um ficheiro `compose.yml`. Desta vez, vamos usar a imagem padrão `nginx:alpine` e montar a nossa pasta local como um volume. **Não é necessário `Dockerfile`.**
+3.  Crie um ficheiro `compose.yml`. Desta vez, usamos a imagem padrão `nginx:alpine` e montamos a nossa pasta local como um volume. **Não é necessário `Dockerfile`.**
     ```yaml
     services:
       webserver:
@@ -177,137 +147,139 @@ Se estiver a usar um anfitrião Linux, siga estes passos no seu terminal para in
     ```
 5.  Abra o seu navegador em `http://localhost:8080` para confirmar que está a funcionar.
 6.  **Atualização em Tempo Real:** Enquanto o contentor está a correr, **edite o ficheiro `index.html`** na sua máquina anfitriã. Altere o cabeçalho para `<h1>Atualizacao em tempo real com um Volume!</h1>`.
-7.  Guarde o ficheiro e **atualize o seu navegador** (Ctrl+F5 para forçar). A alteração aparece instantaneamente!
-8.  Quando terminar, limpe tudo:
+7.  Guarde o ficheiro e **atualize o seu navegador**. A alteração aparece instantaneamente.
+
+**Verificação:** Após editar o `index.html`, pode verificar a alteração a partir da linha de comandos:
+
+```bash
+curl http://localhost:8080
+```
+
+**Dica:** Repare na flag `:ro` (apenas de leitura) no final da montagem do volume. Esta é uma boa prática quando o contentor deve apenas ler ficheiros do anfitrião e nunca escrever neles. Evita que o contentor modifique acidentalmente os seus ficheiros de origem.
+
+**Conceito Chave -- Build vs. Volume:** Compare o Exercício 2 (build) com o Exercício 3 (volume). Construir cria uma imagem portátil e autónoma ideal para **produção**. Os volumes criam uma ligação em tempo real ideal para **desenvolvimento**. Compreender quando usar cada abordagem é fundamental.
+
+**Limpeza:**
+
+```bash
+docker compose down
+```
+
+---
+
+## Exercício 4: Conteúdo Rico em Cache com Varnish e NGINX
+
+**Objetivo:** Construir uma aplicação web de duas camadas com uma cache HTTP Varnish a servir uma página web rica a partir de um backend NGINX. Este exercício introduz ficheiros compose multi-serviço, dependências de serviço e redes internas.
+
+1.  A partir do seu diretório de trabalho, crie a Estrutura de Ficheiros:
     ```bash
-    docker compose down
+    mkdir -p ex04/my-dynamic-website
+    cd ex04
     ```
-
-**Verificação:** Após alterar o `index.html`, confirme que a nova versão aparece no navegador sem necessidade de reiniciar o contentor ou reconstruir a imagem.
-
-> **Dica:** A flag `:ro` (read-only) no volume impede que o contentor modifique os ficheiros no seu anfitrião. É uma boa prática de segurança em cenários de desenvolvimento.
-
-> **Dica:** Se a página não atualizar imediatamente, o seu navegador pode estar a usar cache. Use Ctrl+F5 (hard refresh) ou abra a página numa janela de navegação privada.
-
-> **Conceito Chave:** Compare este exercício com o anterior. No Exercício 2, o conteúdo foi **copiado para dentro da imagem** (ideal para produção). Aqui, o conteúdo é **montado dinamicamente** a partir do anfitrião (ideal para desenvolvimento).
-
------
-
-## Exercício 4: Conteudo Rico em Cache com Varnish e NGINX
-
-**Objetivo:** Construir uma aplicação web de duas camadas com uma cache Varnish a servir uma página web rica a partir de um backend NGINX. Explorar comunicação entre serviços e o conceito de proxy reverso.
-
-1.  **Criar a Estrutura de Ficheiros:**
-    ```bash
-    mkdir -p ex4-varnish-cache/{varnish,my-dynamic-website}
-    cd ex4-varnish-cache
+2.  Crie o Conteúdo Web:
+    * Encontre um GIF animado online e guarde-o dentro de `my-dynamic-website` como `animation.gif`. Por exemplo, pode usar este: [docker.gif](https://github.com/detiuaveiro/lss/blob/master/assets/figures/docker.gif).
+    * Dentro de `my-dynamic-website`, crie um ficheiro `index.html` para exibir o GIF:
+    ```html
+    <!DOCTYPE html>
+    <html lang="pt">
+    <head>
+        <meta charset="UTF-8">
+        <title>Teste de Cache Varnish</title>
+        <style> body { font-family: sans-serif; text-align: center; } </style>
+    </head>
+    <body>
+        <h1>Esta pagina esta a ser colocada em cache pelo Varnish!</h1>
+        <img src="docker.gif" alt="Animacao em cache">
+    </body>
+    </html>
     ```
-2.  **Criar o Conteúdo Web:**
-      * Encontre um GIF animado online e guarde-o dentro de `my-dynamic-website` como `animation.gif`.
-      * Dentro de `my-dynamic-website`, crie um ficheiro `index.html` para exibir o GIF:
-        ```html
-        <!DOCTYPE html>
-        <html lang="pt">
-        <head>
-            <meta charset="UTF-8">
-            <title>Teste de Cache Varnish</title>
-            <style>
-              body { font-family: sans-serif; text-align: center; padding: 2em; }
-              img { max-width: 400px; border-radius: 8px; }
-            </style>
-        </head>
-        <body>
-            <h1>Esta pagina esta a ser servida pela cache do Varnish!</h1>
-            <img src="animation.gif" alt="Animacao em cache">
-        </body>
-        </html>
-        ```
-3.  **Criar a Configuração do Varnish:**
-      * Dentro da pasta `varnish`, crie um ficheiro chamado `default.vcl`. Isto diz ao Varnish onde encontrar o servidor NGINX:
-        ```vcl
-        vcl 4.1;
-
-        # O backend aponta para o serviço 'nginx' definido no compose.yml.
-        # O Docker resolve este nome automaticamente via DNS interno.
-        backend default {
-            .host = "nginx";
-            .port = "80";
-        }
-        ```
-4.  **Criar o Ficheiro Compose:**
-      * Na raiz da sua pasta `ex4-varnish-cache`, crie o `compose.yml`:
-        ```yaml
-        services:
-          cache:
-            image: varnish:stable
-            volumes:
-              - ./varnish:/etc/varnish:ro
-            ports:
-              - "8080:80"
-            depends_on:
-              - nginx
-            restart: unless-stopped
-
-          nginx:
-            image: nginx:alpine
-            volumes:
-              - ./my-dynamic-website:/usr/share/nginx/html:ro
-            # Sem 'ports:' -- este serviço só é acessível internamente
-            restart: unless-stopped
-        ```
-5.  **Executar e Verificar:**
-      * Inicie os serviços:
-        ```bash
-        docker compose up -d
-        ```
-      * Verifique que ambos os serviços estão a correr:
-        ```bash
-        docker compose ps
-        ```
-      * Abra o seu navegador em `http://localhost:8080`. Deverá ver a sua página web com o GIF. O ponto-chave aqui é que foi o **Varnish** que lhe serviu a página, não o NGINX diretamente.
-6.  **Ver a cache em ação:**
-      * Verifique os logs do NGINX para o primeiro pedido:
-        ```bash
-        docker compose logs nginx
-        ```
-      * Agora, atualize a página do seu navegador várias vezes (5-10 vezes).
-      * Verifique os logs do `nginx` novamente:
-        ```bash
-        docker compose logs nginx
-        ```
-      * Deverá ver **poucos ou nenhuns novos registos de log**, porque o Varnish está a servir o conteúdo da sua cache sem contactar o backend NGINX.
-7.  **Limpar:**
+3.  Crie a Configuração do Varnish:
+    * Dentro da pasta `varnish`, crie um ficheiro chamado `default.vcl`. Isto diz ao Varnish onde encontrar o servidor backend NGINX:
+    ```vcl
+    vcl 4.1;
+    backend default {
+        .host = "nginx";
+        .port = "80";
+    }
+    ```
+  * **Dica:** A linha `.host = "nginx"` usa o nome do serviço do ficheiro compose. O Docker Compose cria automaticamente uma entrada DNS para que os serviços se possam alcançar uns aos outros pelo nome.
+4.  Crie o Ficheiro Compose:
+    * Na raiz da sua pasta `ex04`, crie o `compose.yml`:
+    ```yaml
+    services:
+      cache:
+        image: varnish:stable
+        volumes:
+          - ./varnish:/etc/varnish:ro
+        ports:
+          - "8080:80"
+        depends_on:
+          - nginx
+        restart: unless-stopped
+      nginx:
+        image: nginx:alpine
+        volumes:
+          - ./my-dynamic-website:/usr/share/nginx/html:ro
+        # Sem portas expostas: o nginx só é acessível
+        # a partir do interior da rede Docker
+    ```
+5.  Execute e Verifique:
+    * Inicie os serviços:
       ```bash
-      docker compose down
+      docker compose up -d
       ```
+    * Verifique se ambos os serviços estão a correr:
+      ```bash
+      docker compose ps
+      ```
+      Deverá ver dois contentores listados, ambos num estado "running".
+    * Abra o seu navegador em `http://localhost:8080`. Deverá ver a sua página web com o GIF. A chave aqui é que o **Varnish** serviu-lhe a página, não o NGINX diretamente.
+    * **Veja a cache em ação:** Verifique os logs do NGINX para o primeiro pedido:
+      ```bash
+      docker compose logs nginx
+      ```
+    * Agora, atualize a página do seu navegador várias vezes. Verifique os logs do `nginx` novamente:
+      ```bash
+      docker compose logs nginx
+      ```
+      Deverá ver **nenhuma nova entrada de log**, porque o Varnish está a servir o conteúdo da sua cache sem contactar o backend NGINX.
+    * **Bónus -- inspecione os cabeçalhos HTTP** para confirmar a cache:
+    ```bash
+    curl -I http://localhost:8080
+    ```
 
-**Verificação:** Compare os logs do NGINX antes e depois de atualizar a página várias vezes. Se a cache estiver a funcionar, o número de pedidos registados pelo NGINX não deverá aumentar significativamente.
+Procure cabeçalhos como `X-Varnish` e `Age`. Um valor de `Age` superior a `0` confirma que a resposta foi servida a partir da cache.
 
-> **Dica:** O `depends_on` garante que o NGINX arranca antes do Varnish, mas **não garante que o NGINX esteja pronto a servir pedidos**. Para verificações de saúde mais robustas, pode usar a diretiva `healthcheck` no Compose.
+**Conceito Chave -- Service Discovery:** O Docker Compose coloca todos os serviços numa rede partilhada por defeito. Os serviços podem alcançar-se uns aos outros usando o seu nome de serviço como hostname (por exemplo, `nginx`). Apenas os serviços com mapeamentos de portas (`ports`) são acessíveis a partir da máquina anfitriã.
 
-> **Dica:** Note que o serviço `nginx` **não expõe portas** para o anfitrião. Só é acessível a partir de outros contentores na mesma rede Docker. O Compose cria automaticamente uma rede partilhada entre todos os serviços definidos no mesmo ficheiro.
+**Limpeza:**
 
-> **Conceito Chave:** Este exercício demonstra o padrão de **proxy reverso** e **service discovery**. O Varnish encontra o NGINX pelo nome do serviço (`nginx`), graças ao DNS interno do Docker. Este é um padrão fundamental em arquiteturas web modernas.
+```bash
+docker compose down
+```
 
------
+---
 
 ## Exercício 5: Implementar uma Aplicação do Mundo Real
 
-**Objetivo:** Aprender a ler documentação oficial e a implementar um serviço complexo auto-hospedado à sua escolha usando Docker Compose.
+**Objetivo:** Aprender a ler documentação oficial e a implementar um serviço complexo auto-hospedado à sua escolha usando o Docker Compose.
 
-1.  **Escolha um Serviço:** Vá a [LinuxServer.io](https://www.linuxserver.io/) e navegue pela lista de imagens populares. Escolha uma que lhe interesse, por exemplo:
-
-      * **Jellyfin:** Um servidor de multimédia para os seus filmes e música.
-      * **Nextcloud:** Uma nuvem pessoal para ficheiros, contactos e calendários.
-      * **Home Assistant:** Uma plataforma de automação residencial de código aberto.
-
-2.  **Leia a Documentação:** Na página da imagem escolhida, encontre a secção "Docker Compose". Leia-a com atenção, prestando especial atenção aos **volumes** e **variáveis de ambiente** necessários.
-
-      * **Volumes (`- ./config:/config`):** É aqui que a configuração da aplicação será armazenada na sua máquina anfitriã. Isto garante que os dados persistem mesmo que o contentor seja removido.
-      * **Variáveis de Ambiente (`PUID`, `PGID`, `TZ`):** Estas são críticas. `TZ` define o seu fuso horário (p. ex., `Europe/Lisbon`). `PUID` e `PGID` garantem que os ficheiros criados pelo contentor têm a propriedade correta. Em Linux, encontre o seu ID executando o comando `id` no seu terminal. Um valor comum é `1000`.
-
-3.  **Crie o seu `compose.yml`:** Com base na documentação, crie o ficheiro. Aqui está um exemplo para o **Jellyfin**:
-
+1.  A partir do seu diretório de trabalho, crie a Estrutura de Ficheiros:
+    ```bash
+    mkdir ex05
+    cd ex05
+    ```
+2.  Escolha um Serviço: Vá a [LinuxServer.io](https://www.linuxserver.io/) e navegue pela lista de imagens populares. Escolha uma que lhe interesse, por exemplo:
+    * **Jellyfin:** Um servidor multimédia para os seus filmes e música.
+    * **Nextcloud:** Uma nuvem pessoal para ficheiros, contactos e calendários.
+    * **Home Assistant:** Uma plataforma de automação residencial de código aberto.
+3.  Leia a Documentação: Na página da imagem escolhida, encontre a secção "Docker Compose". Leia-a com atenção, prestando especial atenção a:
+    * **Volumes (`- ./config:/config`):** É aqui que a configuração e os dados da aplicação serão armazenados na sua máquina anfitriã. Isto garante que os seus dados persistem mesmo que o contentor seja removido.
+    * **Variáveis de Ambiente (`PUID`, `PGID`, `TZ`):** Estas são críticas para o funcionamento correto.
+      * `TZ` define o seu fuso horário (p. ex., `Europe/Lisbon`). Pode encontrar a sua string de fuso horário em [Wikipedia: List of tz database time zones](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
+      * `PUID` e `PGID` garantem que os ficheiros criados pelo contentor têm a propriedade correta no anfitrião. Encontre os seus valores executando `id` no seu terminal. Um valor comum é `1000`.
+    * **Portas:** Anote em que porta a aplicação escuta para saber onde aceder-lhe no seu navegador.
+4.  Crie o seu `compose.yml`: Com base na documentação, crie o ficheiro. Aqui está um exemplo para o **Jellyfin**:
     ```yaml
     services:
       jellyfin:
@@ -319,93 +291,114 @@ Se estiver a usar um anfitrião Linux, siga estes passos no seu terminal para in
           - TZ=Europe/Lisbon
         volumes:
           - ./config:/config
-          - ./series:/data/tvshows
-          - ./filmes:/data/movies
+          - ./tvshows:/data/tvshows
+          - ./movies:/data/movies
         ports:
           - "8096:8096"
         restart: unless-stopped
     ```
-
-4.  **Prepare e Implemente:**
-
-      * Crie as pastas locais que definiu nos seus volumes:
-        ```bash
-        mkdir -p config series filmes
-        ```
-      * Execute a aplicação:
-        ```bash
-        docker compose up -d
-        ```
-      * Verifique que o serviço está a correr:
-        ```bash
-        docker compose ps
-        docker compose logs -f
-        ```
-        (Use `Ctrl+C` para sair dos logs.)
-
-5.  **Explore:** Verifique a documentação para o número da porta padrão. Para o Jellyfin, é `8096`. Abra o seu navegador em `http://localhost:8096` e siga o assistente de configuração para o seu novo serviço!
-
-6.  **Quando terminar:**
+5.  Prepare e Implemente:
+    * Crie as pastas locais que definiu nos seus volumes:
       ```bash
-      docker compose down
+      mkdir -p config tvshows movies
       ```
+    * Inicie a aplicação:
+    ```bash
+    docker compose up -d
+    ```
+    * Monitorize os logs de arranque para verificar a existência de erros:
+    ```bash
+    docker compose logs -f
+    ```
+    Pressione `Ctrl+C` para parar de seguir os logs (o contentor continua a correr).
+6.  Explore: Verifique a documentação para o número da porta padrão. Para o Jellyfin, é `8096`. Abra o seu navegador em `http://localhost:8096` e siga o assistente de configuração para o seu novo serviço.
 
-**Verificação:** O serviço deve estar acessível no navegador na porta indicada. Execute `docker compose ps` para confirmar que o estado é `Up` e `healthy` (se disponível).
+**Verificação:**
 
-> **Dica:** Se a aplicação demorar a arrancar, consulte os logs com `docker compose logs -f nome_do_servico` para ver o progresso. Muitas aplicações precisam de algum tempo na primeira execução para inicializar a base de dados ou configuração.
+* Execute `docker compose ps` para confirmar que o contentor está a correr.
+* Execute `docker compose logs` para verificar quaisquer mensagens de erro durante o arranque.
+* Se a interface web não carregar, aguarde um minuto -- algumas aplicações demoram algum tempo a inicializar no primeiro arranque.
 
-> **Dica:** A opção `restart: unless-stopped` garante que o contentor reinicia automaticamente após um crash ou reinício do sistema, a menos que o tenha parado explicitamente com `docker compose stop`.
+**Dica:** A política `restart: unless-stopped` significa que o contentor reiniciará automaticamente se falhar ou se o daemon do Docker reiniciar (por exemplo, após uma reinicialização do sistema), a menos que o pare explicitamente com `docker compose down` ou `docker compose stop`.
 
------
+**Limpeza:**
 
-## Referencia Rapida: Comandos Docker Compose
+```bash
+docker compose down
 
-Utilize esta tabela como referência durante os exercícios.
+```
+
+Nota: isto apenas para e remove os contentores. Os seus dados nas pastas de volumes (`config`, `tvshows`, `movies`) são preservados no anfitrião e serão reutilizados se iniciar o serviço novamente.
+
+---
+
+## Referência Rápida: Comandos Essenciais do Docker Compose
+
+A tabela seguinte resume os comandos mais úteis do Docker Compose que irá precisar ao longo destes exercícios e não só.
 
 | Comando | Descrição |
-|---|---|
-| `docker compose up -d` | Inicia todos os serviços em segundo plano |
-| `docker compose up --build -d` | Reconstrói imagens e inicia os serviços |
-| `docker compose down` | Para e remove contentores, redes |
-| `docker compose down -v` | Idem, e também remove volumes nomeados |
-| `docker compose ps` | Lista os serviços e o seu estado |
-| `docker compose ps -a` | Lista todos os serviços (incluindo parados) |
+| --- | --- |
+| `docker compose up -d` | Inicia todos os serviços em modo *detached* (segundo plano) |
+| `docker compose up --build -d` | Reconstrói as imagens e inicia todos os serviços |
+| `docker compose down` | Para e remove todos os contentores e redes |
+| `docker compose down -v` | O mesmo que o anterior, mas também remove os volumes nomeados |
+| `docker compose ps` | Lista os serviços a correr e o seu estado |
 | `docker compose logs` | Mostra os logs de todos os serviços |
-| `docker compose logs -f servico` | Segue os logs de um serviço específico |
-| `docker compose exec servico sh` | Abre um shell dentro de um contentor |
-| `docker compose restart servico` | Reinicia um serviço específico |
-| `docker compose pull` | Descarrega as versões mais recentes das imagens |
-| `docker compose config` | Valida e mostra a configuração final |
+| `docker compose logs -f <servico>` | Segue (tail) os logs para um serviço específico |
+| `docker compose exec <servico> sh` | Abre uma shell dentro de um contentor a correr |
+| `docker compose stop` | Para os serviços sem remover os contentores |
+| `docker compose start` | Inicia serviços previamente parados |
+| `docker compose restart` | Reinicia todos os serviços |
+| `docker compose pull` | Puxa (descarrega) as imagens mais recentes para todos os serviços |
+| `docker compose config` | Valida e mostra o ficheiro compose resolvido |
 
------
+---
 
-## Resolucao de Problemas Comuns
+## Dicas de Resolução de Problemas
 
-**O contentor não arranca ou sai imediatamente:**
+Se encontrar problemas durante os exercícios, tente estes passos:
 
-  * Verifique os logs: `docker compose logs nome_do_servico`
-  * Confirme que o `compose.yml` não tem erros de sintaxe: `docker compose config`
-  * Verifique se a imagem existe e é válida: `docker compose pull`
+1. **Porta já em uso:** Se vir um erro como "port is already allocated", outro serviço (ou um exercício anterior) está a usar essa porta. Pare-o primeiro com `docker compose down` na pasta do outro exercício, ou escolha uma porta de anfitrião diferente (por exemplo, altere `"8080:80"` para `"8081:80"`).
+2. **Contentor termina imediatamente:** Verifique os logs para compreender o porquê:
+```bash
+docker compose logs <nome-do-servico>
 
-**Erro "port is already allocated":**
+```
 
-  * Outra aplicação (ou contentor) está a usar a mesma porta.
-  * Identifique o processo: `ss -tlnp | grep NUMERO_DA_PORTA`
-  * Altere o mapeamento de portas no `compose.yml` (lado esquerdo do `:`) para uma porta livre.
 
-**Erro "permission denied" ao executar docker:**
+3. **Alterações nos ficheiros não refletidas:** Se modificou um `Dockerfile` ou ficheiros copiados com `COPY`, tem de reconstruir:
+```bash
+docker compose up --build -d
 
-  * Certifique-se de que o seu utilizador está no grupo `docker`: `groups`
-  * Se acabou de se adicionar ao grupo, faça logout e login novamente.
-  * Em alternativa, use `sudo` antes do comando (não recomendado como solução permanente).
+```
 
-**Alterações no index.html não aparecem no navegador:**
 
-  * Limpe a cache do navegador com Ctrl+F5 (hard refresh).
-  * Verifique que o caminho do volume no `compose.yml` está correto e aponta para a pasta certa.
-  * Confirme que está a editar o ficheiro correto (não uma cópia).
+Se estiver a usar volumes (bind mounts), as alterações devem aparecer imediatamente -- tente uma atualização forçada no seu navegador (`Ctrl+Shift+R`).
+4. **Não é possível conectar ao daemon do Docker:** Certifique-se de que o serviço Docker está a correr:
+```bash
+sudo systemctl start docker
+sudo systemctl status docker
 
-**Erro "no such service" ou "service not found":**
+```
 
-  * Verifique que está na pasta correta que contém o `compose.yml`.
-  * Confirme que o nome do serviço no comando corresponde ao definido no ficheiro.
+
+5. **Problemas de espaço em disco:** As imagens e contentores Docker podem acumular-se ao longo do tempo. Limpe os recursos não utilizados com:
+```bash
+docker system prune
+
+```
+
+
+Adicione a flag `-a` para também remover imagens não utilizadas (não apenas as "dangling").
+6. **Inspecionar um contentor:** Para explorar o que está a acontecer dentro de um contentor a correr, abra uma shell:
+```bash
+docker compose exec <nome-do-servico> sh
+
+```
+
+
+Isto é útil para verificar o conteúdo de ficheiros, testar conectividade de rede (`ping`, `wget`), ou ler logs dentro do contentor.
+
+```
+
+```

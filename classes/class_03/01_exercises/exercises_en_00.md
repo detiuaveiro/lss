@@ -17,51 +17,15 @@ title: Containers
 
 ## Installing Docker on Debian
 
-If you are using a Linux host, follow these steps in your terminal to install the latest version of Docker. Based on these [instructions](https://docs.docker.com/engine/install/debian/).
+If you are using a Linux host, follow these steps in your terminal to install the latest version of Docker (you can install it manually, following these [instructions](https://docs.docker.com/engine/install/debian/)).
 
-1.  **Set up Docker's `apt` repository:**
-    ```bash
-    # Remove non-official docker packages
-    sudo apt remove docker.io docker-doc \
-    docker-compose podman-docker containerd runc
+To simplify the installation process, you can run the following bash script (works on Ubuntu and Debian). It will set up the Docker repository, install Docker Engine, and configure your user permissions:
 
-    # Update package index and install prerequisites
-    sudo apt update
-    sudo apt install ca-certificates curl
+```bash
+./classes/class_03/02_support/docker_setup.sh
+```
 
-    # Add Docker's official GPG key
-    sudo install -m 0755 -d /etc/apt/keyrings
-    sudo curl -fsSL https://download.docker.com/linux/debian/gpg \
-    -o /etc/apt/keyrings/docker.asc
-    sudo chmod a+r /etc/apt/keyrings/docker.asc
-
-    # Add the repository to Apt sources:
-    echo \
-      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] \
-      https://download.docker.com/linux/debian \
-      $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-      sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-    sudo apt update
-    ```
-2.  **Install the Docker packages:**
-    ```bash
-    sudo apt install docker-ce docker-ce-cli containerd.io \
-    docker-buildx-plugin docker-compose-plugin
-    ```
-3.  **Manage Docker as a non-root user (Recommended):**
-    To run `docker` commands without `sudo`, add your user to the `docker` group.
-    ```bash
-    sudo usermod -aG docker $USER
-    ```
-    **Important:** You must log out and log back in for this change to take effect. You can verify it worked by running `docker ps` without `sudo`.
-4.  **Verify the installation:**
-    ```bash
-    docker --version
-    docker compose version
-    ```
-    Both commands should print version information without errors.
-
-**Tip:** If you encounter a "permission denied" error when running `docker` commands, make sure you completed step 3 and logged out/in again. As a quick workaround you can prefix commands with `sudo`, but configuring the group is the recommended approach.
+**Tip:** If you encounter a "permission denied" error when running `docker` commands, make sure you installed docker correctly and logged out/in again. As a quick workaround you can prefix commands with `sudo`, but configuring the group is the **recommended** approach.
 
 -----
 
@@ -209,11 +173,11 @@ docker compose down
 
 1.  From your working directory, create the File Structure:
     ```bash
-    mkdir -p ex04\my-dynamic-website
+    mkdir -p ex04/my-dynamic-website
     cd ex04
     ```
 2.  Create the Web Content:
-    * Find a fun animated GIF online and save it inside `my-dynamic-website` as `animation.gif`. For example, you can use this one: [docker.gif]().
+    * Find a fun animated GIF online and save it inside `my-dynamic-website` as `animation.gif`. For example, you can use this one: [docker.gif](https://github.com/detiuaveiro/lss/blob/master/assets/figures/docker.gif).
     * Inside `my-dynamic-website`, create an `index.html` file to display the GIF:
       ```html
       <!DOCTYPE html>
@@ -225,67 +189,66 @@ docker compose down
       </head>
       <body>
           <h1>This page is being cached by Varnish!</h1>
-          <img src="animation.gif" alt="Cached animation">
+          <img src="docker.gif" alt="Cached animation">
       </body>
       </html>
       ```
-3.  **Create the Varnish Configuration:**
-      * Inside the `varnish` folder, create a file named `default.vcl`. This tells Varnish where to find the NGINX backend server:
-        ```vcl
-        vcl 4.1;
-        backend default {
-            .host = "nginx";
-            .port = "80";
-        }
-        ```
+3.  Create the Varnish Configuration:
+    * Inside the `varnish` folder, create a file named `default.vcl`. This tells Varnish where to find the NGINX backend server:
+      ```vcl
+      vcl 4.1;
+      backend default {
+          .host = "nginx";
+          .port = "80";
+      }
+      ```
       * **Tip:** The `.host = "nginx"` line uses the service name from the compose file. Docker Compose automatically creates a DNS entry so that services can reach each other by name.
+4.  Create the Compose File:
+    * In the root of your `ex04` folder, create the `compose.yml`:
+      ```yaml
+      services:
+        cache:
+          image: varnish:stable
+          volumes:
+            - ./varnish:/etc/varnish:ro
+          ports:
+            - "8080:80"
+          depends_on:
+            - nginx
+          restart: unless-stopped
 
-4.  **Create the Compose File:**
-      * In the root of your `ex4-varnish-cache` folder, create the `compose.yml`:
-        ```yaml
-        services:
-          cache:
-            image: varnish:stable
-            volumes:
-              - ./varnish:/etc/varnish:ro
-            ports:
-              - "8080:80"
-            depends_on:
-              - nginx
-            restart: unless-stopped
-
-          nginx:
-            image: nginx:alpine
-            volumes:
-              - ./my-dynamic-website:/usr/share/nginx/html:ro
-            # No ports exposed: nginx is only accessible
-            # from within the Docker network
-        ```
-5.  **Run and Verify:**
-      * Start the services:
-        ```bash
-        docker compose up -d
-        ```
-      * Check that both services are running:
-        ```bash
-        docker compose ps
-        ```
-        You should see two containers listed, both in a "running" state.
-      * Open your browser to `http://localhost:8080`. You should see your webpage with the GIF. The key here is that **Varnish** served you the page, not NGINX directly.
-      * **See the cache in action:** Check the NGINX logs for the first request:
-        ```bash
-        docker compose logs nginx
-        ```
-      * Now, refresh your browser page several times. Check the `nginx` logs again:
-        ```bash
-        docker compose logs nginx
-        ```
-        You should see **no new log entries**, because Varnish is serving the content from its cache without contacting the NGINX backend.
-      * **Bonus -- inspect the HTTP headers** to confirm caching:
-        ```bash
-        curl -I http://localhost:8080
-        ```
-        Look for headers like `X-Varnish` and `Age`. An `Age` value greater than `0` confirms the response was served from cache.
+        nginx:
+          image: nginx:alpine
+          volumes:
+            - ./my-dynamic-website:/usr/share/nginx/html:ro
+          # No ports exposed: nginx is only accessible
+          # from within the Docker network
+      ```
+5.  Run and Verify:
+    * Start the services:
+      ```bash
+      docker compose up -d
+      ```
+    * Check that both services are running:
+      ```bash
+      docker compose ps
+      ```
+      You should see two containers listed, both in a "running" state.
+    * Open your browser to `http://localhost:8080`. You should see your webpage with the GIF. The key here is that **Varnish** served you the page, not NGINX directly.
+    * **See the cache in action:** Check the NGINX logs for the first request:
+      ```bash
+      docker compose logs nginx
+      ```
+    * Now, refresh your browser page several times. Check the `nginx` logs again:
+      ```bash
+      docker compose logs nginx
+      ```
+      You should see **no new log entries**, because Varnish is serving the content from its cache without contacting the NGINX backend.
+    * **Bonus -- inspect the HTTP headers** to confirm caching:
+      ```bash
+      curl -I http://localhost:8080
+      ```
+      Look for headers like `X-Varnish` and `Age`. An `Age` value greater than `0` confirms the response was served from cache.
 
 **Key Concept -- Service Discovery:** Docker Compose places all services on a shared network by default. Services can reach each other using their service name as a hostname (e.g., `nginx`). Only services with `ports` mappings are accessible from the host machine.
 
@@ -301,22 +264,25 @@ docker compose down
 
 **Goal:** Learn to read official documentation and deploy a complex, self-hosted service of your choice using Docker Compose.
 
-1.  **Choose a Service:** Go to [LinuxServer.io](https://www.linuxserver.io/) and browse their list of popular images. Choose one that interests you, for example:
+1.  From your working directory, create the File Structure:
+    ```bash
+    mkdir ex05
+    cd ex05
+    ```
 
-      * **Jellyfin:** A media server for your movies and music.
-      * **Nextcloud:** A personal cloud for files, contacts, and calendars.
-      * **Home Assistant:** An open-source home automation platform.
+2.  Choose a Service, go to [LinuxServer.io](https://www.linuxserver.io/) and browse their list of popular images. Choose one that interests you, for example:
+  * **Jellyfin:** A media server for your movies and music.
+  * **Nextcloud:** A personal cloud for files, contacts, and calendars.
+  * **Home Assistant:** An open-source home automation platform.
 
-2.  **Read the Documentation:** On the page for your chosen image, find the "Docker Compose" section. Read it carefully, paying close attention to:
+3. Read the Documentation, on the page for your chosen image, find the "Docker Compose" section. Read it carefully, paying close attention to:
+  * **Volumes (`- ./config:/config`):** This is where the application's configuration and data will be stored on your host machine. This ensures your data persists even if the container is removed.
+  * **Environment Variables (`PUID`, `PGID`, `TZ`):** These are critical for correct operation.
+      * `TZ` sets your timezone (e.g., `Europe/Lisbon`). You can find your timezone string at [Wikipedia: List of tz database time zones](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
+      * `PUID` and `PGID` ensure that files created by the container have the correct ownership on the host. Find your values by running `id` in your terminal. A common value is `1000`.
+  * **Ports:** Note which port the application listens on so you know where to access it in your browser.
 
-      * **Volumes (`- ./config:/config`):** This is where the application's configuration and data will be stored on your host machine. This ensures your data persists even if the container is removed.
-      * **Environment Variables (`PUID`, `PGID`, `TZ`):** These are critical for correct operation.
-          * `TZ` sets your timezone (e.g., `Europe/Lisbon`). You can find your timezone string at [Wikipedia: List of tz database time zones](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
-          * `PUID` and `PGID` ensure that files created by the container have the correct ownership on the host. Find your values by running `id` in your terminal. A common value is `1000`.
-      * **Ports:** Note which port the application listens on so you know where to access it in your browser.
-
-3.  **Create Your `compose.yml`:** Based on the documentation, create the file. Here is an example for **Jellyfin**:
-
+4.  Create Your `compose.yml`, based on the documentation, create the file. Here is an example for **Jellyfin**:
     ```yaml
     services:
       jellyfin:
@@ -335,23 +301,22 @@ docker compose down
         restart: unless-stopped
     ```
 
-4.  **Prepare and Deploy:**
+5.  Prepare and Deploy:
+    * Create the local folders you defined in your volumes:
+      ```bash
+      mkdir -p config tvshows movies
+      ```
+    * Start the application:
+      ```bash
+      docker compose up -d
+      ```
+    * Monitor the startup logs to check for errors:
+      ```bash
+      docker compose logs -f
+      ```
+      Press `Ctrl+C` to stop following the logs (the container keeps running).
 
-      * Create the local folders you defined in your volumes:
-        ```bash
-        mkdir -p config tvshows movies
-        ```
-      * Start the application:
-        ```bash
-        docker compose up -d
-        ```
-      * Monitor the startup logs to check for errors:
-        ```bash
-        docker compose logs -f
-        ```
-        Press `Ctrl+C` to stop following the logs (the container keeps running).
-
-5.  **Explore:** Check the documentation for the default port number. For Jellyfin, it is `8096`. Open your browser to `http://localhost:8096` and follow the setup wizard for your new service.
+6. Check the documentation for the default port number. For Jellyfin, it is `8096`. Open your browser to `http://localhost:8096` and follow the setup wizard for your new service.
 
 **Verification:**
 
@@ -376,7 +341,7 @@ Note: this only stops and removes the containers. Your data in the volume folder
 The following table summarizes the most useful Docker Compose commands you will need throughout these exercises and beyond.
 
 | Command | Description |
-|---|---|
+|:--------|:------------|
 | `docker compose up -d` | Start all services in detached (background) mode |
 | `docker compose up --build -d` | Rebuild images and start all services |
 | `docker compose down` | Stop and remove all containers and networks |
