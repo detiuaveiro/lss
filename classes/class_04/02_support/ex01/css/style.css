@@ -1,0 +1,25 @@
+@font-face {
+    font-family: "FiraSans";
+    src: url("https://fonts.gstatic.com/s/firasans/v17/va9E4kDNxMZdWfMOD5Vvl4jO.ttf")
+        format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    background-color: #f9f9f9;
+    color: #222;
+    font-family: "FiraSans", Arial, Helvetica, sans-serif;
+    margin: 40px;
+    padding: 0;
+}
+
+h1 {
+    color: #005a9c;
+    font-size: 2.5em;
+    margin-bottom: 0.5em;
+}
+
+p {
+    font-size: 1.2em;
+}

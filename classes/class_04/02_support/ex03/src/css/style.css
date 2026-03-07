@@ -1,0 +1,138 @@
+/* Base styles */
+body {
+    background-color: #f8f9fa;
+    color: #222;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header,
+main,
+footer {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+header h1 {
+    color: #004a8c;
+    margin-bottom: 0.5em;
+}
+
+nav {
+    margin-bottom: 1em;
+}
+nav a {
+    color: #005a9c;
+    text-decoration: none;
+    margin-right: 18px;
+    font-weight: bold;
+}
+nav a:hover {
+    text-decoration: underline;
+}
+
+footer {
+    text-align: center;
+    font-size: 0.95em;
+    color: #777;
+    margin-top: 2em;
+}
+
+/* Responsive styles for phone screens */
+@media (max-width: 600px) {
+    header,
+    main,
+    footer {
+        padding: 10px;
+        margin: 8px;
+        max-width: 100%;
+    }
+    nav a {
+        display: block;
+        margin: 8px 0;
+    }
+    .slideshow-container {
+        width: 100%;
+    }
+    img,
+    video {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+/* Slideshow styles (pure HTML+CSS) */
+.slideshow-container {
+    position: relative;
+    max-width: 600px;
+    margin: 30px auto;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    background: #eee;
+}
+
+.slide {
+    display: none;
+    width: 100%;
+    height: 340px;
+    text-align: center;
+    line-height: 340px;
+    font-size: 2em;
+    color: #fff;
+    background: #888;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+input[type="radio"].slide-toggle {
+    display: none;
+}
+
+/* Show the slide when the corresponding radio is checked */
+#slide1:checked ~ .slides .slide1,
+#slide2:checked ~ .slides .slide2,
+#slide3:checked ~ .slides .slide3 {
+    display: block;
+    position: relative;
+}
+
+/* Slideshow navigation dots */
+.slideshow-dots {
+    text-align: center;
+    margin-top: 12px;
+}
+.slideshow-dots label {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin: 0 5px;
+    background: #bbb;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+#slide1:checked ~ .slideshow-dots label[for="slide1"],
+#slide2:checked ~ .slideshow-dots label[for="slide2"],
+#slide3:checked ~ .slideshow-dots label[for="slide3"] {
+    background: #004a8c;
+}
+
+/* Example image styling for slides */
+.slide img {
+    width: 100%;
+    height: 340px;
+    object-fit: cover;
+    border-radius: 8px 8px 0 0;
+}
+
+/* Utility classes */
+.section {
+    margin-bottom: 2em;
+}

@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <!-- SEO: Add a relevant description and keywords for your portfolio -->
+        <meta
+            name="description"
+            content="A personal portfolio website. Add your own description here."
+        />
+        <meta
+            name="keywords"
+            content="portfolio, web development, student, projects"
+        />
+        <meta name="author" content="Your Name" />
+        <!-- Responsive design: Ensures the site scales on mobile devices -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>My Portfolio</title>
+        <link rel="stylesheet" href="css/style.css" />
+    </head>
+    <body>
+        <header>
+            <h1>My Portfolio</h1>
+            <nav aria-label="Main navigation">
+                <a href="index.html">Home</a>
+                <a href="projects.html">Projects</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+        </header>
+        <main>
+            <section id="welcome">
+                <h2>Welcome</h2>
+                <p>Hello! Welcome to my portfolio website.</p>
+                <p>
+                    Here you can find information about me, my projects, and how
+                    to contact me.
+                </p>
+            </section>
+
+            <section id="slideshow">
+                <h2>Photo Slideshow</h2>
+                <div class="slideshow-container">
+                    <input
+                        type="radio"
+                        name="slide"
+                        id="slide1"
+                        class="slide-toggle"
+                        checked
+                    />
+                    <input
+                        type="radio"
+                        name="slide"
+                        id="slide2"
+                        class="slide-toggle"
+                    />
+                    <input
+                        type="radio"
+                        name="slide"
+                        id="slide3"
+                        class="slide-toggle"
+                    />
+                    <div class="slides">
+                        <div class="slide slide1">
+                            <img
+                                src="https://placehold.co/600x340/bf616a/fff?text=Photo+1"
+                                alt="Photo 1"
+                            />
+                        </div>
+                        <div class="slide slide2">
+                            <img
+                                src="https://placehold.co/600x340/ebcb8b/fff?text=Photo+2"
+                                alt="Photo 2"
+                            />
+                        </div>
+                        <div class="slide slide3">
+                            <img
+                                src="https://placehold.co/600x340/b48ead/fff?text=Photo+3"
+                                alt="Photo 3"
+                            />
+                        </div>
+                    </div>
+                    <div class="slideshow-dots">
+                        <label for="slide1"></label>
+                        <label for="slide2"></label>
+                        <label for="slide3"></label>
+                    </div>
+                </div>
+            </section>
+
+            <section id="about">
+                <h2>About Me</h2>
+                <figure>
+                    <img
+                        src="https://placehold.co/150x150/a3be8c/fff?text=Me"
+                        alt="Profile photo"
+                        width="150"
+                        style="border-radius: 50%"
+                    />
+                </figure>
+                <p>I am a first-year student learning about web development.</p>
+                <p>I enjoy building websites and exploring new technologies.</p>
+            </section>
+
+            <section id="media">
+                <h2>Media</h2>
+                <video width="600" controls>
+                    <source
+                        src="https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                        type="video/mp4"
+                    />
+                    <p>Your browser does not support HTML5 video.</p>
+                </video>
+                <audio controls>
+                    <source
+                        src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+                        type="audio/mpeg"
+                    />
+                    <p>Your browser does not support HTML5 audio.</p>
+                </audio>
+            </section>
+        </main>
+        <footer>
+            <p>&copy; 2025 Your Name</p>
+        </footer>
+    </body>
+</html>

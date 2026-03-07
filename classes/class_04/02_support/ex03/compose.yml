@@ -1,0 +1,8 @@
+services:
+  webserver:
+    image: nginx:alpine
+    container_name: ex03_portfolio_site
+    ports:
+      - "8080:80"
+    volumes:
+      - ./src:/usr/share/nginx/html:ro
