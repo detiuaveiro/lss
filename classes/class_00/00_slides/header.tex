@@ -1,4 +1,9 @@
 \usepackage{booktabs}
+\usepackage{longtable}
 \usepackage{etoolbox}
 \usepackage{caption}
 \captionsetup[figure]{labelformat=empty}
+\AtBeginEnvironment{longtable}{\scriptsize}
+\AtBeginEnvironment{cslreferences}{\scriptsize}
+\AtBeginEnvironment{Shaded}{\normalsize}
+\AtBeginEnvironment{verbatim}{\normalsize}

@@ -35,11 +35,13 @@ We will focus on two main OS families:
 - **Windows:** The most common desktop OS, used by the majority of personal computers worldwide.
 - **Linux:** A powerful, open-source OS family, dominant in servers, cloud computing, and scientific research.
 
-## The Computer: Hardware Overview
+## The Computer: Hardware Overview i
 
-A computer system is built from three fundamental components working together:
+A computer system is built from three fundamental components working together.
 
 ![\ ](computer_architecture.png)
+
+## The Computer: Hardware Overview ii
 
 - **Processor (CPU):** The Central Processing Unit executes instructions. Modern CPUs have multiple cores, enabling parallel execution of tasks.
 - **Memory (RAM):** Random Access Memory provides fast, temporary storage for data and instructions that the CPU is actively using. It is **volatile** (data is lost when power is off).
@@ -47,7 +49,7 @@ A computer system is built from three fundamental components working together:
 
 The OS acts as the intermediary, deciding which process gets CPU time, how much RAM each process receives, and how data flows to and from storage.
 
-## OS Architecture: The Layered Model
+## OS Architecture: The Layered Model i
 
 An OS is organized in layers, from hardware at the bottom to user applications at the top:
 
@@ -62,17 +64,20 @@ An OS is organized in layers, from hardware at the bottom to user applications a
 
 - **Hardware:** The physical components (CPU, RAM, disk, network interface card).
 - **Kernel:** The core of the OS. It runs in privileged mode and has direct access to hardware. It handles process scheduling, memory allocation, device drivers, and filesystem operations.
+
+## OS Architecture: The Layered Model ii
+
 - **System Libraries and Services:** Provide a standardized interface (e.g., the C standard library, `libc`) so applications do not need to interact with the kernel directly.
 - **Shell and Utilities:** The command-line interface (e.g., Bash) and essential tools (`ls`, `cp`, `grep`) that allow users to interact with the system.
 - **User Applications:** Programs like web browsers, text editors, and your own code.
 
 # Filesystems
 
-## What is a Filesystem? i
+## What is a Filesystem?
 
 A filesystem defines how data is organized, stored, and retrieved on a storage device. Without a filesystem, data on a disk would be an undifferentiated stream of bytes with no way to tell where one file ends and another begins.
 
-### Windows: NTFS
+## Windows: NTFS
 
 NTFS (New Technology File System) is the default filesystem on modern Windows installations.
 
@@ -81,7 +86,7 @@ NTFS (New Technology File System) is the default filesystem on modern Windows in
 - Supports file permissions via **Access Control Lists (ACLs)**.
 - Example path: `C:\Users\YourName\Documents\report.txt`
 
-### Linux: ext4
+## Linux: ext4
 
 ext4 (Fourth Extended Filesystem) is the most common Linux filesystem (others include Btrfs and XFS).
 
@@ -91,17 +96,13 @@ ext4 (Fourth Extended Filesystem) is the most common Linux filesystem (others in
 - Uses a **permission model** based on owner, group, and others (read, write, execute).
 - Example path: `/home/yourname/documents/report.txt`
 
-## What is a Filesystem? ii
-
-### The Linux Filesystem Hierarchy Standard (FHS)
+## The Linux Filesystem Hierarchy Standard (FHS)
 
 Linux organizes its directories following a well-defined standard. Key directories include:
 
-![Linux Filesystem Hierarchy Standard](FHS.png){width=90%}
+![\ ](FHS.png){width=90%}
 
-## What is a Filesystem? iii
-
-### Key Linux Directories
+## Key Linux Directories
 
 | Directory | Purpose |
 | :--- | :--- |
@@ -119,8 +120,6 @@ Linux organizes its directories following a well-defined standard. Key directori
 # Why Linux?
 
 ## Why a Standard Environment? i
-
-We are standardizing on a **Linux-based command-line environment** for several important reasons:
 
 **Industry Dominance:**
 
@@ -159,7 +158,7 @@ Now, let us explore your options for getting this environment set up.
      - **Best for:** Safe experimentation with full isolation from your host system.
 
 3. **Windows Subsystem for Linux (WSL):**
-     - Run a real Linux kernel and environment directly inside Windows, with deep integration between the two systems.
+     - Run a real Linux kernel and environment directly inside Windows, with deep integration between them.
      - **Best for:** Windows users who want near-native Linux performance without rebooting or running a full VM.
 
 Each option has trade-offs. Let us examine them in detail.
@@ -176,13 +175,15 @@ This means installing a Linux distribution (such as Ubuntu or Fedora) directly o
 - Each OS occupies its own disk partition and operates independently.
 - Only one OS runs at a time, so the running OS has full access to all hardware resources.
 
+## Native Linux Installation ii
+
 ### Pros
 
 - **Best Performance:** No virtualization overhead; Linux has direct access to CPU, GPU, RAM, and all peripherals.
 - **Full Immersion:** Forces you to learn the Linux environment thoroughly.
 - **Full Hardware Access:** Direct access to GPU acceleration, USB devices, and networking hardware.
 
-## Native Linux Installation ii
+## Native Linux Installation iii
 
 ### Cons
 
@@ -190,13 +191,13 @@ This means installing a Linux distribution (such as Ubuntu or Fedora) directly o
 - **Hardware Compatibility:** Some hardware (specific Wi-Fi chipsets, fingerprint readers, certain GPUs) may require manual driver installation or kernel configuration.
 - **Inconvenient Switching:** Changing between Windows and Linux requires a full reboot.
 
-### Who is this for?
+## Who is this for?
 
 Students who are comfortable with computer hardware, enjoy learning by doing, or have a spare machine to dedicate to Linux.
 
-### Setup Steps
+## Setup Steps
 
-1. **Choose a distribution:** We recommend **Ubuntu 24.04 LTS** or **Debian 12** for their stability and extensive community support.
+1. **Choose a distribution:** We recommend **Ubuntu 26.04 LTS** or **Debian 13** for their stability and extensive community support.
 2. **Create a bootable USB drive:** Use [Rufus](https://rufus.ie/) (Windows) or [BalenaEtcher](https://www.balena.io/etcher/) (cross-platform).
 3. **Back up your data.** This step is non-negotiable.
 4. **Partition your hard drive** during installation. Allocate at least 40 GB for the Linux partition.
@@ -216,6 +217,8 @@ A Virtual Machine uses a **hypervisor** to emulate a complete computer system in
 - **Type 1 (Bare-metal):** Runs directly on hardware, without a host OS. Examples: VMware ESXi, Microsoft Hyper-V, Xen. Used in data centers and enterprise environments.
 - **Type 2 (Hosted):** Runs as an application on top of a host OS. Examples: VirtualBox, VMware Workstation, UTM. This is what we use in this course.
 
+## Virtual Machine (VM) ii
+
 ### Resource Allocation
 
 When creating a VM, you assign it a fixed share of your system's resources:
@@ -224,15 +227,7 @@ When creating a VM, you assign it a fixed share of your system's resources:
 - **RAM:** At least 2 GB for the VM (your host system should have 8 GB+ total).
 - **Disk:** A virtual disk file (typically 20--40 GB) stored on your host filesystem.
 
-## Virtual Machine (VM) ii
-
-### Networking Modes
-
-Your VM needs network access to download software (`apt install`), use `git`, and access the web. The hypervisor offers several networking modes:
-
-- **NAT (Network Address Translation):** The default mode. The VM shares the host's IP address. Outbound connections work transparently; inbound connections require port forwarding. This is the simplest and most common option.
-- **Bridged Adapter:** The VM gets its own IP address on the physical network, as if it were a separate physical machine. Useful when you need the VM to be accessible from other devices on the network.
-- **Host-Only:** Creates a private network between the host and the VM only. No internet access, but useful for isolated testing.
+## Virtual Machine (VM) iii
 
 ### Pros
 
@@ -240,7 +235,7 @@ Your VM needs network access to download software (`apt install`), use `git`, an
 - **Easy Setup:** Install VirtualBox, import the provided course image, and start working.
 - **Portable:** The VM image (`.ova` file) can be copied to another machine.
 
-## Virtual Machine (VM) iii
+## Virtual Machine (VM) iv
 
 ### Cons
 
@@ -248,17 +243,23 @@ Your VM needs network access to download software (`apt install`), use `git`, an
 - **Slower Performance:** The virtualization layer introduces overhead, especially for disk I/O and graphics.
 - **Limited GPU Access:** 3D acceleration and GPU passthrough are limited in Type 2 hypervisors.
 
-### Note for Mac Users (Apple Silicon: M1/M2/M3/M4)
+## Networking Modes
+
+The hypervisor offers several networking modes:
+
+- **NAT (Network Address Translation):** The default mode. The VM shares the host's IP address. Outbound connections work transparently; inbound connections require port forwarding. This is the simplest and most common option.
+- **Bridged Adapter:** The VM gets its own IP address on the physical network, as if it were a separate physical machine. Useful when you need the VM to be accessible from other devices on the network.
+- **Host-Only:** Creates a private network between the host and the VM only. No internet access, but useful for isolated testing.
+
+## Note for Mac Users (Apple Silicon: M1/M2/M3/M4)
 
 VirtualBox has limited support for ARM-based Apple Silicon chips. If you use a Mac with Apple Silicon, we recommend **UTM** (free, open-source) or **VMware Fusion** (free for personal use) instead.
 
-### Who is this for?
+## Who is this for?
 
 This is the **recommended default option** for the course. It is the safest, most consistent, and requires no changes to your existing OS.
 
-## Virtual Machine (VM) iv
-
-### Setup Steps
+## Setup Steps
 
 1. **Install the Hypervisor:**
      - Windows / Intel Mac: Download and install [VirtualBox](https://www.virtualbox.org/).
@@ -270,11 +271,11 @@ This is the **recommended default option** for the course. It is the safest, mos
 
 # Windows Subsystem for Linux
 
-## Windows Subsystem for Linux (WSL) i
+## Windows Subsystem for Linux (WSL)
 
 WSL allows you to run a genuine Linux kernel and userspace directly on Windows, without the overhead of a full virtual machine. Microsoft developed WSL to bring native Linux compatibility to Windows.
 
-### WSL 1 vs. WSL 2
+## WSL 1 vs. WSL 2
 
 | Feature | WSL 1 | WSL 2 |
 | :--- | :--- | :--- |
@@ -286,22 +287,20 @@ WSL allows you to run a genuine Linux kernel and userspace directly on Windows, 
 
 **We use WSL 2**, which ships a real Linux kernel in a lightweight, managed virtual machine. It offers full system call compatibility and excellent performance.
 
-## Windows Subsystem for Linux (WSL) ii
-
-### How it Works: Filesystem Integration
+## How it Works: Filesystem Integration
 
 - Your Windows drives are automatically mounted inside Linux under `/mnt/`. For example, `C:\Users\YourName` is accessible at `/mnt/c/Users/YourName`.
 - The Linux filesystem lives in a separate virtual disk, accessible from Windows Explorer by navigating to `\\wsl$\Ubuntu\home\yourname`.
 
 **Important:** For best performance, always store your project files inside the Linux filesystem (`/home/yourname/`), not on the mounted Windows drives (`/mnt/c/`). Cross-filesystem access is significantly slower.
 
-### How it Works: Networking
+## How it Works: Networking
 
 - WSL 2 uses a virtual network adapter with its own IP address.
 - Internet access works transparently through the host.
 - To access a server running inside WSL from Windows, use `localhost` (recent Windows builds support this automatically).
 
-## Windows Subsystem for Linux (WSL) iii
+## Windows Subsystem for Linux (WSL) i
 
 ### Pros
 
@@ -310,19 +309,19 @@ WSL allows you to run a genuine Linux kernel and userspace directly on Windows, 
 - **Seamless Integration:** Call Linux commands from PowerShell (`wsl ls -la`) and Windows executables from Linux (`explorer.exe .`). Share environment variables and clipboard.
 - **Low Resource Usage:** The lightweight VM starts in seconds and uses memory dynamically.
 
+## Windows Subsystem for Linux (WSL) ii
+
 ### Cons
 
 - **Windows Only:** Not available on macOS or native Linux (obviously).
 - **Advanced Networking Complexity:** Port forwarding, firewall rules, and USB device access require additional configuration compared to a full VM.
 - **Subtle Differences:** Line endings (`\r\n` vs `\n`), file permissions, and path formats can cause issues if you mix Windows and Linux filesystems carelessly.
 
-### Who is this for?
+## Who is this for?
 
 Windows users who want a fast, deeply integrated Linux environment without the overhead of a full VM or the commitment of a native installation.
 
-## Windows Subsystem for Linux (WSL) iv
-
-### Setup Steps
+## Setup Steps i
 
 1. **Enable WSL:** Open **PowerShell as Administrator** and run:
 
@@ -330,7 +329,7 @@ Windows users who want a fast, deeply integrated Linux environment without the o
    wsl --install
    ```
 
-   This command enables the required Windows features, downloads the Linux kernel, and installs **Ubuntu** by default. To install a different distribution:
+   This command enables the required Windows features, downloads the Linux kernel, and installs **Debian** by default. To install a different distribution:
 
    ```
    wsl --install -d Debian
@@ -338,6 +337,9 @@ Windows users who want a fast, deeply integrated Linux environment without the o
 
 2. **Reboot** your computer when prompted.
 3. **Create a User Account:** After reboot, a terminal window opens automatically. Create your Linux username and password.
+
+## Setup Steps ii
+
 4. **Verify the installation:** Run the following commands:
 
    ```
@@ -345,7 +347,7 @@ Windows users who want a fast, deeply integrated Linux environment without the o
    uname -r
    ```
 
-5. **Launch anytime:** Open "Ubuntu" (or "Debian") from the Start Menu, or type `wsl` in PowerShell.
+5. **Launch anytime:** Open "Debian" (or other Linux) from the Start Menu, or type `wsl` in PowerShell.
 
 # Wrap Up
 
@@ -371,7 +373,7 @@ Recommended For & Enthusiasts & \textbf{Everyone} & Windows Users \\
 
 The **Virtual Machine** is the default recommendation for this course due to its safety, consistency, and ease of setup.
 
-## Next Steps
+## Next Steps i
 
 ### Your Task Now:
 
@@ -385,6 +387,8 @@ The **Virtual Machine** is the default recommendation for this course due to its
    ```
 
 4. Be ready for our next session with a working environment.
+
+## Next Steps ii
 
 ### Need Help?
 

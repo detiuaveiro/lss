@@ -4,14 +4,14 @@ title: Web programming
 
 # JavaScript
 
-## JavaScript: Visão Geral Detalhada 
+## JavaScript: Visão Geral Detalhada i
 
 O JavaScript (JS) é frequentemente mal compreendido como um "brinquedo de scripting", mas é uma linguagem sofisticada e de alto nível.
 
 **1. Tipagem Dinâmica e Tipagem Fraca**
 
 * As variáveis não estão vinculadas a um *tipo de dados* específico.
-* *Porque é que isto importa:* Pode atribuir um Número a uma variável e, mais tarde, atribuir uma String à mesma variável. Isto oferece flexibilidade, mas aumenta o risco de erros em tempo de execução (ex: tentar multiplicar uma string).
+* *Porque é que isto importa:* Pode atribuir um Número a uma variável e, mais tarde, atribuir uma String à mesma variável. Flexível, mas aumenta o risco de erros (ex: tentar multiplicar uma string).
 
 ```javascript
 let x = 42;
@@ -19,10 +19,14 @@ x = "olá";
 console.log(x)
 ```
 
+## JavaScript: Visão Geral Detalhada ii
+
 **2. Orientação a Objetos baseada em Protótipos**
 
   * *Como funciona:* Ao contrário das linguagens baseadas em Classes (Java/C++), onde os objetos são instanciados a partir de "plantas" (classes), os objetos JS herdam diretamente de outros objetos (protótipos).
   * *Implicação:* A eficiência de memória envolve clonar estruturas existentes em vez de definir hierarquias rígidas.
+
+## JavaScript: Visão Geral Detalhada iii
 
 ```javascript
 let person  = {
@@ -35,6 +39,11 @@ let man = {
   hasBreast: false,
   hasBeard : true,
 }
+```
+
+## JavaScript: Visão Geral Detalhada iv
+
+```javascript
 //definir o protótipo de man para o objeto person
 man.__proto__ = person;
 //definir um terceiro objeto
@@ -49,6 +58,8 @@ console.log(samuel.walks())
 console.log(samuel.hasBeard)
 ```
 
+## JavaScript: Visão Geral Detalhada v
+
 **3. Execução Single-Threaded**
 
   * *A Restrição:* O JS tem uma **única Call Stack** (Pilha de Chamadas). Só consegue fazer *uma coisa de cada vez*.
@@ -56,7 +67,7 @@ console.log(samuel.hasBeard)
 
 # Paradigmas de Programação
 
-## Programação Sequencial (Procedimental) 
+## Programação Sequencial (Procedimental) i
 
 Este é o modelo utilizado em C básico, Fortran ou scripts simples de Python.
 
@@ -68,11 +79,13 @@ Este é o modelo utilizado em C básico, Fortran ou scripts simples de Python.
 4.  **A Linha 3 pede entrada de dados (`scanf`, `input()`).**
 5.  O programa **PARA** (bloqueia) e espera pelo utilizador. Nada mais acontece até o utilizador carregar no Enter.
 
+## Programação Sequencial (Procedimental) ii
+
 **Porque é que isto falha na UI:**
 Numa interface web, não podemos **"parar"** o motor de renderização para esperar por um clique do rato. Se o fizéssemos, os botões não animariam e os gifs não seriam reproduzidos.
 ![Sequential Programming](sequence.png)
 
-## Programação Orientada a Eventos 
+## Programação Orientada a Eventos i
 
 As interfaces modernas (Web, Windows, macOS) utilizam uma arquitetura **Orientada a Eventos** (Event-Driven).
 
@@ -85,17 +98,23 @@ As interfaces modernas (Web, Windows, macOS) utilizam uma arquitetura **Orientad
 
 **O "Princípio de Hollywood":**
 
-  * *Não nos ligue, nós ligamos-lhe.*
-  * O código não pergunta "O utilizador clicou?". Em vez disso, o browser interrompe o código dizendo "Acabou de ocorrer um clique, execute a Função de Clique."
-![Event-Driven Programming](event_loop.png){ width=65% }
+* *Não nos ligue, nós ligamos-lhe.*
+* O código não pergunta "O utilizador clicou?". Em vez disso, o browser interrompe o código dizendo "Acabou de ocorrer um clique, execute a Função de Clique."
 
-## A Cadeia de Eventos 
+## Programação Orientada a Eventos ii
+
+![\ ](event_loop.png){ width=65% }
+
+## A Cadeia de Eventos i
 
 Como é que uma ação física se torna execução de código?
 
 1.  **Nível de Hardware:** O utilizador move o rato. O hardware do rato envia um sinal elétrico (interrupção) ao CPU.
 2.  **Nível do SO:** O Sistema Operativo (Windows/Linux) interpreta este sinal como uma mudança de coordenadas e pinta o cursor a mover-se.
 3.  **Nível do Browser:** A janela do browser vê que o cursor está sobre um botão HTML específico e que o botão do rato foi pressionado.
+
+## A Cadeia de Eventos ii
+
 4.  **O Evento:** O browser cria um Objeto JavaScript `Event` contendo detalhes (coordenadas X/Y, qual o botão, timestamps).
 5.  **O Listener:** O browser verifica: *Este elemento HTML tem um listener anexado?*
 6.  **Execução:** Se sim, a função JS registada é empurrada para a pilha de execução (stack).
@@ -107,20 +126,22 @@ Como é que uma ação física se torna execução de código?
 **O Conceito:**
 Quando escreve um ficheiro HTML, é apenas uma string de texto. O browser analisa (faz o parse) desta string para uma estrutura em memória chamada DOM.
 
-  * **HTML:** `<div id="app"></div>` (Texto no disco rígido)
-  * **DOM:** `HTMLDivElement` (Objeto na RAM)
+* **HTML:** `<div id="app"></div>` (Texto no disco rígido)
+* **DOM:** `HTMLDivElement` (Objeto na RAM)
 
 **Porque é que o JS usa o DOM:**
 O JavaScript não pode editar o ficheiro de texto no servidor. Ele edita o **Objeto na RAM**. O motor de renderização do browser vigia constantemente o DOM; quando o JS atualiza o objeto DOM, o browser "repinta" o ecrã.
 
-## Estratégias de Execução e Carregamento 
+## Estratégias de Execução e Carregamento i
 
 O HTML é analisado sequencialmente (de cima para baixo). Quando o parser vê uma tag `<script>`, pausa a análise do HTML para descarregar e executar o script. Isto cria problemas:
 
 **1. O Truque "Bottom of Body"**
 
-  * *Técnica:* Colocar o `<script>` logo antes de `</body>`.
-  * *Raciocínio:* Garante que todos os elementos HTML existem no DOM antes que o script tente encontrá-los.
+* *Técnica:* Colocar o `<script>` logo antes de `</body>`.
+* *Raciocínio:* Garante que todos os elementos HTML existem no DOM antes que o script tente encontrá-los.
+
+## Estratégias de Execução e Carregamento ii
 
 **2. O Atributo `defer` (Padrão Moderno)**
 
@@ -128,11 +149,11 @@ O HTML é analisado sequencialmente (de cima para baixo). Quando o parser vê um
 <script src="app.js" defer></script>
 ```
 
-  * *Comportamento:* O script é descarregado em segundo plano (paralelo) enquanto o HTML é analisado.
-  * *Execução:* O browser garante que o script só correrá **depois** de o HTML estar totalmente analisado, mas **antes** do evento `DOMContentLoaded`.
-  * *Benefício:* Tempos de carregamento de página mais rápidos e acesso seguro ao DOM.
+* *Comportamento:* O script é descarregado em segundo plano (paralelo) enquanto o HTML é analisado.
+* *Execução:* O browser garante que o script só correrá **depois** de o HTML estar totalmente analisado, mas **antes** do evento `DOMContentLoaded`.
+* *Benefício:* Tempos de carregamento de página mais rápidos e acesso seguro ao DOM.
 
-## O Event Loop (Detalhe Técnico) 
+## O Event Loop (Detalhe Técnico)
 
 Como é que o JS single-threaded lida com tarefas assíncronas (como obter dados) sem congelar?
 
@@ -147,7 +168,7 @@ Como é que o JS single-threaded lida com tarefas assíncronas (como obter dados
 
 # Exemplos de JS
 
-## 1\. Manipulação de Eventos do Rato 
+## 1\. Manipulação de Eventos do Rato
 
 Usamos `addEventListener`. Esta é a fase de registo da programação Orientada a Eventos.
 
@@ -168,7 +189,7 @@ function handleMove(event) {
 box.addEventListener('mousemove', handleMove);
 ```
 
-## 2\. Conteúdo Dinâmico (Biblioteca de Fotos) 
+## 2\. Conteúdo Dinâmico (Biblioteca de Fotos)
 
 Podemos criar a interface programaticamente. É assim que o React/Vue funcionam "debaixo do capô" (Abordagem Imperativa).
 
@@ -191,7 +212,7 @@ urls.forEach(url => {
 });
 ```
 
-## 3\. Dados Assíncronos (Fetch API) 
+## 3\. Dados Assíncronos (Fetch API)
 
 Obter dados de uma API leva tempo (latência). Usamos **Promises** (`async/await`) para evitar bloqueios.
 
@@ -211,7 +232,7 @@ async function getData() {
 }
 ```
 
-## 4\. Comunicação em Tempo Real (WebSockets) 
+## 4\. Comunicação em Tempo Real (WebSockets)
 
 **HTTP vs. WebSockets:**
 
@@ -237,7 +258,7 @@ socket.onmessage = (event) => {
 
 # Depuração (Debugging) no Browser
 
-## O Desafio das Linguagens Interpretadas 
+## O Desafio das Linguagens Interpretadas
 
 Ao contrário de C, C++ ou Rust, o JavaScript é uma linguagem **Interpretada** (ou compilada JIT).
 
@@ -256,7 +277,7 @@ Ao contrário de C, C++ ou Rust, o JavaScript é uma linguagem **Interpretada** 
 **Consequência:**
 "Funciona na minha máquina" é comum. Pode não encontrar o erro porque não ativou o caminho de execução específico que contém o bug.
 
-## A Lacuna de Ambiente: Editor vs. Browser 
+## A Lacuna de Ambiente: Editor vs. Browser
 
 A depuração de Aplicações Web introduz uma desconexão entre onde **escreve** o código e onde **executa** o código.
 
@@ -292,7 +313,7 @@ A depuração de Aplicações Web introduz uma desconexão entre onde **escreve*
 
 # Frameworks Frontend Modernas
 
-## O Problema "Estado vs. Vista" 
+## O Problema "Estado vs. Vista"
 
 Em apps complexas (ex: Facebook, Spotify), manter a UI (Vista) sincronizada com os dados (Estado) usando Vanilla JS é propenso a erros.
 
@@ -301,7 +322,7 @@ Em apps complexas (ex: Facebook, Spotify), manter a UI (Vista) sincronizada com 
 1.  **Programação Declarativa:** Define *o que* a UI deve parecer para um determinado estado, e não *como* atualizá-la.
 2.  **Componentização:** Dividir a UI em pedaços reutilizáveis e isolados.
 
-## React: A Biblioteca 
+## React: A Biblioteca
 
 Desenvolvido pelo Facebook (Meta). O React é tecnicamente uma **Biblioteca**, não uma Framework, focada apenas na camada de Vista (View).
 
@@ -311,7 +332,7 @@ Desenvolvido pelo Facebook (Meta). O React é tecnicamente uma **Biblioteca**, n
 2.  **JSX (JavaScript XML):** Extensão de sintaxe que permite escrever HTML dentro de JS.
 3.  **Fluxo de Dados Unidirecional:** Os dados fluem para baixo (Pai -\> Filho).
 
-## Exemplo React 
+## Exemplo React
 
 Note a natureza **Declarativa**. Não chamamos `appendChild`. Retornamos a estrutura que queremos.
 
@@ -334,7 +355,7 @@ function ImageGallery() {
 }
 ```
 
-## Angular: A Framework 
+## Angular: A Framework
 
 Desenvolvido pela Google. O Angular é uma **Framework** completa. Inclui routing, clientes HTTP e gestão de formulários "out of the box".
 
@@ -345,7 +366,7 @@ Desenvolvido pela Google. O Angular é uma **Framework** completa. Inclui routin
 3.  **Ligação de Dados Bidirecional (Two-Way Data Binding):** Alterações na UI atualizam o Estado; Alterações no Estado atualizam a UI (automaticamente).
 4.  **Real DOM:** O Angular opera diretamente no DOM mas usa um mecanismo sofisticado de Deteção de Mudanças (Zones).
 
-## Exemplo Angular 
+## Exemplo Angular
 
 O Angular separa a Lógica (Typescript) da Vista (Template HTML).
 
@@ -373,7 +394,7 @@ export class GalleryComponent {
 </div>
 ```
 
-## Comparação Resumida 
+## Comparação Resumida
 
 | Característica | **Vanilla JS** | **React** | **Angular** |
 | :--- | :--- | :--- | :--- |
@@ -385,7 +406,7 @@ export class GalleryComponent {
 
 # Backends
 
-## Node.js & NPM 
+## Node.js & NPM
 
 **Node.js** não é uma linguagem; é um **Ambiente de Execução (Runtime)**. Pega no Motor V8 do Chrome e adiciona bindings C++ para Sistema de Ficheiros (FS) e Redes, permitindo que o JS corra em servidores.
 
@@ -394,7 +415,7 @@ export class GalleryComponent {
   * Gere dependências (bibliotecas).
   * **`package.json`**: O manifesto do projeto. Lista quais as bibliotecas necessárias (`dependencies`) e como correr o projeto (`scripts`).
 
-## Servidor Express Simples 
+## Servidor Express Simples
 
 Express é a framework padrão para Node. Simplifica o routing.
 
@@ -417,7 +438,7 @@ app.get('/api/hello', (req, res) => {
 app.listen(3000, () => console.log("A correr na porta 3000"));
 ```
 
-## Python para Serviços Web 
+## Python para Serviços Web
 
 Enquanto o Node.js partilha uma linguagem com o frontend, o **Python** é dominante em Ciência de Dados e IA.
 
@@ -427,7 +448,7 @@ Enquanto o Node.js partilha uma linguagem com o frontend, o **Python** é domina
 2.  **Dicas de Tipo (Type Hints):** Valida dados automaticamente.
 3.  **Swagger UI:** Gera um website de documentação (`/docs`) para a sua API automaticamente.
 
-## Exemplo FastAPI 
+## Exemplo FastAPI
 
 ```python
 from fastapi import FastAPI
@@ -452,7 +473,7 @@ async def read_items():
     ]
 ```
 
-## A Arquitetura 
+## A Arquitetura
 
 Temos duas aplicações separadas:
 
@@ -461,7 +482,7 @@ Temos duas aplicações separadas:
 
 Precisamos de as correr juntas e garantir que conseguem comunicar.
 
-## Configuração do Docker Compose 
+## Configuração do Docker Compose
 
 `docker-compose.yml` orquestra aplicações multi-contentor.
 
@@ -493,7 +514,7 @@ services:
 
   * **Browser para Backend:** Quando o seu JavaScript corre no *browser*, está a correr na *Máquina do Utilizador*. Portanto, o URL do `fetch` JS deve apontar para `http://localhost:8000` (a porta exposta pelo Docker para a máquina anfitriã), não para o nome interno do contentor.
 
-## Recursos Adicionais 
+## Recursos Adicionais
 
 **JavaScript & A Web**
 

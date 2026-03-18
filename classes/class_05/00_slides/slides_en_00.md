@@ -4,7 +4,7 @@ title: Web programming
 
 # JavaScript
 
-## JavaScript: Detailed Overview 
+## JavaScript: Detailed Overview i
 
 JavaScript (JS) is often misunderstood as a "scripting toy," but it is a sophisticated, high-level language.
 
@@ -19,10 +19,14 @@ x = "hello";
 console.log(x)
 ```
 
+## JavaScript: Detailed Overview ii
+
 **2. Prototype-based Object Orientation**
 
 * *How it works:* Unlike Class-based languages (Java/C++) where objects are instantiated from "blueprints" (classes), JS objects inherit directly from other objects (prototypes).
 * *Implication:* Memory efficiency involves cloning existing structures rather than defining rigid hierarchies.
+
+## JavaScript: Detailed Overview iii
 
 ```javascript
 let person  = {
@@ -35,6 +39,11 @@ let man = {
   hasBreast: false,
   hasBeard : true,
 }
+```
+
+## JavaScript: Detailed Overview iv
+
+```javascript
 //set the prototype of man to person object
 man.__proto__ = person;
 //define a third object
@@ -49,6 +58,8 @@ console.log(samuel.walks())
 console.log(samuel.hasBeard)
 ```
 
+## JavaScript: Detailed Overview v
+
 **3. Single-Threaded Execution**
 
 * *The Constraint:* JS has a **single Call Stack**. It can only do *one thing at a time*.
@@ -56,7 +67,7 @@ console.log(samuel.hasBeard)
 
 # Programming Paradigms
 
-## Sequential Programming (Procedural) 
+## Sequential Programming (Procedural)
 
 This is the model used in basic C, Fortran, or simple Python scripts.
 
@@ -68,32 +79,42 @@ This is the model used in basic C, Fortran, or simple Python scripts.
 4.  **Line 3 asks for input (`scanf`, `input()`).**
 5.  The program **HALTS** (blocks) and waits for the user. Nothing else happens until the user hits Enter.
 
+## Sequential Programming (Procedural) ii
+
 **Why this fails for UI:**
 In a web interface, we cannot **"halt"** the rendering engine to wait for a mouse click. If we did, buttons wouldn't animate, and gifs wouldn't play.
 ![Sequential Programming](sequence.png)
 
-## Event-Driven Programming 
+## Event-Driven Programming i
 
 Modern interfaces (Web, Windows, macOS) use an **Event-Driven** architecture.
 
 **The Logic:**
+
 1.  The program starts (Initialization).
 2.  It defines "Handlers" (functions waiting for specific triggers).
 3.  It enters the **Event Loop**.
 4.  The program sits in a **Listening State**.
 
 **The "Hollywood Principle":**
+
 * *Don't call us, we'll call you.*
 * The code doesn't ask "Did the user click?". Instead, the browser interrupts the code saying "A click just happened, run the Click Function."
-![Event-Driven Programming](event_loop.png){ width=65% }
 
-## The Chain of Events 
+## Event-Driven Programming ii
+
+![\ ](event_loop.png){ width=65% }
+
+## The Chain of Events i
 
 How does a physical action become code execution?
 
 1.  **Hardware Level:** User moves the mouse. The mouse hardware sends an electrical signal (interrupt) to the CPU.
 2.  **OS Level:** The Operating System (Windows/Linux) interprets this signal as a coordinate change and paints the cursor moving.
 3.  **Browser Level:** The browser window sees the cursor is over a specific HTML button and the mouse button was pressed.
+
+## The Chain of Events ii
+
 4.  **The Event:** The browser creates a JavaScript `Event` Object containing details (X/Y coordinates, which button, timestamps).
 5.  **The Listener:** The browser checks: *Does this HTML element have a listener attached?*
 6.  **Execution:** If yes, the registered JS function is pushed to the execution stack.
@@ -111,7 +132,7 @@ When you write an HTML file, it is just a text string. The browser parses this s
 **Why JS uses the DOM:**
 JavaScript cannot edit the text file on the server. It edits the **Object in RAM**. The browser's rendering engine constantly watches the DOM; when JS updates the DOM object, the browser repaints the screen.
 
-## Execution & Loading Strategies 
+## Execution & Loading Strategies i
 
 HTML is parsed sequentially (top to bottom). When the parser sees a `<script>` tag, it pauses HTML parsing to download and run the script. This creates issues:
 
@@ -119,6 +140,8 @@ HTML is parsed sequentially (top to bottom). When the parser sees a `<script>` t
 
 * *Technique:* Putting `<script>` just before `</body>`.
 * *Reasoning:* Ensures all HTML elements exist in the DOM before the script tries to find them.
+
+## Execution & Loading Strategies ii
 
 **2. The `defer` Attribute (Modern Standard)**
 
@@ -130,7 +153,7 @@ HTML is parsed sequentially (top to bottom). When the parser sees a `<script>` t
 * *Execution:* The browser guarantees the script will only run **after** the HTML is fully parsed but **before** the `DOMContentLoaded` event.
 * *Benefit:* Faster page load times and safe DOM access.
 
-## The Event Loop (Technical Detail) 
+## The Event Loop (Technical Detail)
 
 How does single-threaded JS handle asynchronous tasks (like fetching data) without freezing?
 
@@ -145,7 +168,7 @@ How does single-threaded JS handle asynchronous tasks (like fetching data) witho
 
 # JS Examples
 
-## 1. Handling Mouse Events 
+## 1. Handling Mouse Events
 
 We use `addEventListener`. This is the registration phase of Event-Driven programming.
 
@@ -166,7 +189,7 @@ function handleMove(event) {
 box.addEventListener('mousemove', handleMove);
 ```
 
-## 2. Dynamic Content (Photo Library) 
+## 2. Dynamic Content (Photo Library)
 
 We can create the interface programmatically. This is how React/Vue work under the hood (Imperative approach).
 
@@ -189,7 +212,7 @@ urls.forEach(url => {
 });
 ```
 
-## 3. Asynchronous Data (Fetch API) 
+## 3. Asynchronous Data (Fetch API)
 
 Fetching data from an API takes time (latency). We use **Promises** (`async/await`) to prevent blocking.
 
@@ -209,7 +232,7 @@ async function getData() {
 }
 ```
 
-## 4. Real-Time Communication (WebSockets) 
+## 4. Real-Time Communication (WebSockets)
 
 **HTTP vs. WebSockets:**
 
@@ -233,7 +256,7 @@ socket.onmessage = (event) => {
 
 # Debugging in the Browser
 
-## The Challenge of Interpreted Languages 
+## The Challenge of Interpreted Languages
 
 Unlike C, C++, or Rust, JavaScript is an **Interpreted** (or JIT compiled) language.
 
@@ -252,7 +275,7 @@ Unlike C, C++, or Rust, JavaScript is an **Interpreted** (or JIT compiled) langu
 **Consequence:**
 "It works on my machine" is common. You might not encounter the error because you didn't trigger the specific execution path that contains the bug.
 
-## The Environment Gap: Editor vs. Browser 
+## The Environment Gap: Editor vs. Browser
 
 Debugging Web Applications introduces a disconnect between where you **write** code and where you **run** code.
 
@@ -283,7 +306,7 @@ Debugging Web Applications introduces a disconnect between where you **write** c
 
 # Modern Frontend Frameworks
 
-## The "State vs. View" Problem 
+## The "State vs. View" Problem
 
 In complex apps (e.g., Facebook, Spotify), keeping the UI (View) in sync with the data (State) using Vanilla JS is error-prone.
 
@@ -292,7 +315,7 @@ In complex apps (e.g., Facebook, Spotify), keeping the UI (View) in sync with th
 1.  **Declarative Programming:** You define *what* the UI should look like for a given state, not *how* to update it.
 2.  **Componentization:** Breaking the UI into reusable, isolated chunks.
 
-## React: The Library 
+## React: The Library
 
 Developed by Facebook (Meta). React is technically a **Library**, not a Framework, focused solely on the View layer.
 
@@ -302,7 +325,7 @@ Developed by Facebook (Meta). React is technically a **Library**, not a Framewor
 2.  **JSX (JavaScript XML):** Syntax extension allowing HTML to be written inside JS.
 3.  **Unidirectional Data Flow:** Data flows down (Parent -\> Child).
 
-## React Example 
+## React Example
 
 Note the **Declarative** nature. We don't call `appendChild`. We return the structure we want.
 
@@ -325,7 +348,7 @@ function ImageGallery() {
 }
 ```
 
-## Angular: The Framework 
+## Angular: The Framework
 
 Developed by Google. Angular is a full-fledged **Framework**. It includes routing, HTTP clients, and form handling out of the box.
 
@@ -336,7 +359,7 @@ Developed by Google. Angular is a full-fledged **Framework**. It includes routin
 3.  **Two-Way Data Binding:** Changes in UI update State; Changes in State update UI (automatically).
 4.  **Real DOM:** Angular operates directly on the DOM but uses a sophisticated Change Detection mechanism (Zones).
 
-## Angular Example 
+## Angular Example
 
 Angular separates the Logic (Typescript) from the View (HTML Template).
 
@@ -365,7 +388,7 @@ export class GalleryComponent {
 </div>
 ```
 
-## Summary Comparison 
+## Summary Comparison
 
 | Feature | **Vanilla JS** | **React** | **Angular** |
 | :--- | :--- | :--- | :--- |
@@ -377,7 +400,7 @@ export class GalleryComponent {
 
 # Backends
 
-## Node.js & NPM 
+## Node.js & NPM
 
 **Node.js** is not a language; it is a **Runtime Environment**. It takes Chrome's V8 Engine and adds C++ bindings for File System (FS) and Networking, allowing JS to run on servers.
 
@@ -386,7 +409,7 @@ export class GalleryComponent {
   * Manages dependencies (libraries).
   * **`package.json`**: The project manifest. Lists what libraries are needed (`dependencies`) and how to run the project (`scripts`).
 
-## Simple Express Server 
+## Simple Express Server
 
 Express is the standard framework for Node. It simplifies routing.
 
@@ -409,7 +432,7 @@ app.get('/api/hello', (req, res) => {
 app.listen(3000, () => console.log("Running on port 3000"));
 ```
 
-## Python for Web Services 
+## Python for Web Services
 
 While Node.js shares a language with the frontend, **Python** is dominant in Data Science and AI.
 
@@ -419,7 +442,7 @@ While Node.js shares a language with the frontend, **Python** is dominant in Dat
 2.  **Type Hints:** Validates data automatically.
 3.  **Swagger UI:** Generates a documentation website (`/docs`) for your API automatically.
 
-## FastAPI Example 
+## FastAPI Example
 
 ```python
 from fastapi import FastAPI
@@ -444,7 +467,7 @@ async def read_items():
     ]
 ```
 
-## The Architecture 
+## The Architecture
 
 We have two separate applications:
 
@@ -453,7 +476,7 @@ We have two separate applications:
 
 We need to run them together and ensure they can communicate.
 
-## Docker Compose Configuration 
+## Docker Compose Configuration
 
 `docker-compose.yml` orchestrates multi-container applications.
 
@@ -485,7 +508,7 @@ services:
 
   * **Browser to Backend:** When your JavaScript runs in the *browser*, it is running on the *User's Machine*. Therefore, the JS `fetch` URL must point to `http://localhost:8000` (the port exposed by Docker to the host machine), not the internal container name.
 
-## Additional Resources 
+## Additional Resources
 
 **JavaScript & The Web**
 * [MDN Web Docs (Mozilla)](https://developer.mozilla.org/en-US/) - The bible of web development.
