@@ -256,7 +256,7 @@ socket.onmessage = (event) => {
 
 # Debugging in the Browser
 
-## The Challenge of Interpreted Languages
+## The Challenge of Interpreted Languages i
 
 Unlike C, C++, or Rust, JavaScript is an **Interpreted** (or JIT compiled) language.
 
@@ -265,6 +265,8 @@ Unlike C, C++, or Rust, JavaScript is an **Interpreted** (or JIT compiled) langu
 *   The compiler scans the entire code **before** execution.
 *   Syntax errors and type mismatches are caught at **Compile Time**.
 *   *Result:* You cannot run the program until these errors are fixed.
+
+## The Challenge of Interpreted Languages ii
 
 **Interpreted Languages (JavaScript):**
 
@@ -275,32 +277,41 @@ Unlike C, C++, or Rust, JavaScript is an **Interpreted** (or JIT compiled) langu
 **Consequence:**
 "It works on my machine" is common. You might not encounter the error because you didn't trigger the specific execution path that contains the bug.
 
-## The Environment Gap: Editor vs. Browser
+## The Environment Gap: Editor vs. Browser i
 
 Debugging Web Applications introduces a disconnect between where you **write** code and where you **run** code.
 
 **1. The Context Switch:**
+
 *   You write code in an **IDE** (VS Code), which has static analysis and linting.
 *   You run code in the **Browser** (Chrome/Firefox).
 *   When an error occurs, it appears in the Browser's Console, not immediately in your text editor.
 
+## The Environment Gap: Editor vs. Browser ii
+
 **2. The "Black Box" Problem:**
+
 *   The browser often runs "minified" or "bundled" code (to save bandwidth).
 *   An error on line 1 of `bundle.js` is useless to the developer.
 *   *Solution:* We rely on **Source Maps**, which tell the browser how to map the running code back to your original files.
 
-## Debugging Strategies
+## Debugging Strategies i
 
 **1. "Printf" Debugging (`console.log`)**
+
 *   The oldest method. You print variables to the browser console to inspect the state.
 *   *Pros:* Fast, simple.
 *   *Cons:* Clutters code, requires cleanup, doesn't pause execution.
 
 **2. The `debugger;` Keyword**
+
 *   Placing the statement `debugger;` in your code forces the browser to **pause execution** (breakpoint) at that line.
 *   You can then step through code line-by-line.
 
+## Debugging Strategies ii
+
 **3. Browser DevTools (The Sources Tab)**
+
 *   Modern browsers (Chrome/Firefox) have built-in debuggers that rival desktop IDEs.
 *   You can set breakpoints, watch variables, and inspect the Call Stack directly in the browser.
 

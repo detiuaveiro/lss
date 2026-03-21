@@ -168,7 +168,7 @@ Como é que o JS single-threaded lida com tarefas assíncronas (como obter dados
 
 # Exemplos de JS
 
-## 1\. Manipulação de Eventos do Rato
+## 1. Manipulação de Eventos do Rato
 
 Usamos `addEventListener`. Esta é a fase de registo da programação Orientada a Eventos.
 
@@ -189,7 +189,7 @@ function handleMove(event) {
 box.addEventListener('mousemove', handleMove);
 ```
 
-## 2\. Conteúdo Dinâmico (Biblioteca de Fotos)
+## 2. Conteúdo Dinâmico (Biblioteca de Fotos)
 
 Podemos criar a interface programaticamente. É assim que o React/Vue funcionam "debaixo do capô" (Abordagem Imperativa).
 
@@ -212,7 +212,7 @@ urls.forEach(url => {
 });
 ```
 
-## 3\. Dados Assíncronos (Fetch API)
+## 3. Dados Assíncronos (Fetch API)
 
 Obter dados de uma API leva tempo (latência). Usamos **Promises** (`async/await`) para evitar bloqueios.
 
@@ -232,14 +232,12 @@ async function getData() {
 }
 ```
 
-## 4\. Comunicação em Tempo Real (WebSockets)
+## 4. Comunicação em Tempo Real (WebSockets)
 
 **HTTP vs. WebSockets:**
 
-  * **HTTP:** Cliente pede, Servidor responde, Ligação fecha. (Stateless).
-  * **WebSocket:** Cliente realiza um "Handshake", a Ligação atualiza para socket TCP, a Ligação mantém-se aberta.
-
-<!-- end list -->
+* **HTTP:** Cliente pede, Servidor responde, Ligação fecha. (Stateless).
+* **WebSocket:** Cliente realiza um "Handshake", a Ligação atualiza para socket TCP, a Ligação mantém-se aberta.
 
 ```javascript
 const socket = new WebSocket('ws://localhost:8080');
@@ -258,58 +256,64 @@ socket.onmessage = (event) => {
 
 # Depuração (Debugging) no Browser
 
-## O Desafio das Linguagens Interpretadas
+## O Desafio das Linguagens Interpretadas i
 
 Ao contrário de C, C++ ou Rust, o JavaScript é uma linguagem **Interpretada** (ou compilada JIT).
 
 **Linguagens Compiladas (C/C++):**
 
-  * O compilador analisa todo o código **antes** da execução.
-  * Erros de sintaxe e incompatibilidade de tipos são apanhados em **Tempo de Compilação**.
-  * *Resultado:* Não pode executar o programa até que estes erros sejam corrigidos.
+* O compilador analisa todo o código **antes** da execução.
+* Erros de sintaxe e incompatibilidade de tipos são apanhados em **Tempo de Compilação**.
+* *Resultado:* Não pode executar o programa até que estes erros sejam corrigidos.
+
+## O Desafio das Linguagens Interpretadas ii
 
 **Linguagens Interpretadas (JavaScript):**
 
-  * O browser lê e executa o código linha-a-linha (ou bloco-a-bloco) em **Tempo de Execução (Runtime)**.
-  * *Resultado:* A aplicação pode carregar perfeitamente e correr durante minutos.
-  * **O Crash:** O erro ocorre apenas quando o fluxo de execução atinge a linha específica com bug (ex: quando um utilizador clica num botão específico).
+* O browser lê e executa o código linha-a-linha (ou bloco-a-bloco) em **Tempo de Execução (Runtime)**.
+* *Resultado:* A aplicação pode carregar perfeitamente e correr durante minutos.
+* **O Crash:** O erro ocorre apenas quando o fluxo de execução atinge a linha específica com bug (ex: quando um utilizador clica num botão específico).
 
 **Consequência:**
 "Funciona na minha máquina" é comum. Pode não encontrar o erro porque não ativou o caminho de execução específico que contém o bug.
 
-## A Lacuna de Ambiente: Editor vs. Browser
+## A Lacuna de Ambiente: Editor vs. Browser i
 
 A depuração de Aplicações Web introduz uma desconexão entre onde **escreve** o código e onde **executa** o código.
 
 **1. A Mudança de Contexto (Context Switch):**
 
-  * Escreve código num **IDE** (VS Code), que tem análise estática e linting.
-  * Executa código no **Browser** (Chrome/Firefox).
-  * Quando ocorre um erro, ele aparece na Consola do Browser, não imediatamente no seu editor de texto.
+* Escreve código num **IDE** (VS Code), que tem análise estática e linting.
+* Executa código no **Browser** (Chrome/Firefox).
+* Quando ocorre um erro, ele aparece na Consola do Browser, não imediatamente no seu editor de texto.
+
+## A Lacuna de Ambiente: Editor vs. Browser ii
 
 **2. O Problema da "Caixa Negra":**
 
-  * O browser executa frequentemente código "minificado" ou "agrupado" (bundled) (para poupar largura de banda).
-  * Um erro na linha 1 do `bundle.js` é inútil para o programador.
-  * *Solução:* Confiamos em **Source Maps**, que dizem ao browser como mapear o código em execução de volta aos seus ficheiros originais.
+* O browser executa frequentemente código "minificado" ou "agrupado" (bundled) (para poupar largura de banda).
+* Um erro na linha 1 do `bundle.js` é inútil para o programador.
+* *Solução:* Confiamos em **Source Maps**, que dizem ao browser como mapear o código em execução de volta aos seus ficheiros originais.
 
-## Estratégias de Depuração
+## Estratégias de Depuração i
 
 **1. Depuração "Printf" (`console.log`)**
 
-  * O método mais antigo. Imprime variáveis na consola do browser para inspecionar o estado.
-  * *Prós:* Rápido, simples.
-  * *Contras:* Atravanca o código, requer limpeza, não pausa a execução.
+* O método mais antigo. Imprime variáveis na consola do browser para inspecionar o estado.
+* *Prós:* Rápido, simples.
+* *Contras:* Atravanca o código, requer limpeza, não pausa a execução.
 
 **2. A palavra-chave `debugger;`**
 
-  * Colocar a instrução `debugger;` no seu código força o browser a **pausar a execução** (breakpoint) nessa linha.
-  * Pode então percorrer o código linha-a-linha.
+* Colocar a instrução `debugger;` no seu código força o browser a **pausar a execução** (breakpoint) nessa linha.
+* Pode então percorrer o código linha-a-linha.
+
+## Estratégias de Depuração ii
 
 **3. Browser DevTools (O separador Sources)**
 
-  * Browsers modernos (Chrome/Firefox) têm debuggers integrados que rivalizam com IDEs de desktop.
-  * Pode definir breakpoints, vigiar variáveis e inspecionar a Call Stack diretamente no browser.
+* Browsers modernos (Chrome/Firefox) têm debuggers integrados que rivalizam com IDEs de desktop.
+* Pode definir breakpoints, vigiar variáveis e inspecionar a Call Stack diretamente no browser.
 
 # Frameworks Frontend Modernas
 
