@@ -4,380 +4,534 @@ title: Web programming
 
 # Exercises
 
-## Objective
+This guide accompanies the theoretical slides on Dynamic Web Pages.
+You will build a complete web application from scratch, starting with a static profile and evolving it into a dynamic system with user authentication, real-time maps, and chat support.
 
-In this laboratory, you will explore the famous **Titanic dataset**. Your goal is to analyze passenger data to understand who survived the disaster. You will simulate a real-world scenario where data comes in different formats (CSV, JSON, Excel), clean that data, visualize it, and build a web application to process it.
+**Technologies used:**
+* **Frontend:** HTML5, CSS3 (Nord Light Theme), Vanilla JavaScript.
+* **Backend 1:** Node.js (Express) for Authentication and Chat.
+* **Backend 2:** Python (FastAPI) for Geolocation and Data processing.
+* **Infrastructure:** Docker & Docker Compose.
 
-## Part 0: Environment Setup
 
-We will use **Docker** to create a consistent coding environment.
+## Phase 1: Project Setup & Static Structure
 
-### 1. Create Project Structure
+### Step 0: Installation & Verification
 
-Run these commands in your terminal:
+Before writing code, ensure your environment is ready.
 
-```bash
-mkdir ex11
-cd ex11
-mkdir notebooks
-mkdir data
-mkdir output
-```
+1.  **Open your terminal.**
+2.  **Verify Docker:** `docker --version` and `docker compose version`
+3.  **Verify Node.js (Optional):** `node -v`
 
-### 2. The Dockerfile
+### Step 1: Folder Structure
 
-Create a file named `Dockerfile` inside `ex11` folder:
+1.  Create a main folder named `ex10`.
+2.  Inside it, create three subfolders: `frontend`, `auth-service`, and `geo-service`.
+3.  Create a `compose.yml` file in the root.
 
-```dockerfile
-# Use a lightweight Jupyter notebook image
-FROM quay.io/jupyter/minimal-notebook:latest
+### Step 2: The Base Docker Compose
 
-# Switch to root to install system packages
-USER root
-
-# Install Python libraries for Data Science and Web
-RUN pip install numpy pandas polars matplotlib
-seaborn openpyxl fastapi uvicorn python-multipart
-
-# Switch back to the standard user
-USER ${NB_UID}
-```
-
-### 3. The Docker Compose File
-
-Create `docker-compose.yml` inside `titanic_lab`:
+Open `compose.yml` and paste this code:
 
 ```yaml
 services:
-  notebook:
-    build: .
-    ports:
-      - "8888:8888"
-    volumes:
-      - ./notebooks:/home/jovyan/work
-      - ./data:/home/jovyan/data
-      - ./output:/home/jovyan/output
-    environment:
-      - JUPYTER_TOKEN=titanic
-```
-
-### 4. Launch and Generate Data
-
-Run `docker compose up --build` in your terminal.
-Open `http://localhost:8888` (password: `titanic`).
-
-Create a new notebook and  download the titatic dataset from elearning.
-Place it in the data folder previously created.
-
-## Part 1: Data Loading
-
-In the real world, you might receive passenger lists in Excel from HR, or JSON from a web API.
-Let's learn to load all of them.
-
-```python
-import pandas as pd
-import polars as pl
-
-# 1. Load CSV (Comma Separated Values)
-# Most common format in Data Science
-df_csv = pd.read_csv('../data/titanic.csv')
-print("--- Loaded from CSV ---")
-print(df_csv.head(3))
-
-# 2. Load JSON (JavaScript Object Notation)
-# Common when dealing with Web APIs
-df_json = pd.read_json('../data/titanic.json')
-print("\n--- Loaded from JSON ---")
-print(df_json.head(3))
-
-# 3. Load Excel (.xlsx)
-# Common in business environments
-df_excel = pd.read_excel('../data/titanic.xlsx')
-print("\n--- Loaded from Excel ---")
-print(df_excel.head(3))
-```
-
-
-## Part 2: Data Pre-processing
-
-The Titanic dataset is notorious for having missing `Age` values and occasionally messy data.
-We will simulate "dirty" data and fix it.
-
-### Step 1: Identify Issues
-
-We created the dataset with a missing value (`None`) in the Age column for passenger 6.
-Let's also verify if there are outliers.
-
-```python
-# Check for null values
-print("Missing values per column:")
-print(df_csv.isnull().sum())
-
-# Describe gives us statistics. Look at 'Age' max value.
-print("\nStatistics:")
-print(df_csv.describe())
-```
-
-### Step 2: Inject an Outlier
-
-Let's manually add an error to simulate a data entry mistake (e.g., someone typing age 200 instead of 20).
-
-```python
-df_dirty = df_csv.copy()
-# Inject an impossible age
-df_dirty.loc[0, 'Age'] = 200
-
-# Visualization: Boxplot reveals the outlier
-import seaborn as sns
-import matplotlib.pyplot as plt
-
-plt.figure(figsize=(6,2))
-sns.boxplot(x=df_dirty['Age'])
-plt.title("Age Distribution (With Outlier)")
-plt.show()
-```
-
-### Step 3: Fix the Data
-
-1.  **Missing Values:** Fill missing `Age` with the median age of passengers.
-2.  **Outliers:** Filter out unrealistic ages (e.g., \> 100).
-
-```python
-# 1. Fill missing Age with Median
-median_age = df_dirty['Age'].median()
-df_dirty['Age'] = df_dirty['Age'].fillna(median_age)
-
-# 2. Remove Outliers (Cap Age at 100)
-df_clean = df_dirty[df_dirty['Age'] <= 100].copy()
-
-print("Cleaned Max Age:", df_clean['Age'].max())
-print("Missing Ages:", df_clean['Age'].isnull().sum())
-```
-
-## Part 3: Data Visualization
-
-We will now generate plots to explicitly verify the Survivability Rate.
-Instead of just counting survivors, we want to see the percentage of people who survived in different groups.
-
-```python
-# Calculate Global Survival Rate
-global_rate = df_clean['Survived'].mean() * 100
-print(f"Overall Survival Rate: {global_rate:.2f}%")
-
-# Create a figure with two subplots
-fig, axes = plt.subplots(1, 2, figsize=(12, 5))
-
-# Plot 1: Survival Rate by Class
-# sns.barplot automatically calculates the Mean (Survival Rate) and confidence interval
-sns.barplot(data=df_clean, x='Pclass', y='Survived', palette='viridis', ax=axes[0])
-axes[0].set_title("Survival Rate by Passenger Class")
-axes[0].set_ylabel("Survival Probability (0-1)")
-axes[0].set_xlabel("Class (1=1st, 3=3rd)")
-axes[0].set_ylim(0, 1)
-
-# Plot 2: Survival Rate by Gender
-sns.barplot(data=df_clean, x='Sex', y='Survived', palette='pastel', ax=axes[1])
-axes[1].set_title("Survival Rate by Gender")
-axes[1].set_ylabel("Survival Probability (0-1)")
-axes[1].set_ylim(0, 1)
-
-plt.tight_layout()
-plt.show()
-```
-**Analysis:**
-
-* **Left Plot:** Verifies if richer passengers (1st Class) had a higher chance of survival compared to 3rd Class.
-* **Right Plot:** Verifies the "Women and children first" protocol by comparing Male vs Female survival rates.
-
-## Part 4: Exporting Results
-
-We will save the Survival Rate by Class analysis to the shared volume, as this is the most critical insight for our report.
-
-```python
-save_path = '../output/survival_rate_analysis.png'
-
-plt.figure(figsize=(6,5))
-# Re-drawing the specific plot for export
-barplot = sns.barplot(data=df_clean, x='Pclass', y='Survived', palette='viridis')
-
-# Add labels on top of bars for clarity
-for p in barplot.patches:
-    barplot.annotate(format(p.get_height(), '.2f'),
-                     (p.get_x() + p.get_width() / 2., p.get_height()),
-                     ha = 'center', va = 'center',
-                     xytext = (0, 9),
-                     textcoords = 'offset points')
-
-plt.title("Official Report: Survival Rate by Class")
-plt.xlabel("Passenger Class")
-plt.ylabel("Survival Rate")
-plt.ylim(0, 1)
-
-plt.savefig(save_path, dpi=300)
-print(f"Survival analysis saved to {save_path}")
-```
-
-## Part 5: Web Application
-
-We will create a simple website where a user can upload the `titanic.csv` and get a generated plot of **Survival Rate by Class**.
-
-### 1. Structure
-
-Create the folder `web_app` inside `ex11`. Inside it, create `backend` and `frontend`.
-
-### 2. Backend (FastAPI + Polars)
-
-Create `web_app/backend/main.py`. This API reads the CSV, calculates survival rates using **Polars**, and draws a plot.
-
-```python
-from fastapi import FastAPI, UploadFile, File
-from fastapi.responses import HTMLResponse
-import polars as pl
-import matplotlib.pyplot as plt
-import io
-import base64
-
-app = FastAPI()
-
-@app.post("/analyze")
-async def analyze_titanic(file: UploadFile = File(...)):
-    # 1. Read CSV data using Polars
-    content = await file.read()
-    df = pl.read_csv(content)
-
-    # 2. Group by Pclass and calculate Mean Survival
-    # (Polars syntax is different from Pandas!)
-    stats = df.group_by("Pclass").agg(
-        pl.col("Survived").mean().alias("Survival_Rate")
-    ).sort("Pclass")
-
-    # 3. Generate Plot
-    plt.figure(figsize=(8, 6))
-    # We define colors: Red for low survival, Green for high
-    colors = ['#ff9999' if rate < 0.5 else '#99ff99'
-    for rate in stats['Survival_Rate']]
-
-    plt.bar(stats['Pclass'], stats['Survival_Rate'],
-    color=colors, edgecolor='black')
-    plt.xlabel("Passenger Class (1st, 2nd, 3rd)")
-    plt.ylabel("Survival Rate (0.0 to 1.0)")
-    plt.title("Titanic: Survival Rate by Class")
-    plt.xticks(stats['Pclass'])
-    plt.ylim(0, 1)
-
-    # 4. Save to Buffer
-    buf = io.BytesIO()
-    plt.savefig(buf, format="png")
-    buf.seek(0)
-    img_str = base64.b64encode(buf.read()).decode("utf-8")
-    plt.close()
-
-    # 5. Return HTML
-    return HTMLResponse(content=f"""
-        <div style="text-align:center; font-family:sans-serif;">
-            <h1>Analysis Result</h1>
-            <p>Based on {df.height} passenger records.</p>
-            <img src="data:image/png;base64,{img_str}" />
-            <br><br>
-            <a href="/">Analyze Another File</a>
-        </div>
-    """)
-```
-
-Create `web_app/backend/Dockerfile`:
-
-```dockerfile
-FROM python:3.12-trixie
-RUN pip install fastapi uvicorn python-multipart polars matplotlib
-COPY main.py .
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
-```
-
-### 3. Frontend (HTML)
-
-Create `web_app/frontend/index.html`:
-
-```html
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Titanic Analyzer</title>
-    <style>
-        body { font-family: sans-serif; display: flex; justify-content: center;
-        padding-top: 50px; background-color: #f0f2f5; }
-        .card { background: white; padding: 30px; border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 400px; text-align: center; }
-        button { background-color: #007bff; color: white; border: none;
-        padding: 10px 20px; border-radius: 5px; cursor: pointer; }
-        button:hover { background-color: #0056b3; }
-    </style>
-</head>
-<body>
-    <div class="card">
-        <h2>Titanic Data Upload</h2>
-        <p>Upload your <code>titanic.csv</code> file to see survival rates by class.</p>
-        <form action="/api/analyze" method="post" enctype="multipart/form-data">
-            <input type="file" name="file" accept=".csv" required>
-            <br><br>
-            <button type="submit">Generate Report</button>
-        </form>
-    </div>
-</body>
-</html>
-```
-
-### 4. Nginx Config
-
-Create `web_app/nginx.conf`:
-
-```nginx
-events {}
-http {
-    server {
-        listen 80;
-        location / {
-            root /usr/share/nginx/html;
-            index index.html;
-        }
-        location /api/ {
-            proxy_pass http://backend:8000/;
-        }
-    }
-}
-```
-
-### 5. Run the App
-
-Create `compose.yml` in the root (`web_app`) folder:
-
-```yaml
-services:
-  backend:
-    build: ./backend
-  frontend:
+  # 1. Frontend Server (Nginx)
+  web:
     image: nginx:alpine
+    container_name: frontend_server
     ports:
       - "8080:80"
     volumes:
       - ./frontend:/usr/share/nginx/html
-      - ./nginx.conf:/etc/nginx/nginx.conf
-    depends_on:
-      - backend
+````
+
+### Step 3: The Static Profile (HTML)
+
+Open `frontend/index.html`.
+Note the `chatWidget` div at the bottom; this will be used in Step 11.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Dynamic Profile</title>
+    <!-- Leaflet CSS for the Map (Step 15) -->
+    <link rel="stylesheet" href="[https://unpkg.com/leaflet@1.9.4/dist/leaflet.css](https://unpkg.com/leaflet@1.9.4/dist/leaflet.css)" />
+    <link rel="stylesheet" href="style.css">
+    <script src="app.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1>User Profile</h1>
+        <nav>
+            <button id="loginBtn">Login</button>
+            <button id="logoutBtn" style="display:none;">Logout</button>
+        </nav>
+    </header>
+
+    <main id="app">
+        <!-- Login Modal -->
+        <dialog id="loginDialog">
+            <form id="loginForm">
+                <h2>Welcome Back</h2>
+                <input type="text" id="username" placeholder="Username" required>
+                <input type="password" id="password" placeholder="Password" required>
+                <button type="submit">Sign In</button>
+                <button type="button" id="cancelLogin">Cancel</button>
+            </form>
+        </dialog>
+
+        <!-- Content Section (Hidden until logged in) -->
+        <div id="contentArea" class="hidden">
+            <section class="card profile-card">
+                <img src="[https://ui-avatars.com/api/?name=User&background=88C0D0&color=fff](https://ui-avatars.com/api/?name=User&background=88C0D0&color=fff)" alt="Profile" id="avatar">
+                <h2 id="welcomeMsg">Hello, User</h2>
+                <p>Full Stack Student</p>
+            </section>
+
+            <section class="card gallery-card">
+                <h3>Photo Gallery</h3>
+                <div id="galleryGrid" class="grid"></div>
+            </section>
+
+            <section class="card map-card">
+                <h3>Live Location Tracker (WebSocket)</h3>
+                <div id="map"></div>
+            </section>
+
+            <!-- Chat Widget (For Step 11) -->
+            <div id="chatWidget">
+                <div id="chatHeader">Support Chat</div>
+                <div id="chatMessages"></div>
+                <input type="text" id="chatInput" placeholder="Type a message...">
+            </div>
+        </div>
+
+        <div id="guestMessage">
+            <p>Please log in to view the dashboard.</p>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Web Engineering</p>
+    </footer>
+
+    <!-- Leaflet JS -->
+    <script src="[https://unpkg.com/leaflet@1.9.4/dist/leaflet.js](https://unpkg.com/leaflet@1.9.4/dist/leaflet.js)"></script>
+</body>
+</html>
 ```
 
-Run: `docker compose up --build`
-Go to `http://localhost:8080` and upload your generated `titanic.csv`.
+### Step 4: Nordic Styling (CSS)
 
+Open `frontend/style.css`. This defines the layout and the Chat Window position.
 
-## Part 6: Optional Challenge
+```css
+:root {
+    --polar-night: #2E3440;
+    --snow-storm: #ECEFF4;
+    --frost-1: #8FBCBB;
+    --frost-2: #88C0D0;
+    --frost-3: #81A1C1;
+    --frost-4: #5E81AC;
+    --aurora-red: #BF616A;
+}
+body {
+    font-family: 'Noto Sans', sans-serif;
+    background-color: var(--snow-storm);
+    color: var(--polar-night);
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+header {
+    background-color: var(--frost-4);
+    color: white;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+button {
+    background-color: var(--frost-3);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+button:hover { background-color: var(--frost-2); }
+main {
+    flex: 1;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+.card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+.hidden { display: none; }
+dialog {
+    border: 1px solid var(--frost-2);
+    border-radius: 8px;
+    padding: 2rem;
+}
+dialog::backdrop { background: rgba(46, 52, 64, 0.5); }
 
-**Objective:** Filter by Gender.
+/* Chat Widget Styling */
+#chatWidget {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 300px;
+    background: white;
+    border: 1px solid var(--frost-3);
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+#chatHeader {
+    background: var(--frost-4);
+    color: white;
+    padding: 10px;
+    font-weight: bold;
+}
+#chatMessages {
+    height: 200px;
+    padding: 10px;
+    overflow-y: auto;
+    font-size: 0.9rem;
+    background-color: #fff;
+}
+#chatInput {
+    border: none;
+    border-top: 1px solid #eee;
+    padding: 10px;
+    outline: none;
+}
 
-1.  **Modify Frontend:** Add a dropdown menu to `index.html` to select "All", "Male", or "Female".
-2.  **Modify Backend:** Accept this new form field. Use Polars `filter` to subset the data before calculating the mean survival rate.
+/* Map & Gallery */
+#map { height: 300px; width: 100%; border-radius: 4px; }
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+}
+.grid img { width: 100%; border-radius: 4px; }
+```
 
-  ```python
-  # Example Polars Filter
-  if gender != "All":
-      df = df.filter(pl.col("Sex") == gender.lower())
-  ```
+### Step 5: Basic JavaScript
+
+Create `frontend/app.js`.
+
+```javascript
+console.log("Application Loaded");
+
+const loginBtn = document.getElementById('loginBtn');
+const loginDialog = document.getElementById('loginDialog');
+const cancelLogin = document.getElementById('cancelLogin');
+
+loginBtn.addEventListener('click', () => loginDialog.showModal());
+cancelLogin.addEventListener('click', () => loginDialog.close());
+```
+
+**Test Phase 1:** Run `docker compose up -d` and visit `http://localhost:8080`.
+
+## Phase 2: Node.js Backend (Auth & Chat)
+
+### Step 6: Setup Node Service
+
+1.  Go to `auth-service/`.
+2.  Create `package.json`:
+    ```json
+    {
+      "name": "auth-service",
+      "main": "server.js",
+      "scripts": { "start": "node server.js" },
+      "dependencies": { "express": "^4.18.2", "cors": "^2.8.5", "ws": "^8.13.0" }
+    }
+    ```
+3.  Create `Dockerfile`:
+    ```dockerfile
+    FROM node:18-alpine
+    WORKDIR /app
+    COPY package.json .
+    RUN npm install
+    COPY . .
+    EXPOSE 3000
+    CMD ["npm", "start"]
+    ```
+
+### Step 7: Implement Server Logic
+
+Create `auth-service/server.js`.
+
+```javascript
+const express = require('express');
+const cors = require('cors');
+const http = require('http');
+const WebSocket = require('ws');
+
+const app = express();
+const server = http.createServer(app);
+const wss = new WebSocket.Server({ server });
+
+app.use(cors());
+app.use(express.json());
+
+// Login Endpoint
+const VALID_USER = { username: "admin", password: "123" };
+app.post('/login', (req, res) => {
+    const { username, password } = req.body;
+    if (username === VALID_USER.username && password === VALID_USER.password) {
+        res.json({ success: true, token: "jwt-123" });
+    } else {
+        res.status(401).json({ success: false, message: "Invalid credentials" });
+    }
+});
+
+// Chat WebSocket Logic
+wss.on('connection', (ws) => {
+    ws.send('Support: Hello! How can I help you?');
+    ws.on('message', (message) => {
+        setTimeout(() => {
+            ws.send(`Support: I received "${message}"`);
+        }, 1000);
+    });
+});
+
+server.listen(3000, () => console.log('Auth/Chat running on 3000'));
+```
+
+### Step 8: Update Frontend JS
+
+Modify `frontend/app.js` to handle login.
+
+```javascript
+// Add these references
+const loginForm = document.getElementById('loginForm');
+const contentArea = document.getElementById('contentArea');
+const guestMessage = document.getElementById('guestMessage');
+const logoutBtn = document.getElementById('logoutBtn');
+
+loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    try {
+        const response = await fetch('http://localhost:3000/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
+        const data = await response.json();
+
+        if (data.success) {
+            loginDialog.close();
+            handleLoginState(true);
+        } else {
+            alert(data.message);
+        }
+    } catch (err) { console.error(err); }
+});
+
+function handleLoginState(isLoggedIn) {
+    if (isLoggedIn) {
+        contentArea.classList.remove('hidden');
+        guestMessage.classList.add('hidden');
+        loginBtn.style.display = 'none';
+        logoutBtn.style.display = 'inline-block';
+
+        // Load dynamic features
+        loadGallery();
+        initChat();
+        initMap();
+    } else {
+        location.reload();
+    }
+}
+logoutBtn.addEventListener('click', () => handleLoginState(false));
+```
+
+### Step 9: Update Docker Compose
+
+Update `docker-compose.yml` to include `auth`.
+
+```yaml
+services:
+  web:
+    # ... (existing config)
+  auth:
+    build: ./auth-service
+    container_name: auth_server
+    ports:
+      - "3000:3000"
+```
+
+## Phase 3: Features (Gallery & Chat)
+
+### Step 10: The Photo Gallery (JS)
+
+Append this to `frontend/app.js`:
+
+```javascript
+function loadGallery() {
+    const galleryGrid = document.getElementById('galleryGrid');
+    const images = [
+        '[https://picsum.photos/id/101/300/200](https://picsum.photos/id/101/300/200)',
+        '[https://picsum.photos/id/102/300/200](https://picsum.photos/id/102/300/200)',
+        '[https://picsum.photos/id/103/300/200](https://picsum.photos/id/103/300/200)',
+        '[https://picsum.photos/id/104/300/200](https://picsum.photos/id/104/300/200)'
+    ];
+    galleryGrid.innerHTML = '';
+    images.forEach(url => {
+        const img = document.createElement('img');
+        img.src = url;
+        galleryGrid.appendChild(img);
+    });
+}
+```
+
+### Step 11: The Chat Client (WebSocket)
+
+Append this to `frontend/app.js`. This code makes the Chat Window defined in HTML/CSS functional.
+
+```javascript
+function initChat() {
+    const chatInput = document.getElementById('chatInput');
+    const chatMessages = document.getElementById('chatMessages');
+
+    // Connect to Node.js WebSocket
+    const socket = new WebSocket('ws://localhost:3000');
+
+    socket.addEventListener('message', (event) => {
+        addMessage(event.data, 'server');
+    });
+
+    chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            const text = chatInput.value;
+            socket.send(text);
+            addMessage("You: " + text, 'user');
+            chatInput.value = '';
+        }
+    });
+
+    function addMessage(text, sender) {
+        const div = document.createElement('div');
+        div.innerText = text;
+        div.style.textAlign = sender === 'user' ? 'right' : 'left';
+        div.style.color = sender === 'user' ? '#5E81AC' : '#BF616A';
+        div.style.marginBottom = '5px';
+        chatMessages.appendChild(div);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+}
+```
+
+## Phase 4: FastAPI Backend (Geolocation)
+
+### Step 12: Setup Python Service
+
+1.  Go to `geo-service/`.
+2.  Create `requirements.txt`:
+    ```text
+    fastapi
+    uvicorn
+    websockets
+    ```
+3.  Create `Dockerfile`:
+    ```dockerfile
+    FROM python:3.9-slim
+    WORKDIR /app
+    COPY requirements.txt .
+    RUN pip install --no-cache-dir -r requirements.txt
+    COPY . .
+    CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+    ```
+
+### Step 13: Implement Python Logic
+
+Create `geo-service/main.py`.
+
+```python
+from fastapi import FastAPI, WebSocket
+from fastapi.middleware.cors import CORSMiddleware
+import asyncio, random
+
+app = FastAPI()
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"])
+
+@app.websocket("/ws/location")
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    lat, lon = 40.64427, -8.64554
+    try:
+        while True:
+            lat += random.uniform(-0.001, 0.001)
+            lon += random.uniform(-0.001, 0.001)
+            await websocket.send_json({"lat": lat, "lng": lon})
+            await asyncio.sleep(2)
+    except: print("Disconnected")
+```
+
+### Step 14: Update Docker Compose
+
+Add the `geo` service to `docker-compose.yml`.
+
+```yaml
+services:
+  # ... existing web and auth ...
+  geo:
+    build: ./geo-service
+    container_name: geo_server
+    ports:
+      - "8000:8000"
+```
+
+### Step 15: The Map (Leaflet + WebSocket)
+
+Append this to `frontend/app.js`:
+
+```javascript
+function initMap() {
+    const map = L.map('map').setView([40.64427, -8.64554], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    const marker = L.marker([40.64427, -8.64554]).addTo(map);
+
+    // Connect to Python WebSocket
+    const geoSocket = new WebSocket('ws://localhost:8000/ws/location');
+
+    geoSocket.addEventListener('message', (event) => {
+        const data = JSON.parse(event.data);
+        const newLatLng = [data.lat, data.lng];
+        marker.setLatLng(newLatLng);
+        map.panTo(newLatLng);
+    });
+}
+```
+
+**Final Step:** Run `docker compose up -d --build` and enjoy your app!
+
+## Phase 5 (Optional)
+
+Implement two major changes in the code:
+
+1. For a more realistic approach, the server should compare password hashes instead of the passwords directly. Implement this modification on the webpage and the authentication server.
+2. Create multiple chat windows, updating the webpage and server to support this.

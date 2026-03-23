@@ -370,7 +370,7 @@ Developed by Google. Angular is a full-fledged **Framework**. It includes routin
 3.  **Two-Way Data Binding:** Changes in UI update State; Changes in State update UI (automatically).
 4.  **Real DOM:** Angular operates directly on the DOM but uses a sophisticated Change Detection mechanism (Zones).
 
-## Angular Example
+## Angular Example i
 
 Angular separates the Logic (Typescript) from the View (HTML Template).
 
@@ -387,6 +387,8 @@ export class GalleryComponent {
   images: Array<{url: string}> = [{ url: 'img1.jpg' }];
 }
 ```
+
+## Angular Example ii
 
 **Template (`gallery.component.html`)**
 
@@ -487,13 +489,12 @@ We have two separate applications:
 
 We need to run them together and ensure they can communicate.
 
-## Docker Compose Configuration
+## Docker Compose Configuration i
 
 `docker-compose.yml` orchestrates multi-container applications.
 
 ```yaml
 services:
-  # --- THE BACKEND ---
   backend-api:
     build: ./backend_folder       # Build image from Dockerfile
     container_name: py_api
@@ -502,35 +503,38 @@ services:
     volumes:
       - ./backend_folder:/app     # Hot-reload code changes
 
-  # --- THE FRONTEND ---
   frontend-web:
     image: nginx:alpine           # Use pre-built Nginx
     container_name: my_website
     ports:
       - "8080:80"                 # Browser hits localhost:8080
     volumes:
-      # Inject our HTML/JS (or React build) into Nginx
-      - ./frontend_folder:/usr/share/nginx/html
+      - ./frontend_folder:/usr/share/nginx/html # Inject our HTML/JS
     depends_on:
       - backend-api               # Wait for API to start
 ```
 
+## Docker Compose Configuration ii
+
 **Critical Networking Concept:**
 
-  * **Browser to Backend:** When your JavaScript runs in the *browser*, it is running on the *User's Machine*. Therefore, the JS `fetch` URL must point to `http://localhost:8000` (the port exposed by Docker to the host machine), not the internal container name.
+* **Browser to Backend:** When your JavaScript runs in the *browser*, it is running on the *User's Machine*. Therefore, the JS `fetch` URL must point to `http://localhost:8000` (the port exposed by Docker to the host machine), not the internal container name.
 
 ## Additional Resources
 
 **JavaScript & The Web**
+
 * [MDN Web Docs (Mozilla)](https://developer.mozilla.org/en-US/) - The bible of web development.
 * [JavaScript.info](https://javascript.info/) - Deep dive into the modern language.
 * [What the heck is the event loop anyway?](https://www.youtube.com/watch?v=8aGhZQkoFbQ) (Philip Roberts) - Essential visualization of the JS runtime.
 
 **Frameworks**
+
 * [React Documentation](https://react.dev/) - Official docs (newly rewritten).
 * [Angular University](https://angular-university.io/) - Comprehensive tutorials for Angular.
 
 **Backend & DevOps**
+
 * [Node.js Best Practices](https://github.com/goldbergyoni/nodebestpractices) - Architecture patterns.
 * [FastAPI User Guide](https://fastapi.tiangolo.com/) - Excellent documentation with interactive examples.
 * [Docker Curriculum](https://docker-curriculum.com/) - A hands-on guide for beginners.
