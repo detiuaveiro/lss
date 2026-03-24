@@ -8,6 +8,7 @@ This guide accompanies the theoretical slides on Dynamic Web Pages.
 You will build a complete web application from scratch, starting with a static profile and evolving it into a dynamic system with user authentication, real-time maps, and chat support.
 
 **Technologies used:**
+
 * **Frontend:** HTML5, CSS3 (Nord Light Theme), Vanilla JavaScript.
 * **Backend 1:** Node.js (Express) for Authentication and Chat.
 * **Backend 2:** Python (FastAPI) for Geolocation and Data processing.
@@ -59,7 +60,7 @@ Note the `chatWidget` div at the bottom; this will be used in Step 11.
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Dynamic Profile</title>
     <!-- Leaflet CSS for the Map (Step 15) -->
-    <link rel="stylesheet" href="[https://unpkg.com/leaflet@1.9.4/dist/leaflet.css](https://unpkg.com/leaflet@1.9.4/dist/leaflet.css)" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="style.css">
     <script src="app.js" defer></script>
 </head>
@@ -87,7 +88,7 @@ Note the `chatWidget` div at the bottom; this will be used in Step 11.
         <!-- Content Section (Hidden until logged in) -->
         <div id="contentArea" class="hidden">
             <section class="card profile-card">
-                <img src="[https://ui-avatars.com/api/?name=User&background=88C0D0&color=fff](https://ui-avatars.com/api/?name=User&background=88C0D0&color=fff)" alt="Profile" id="avatar">
+                <img src="https://ui-avatars.com/api/?name=User&background=88C0D0&color=fff" alt="Profile" id="avatar">
                 <h2 id="welcomeMsg">Hello, User</h2>
                 <p>Full Stack Student</p>
             </section>
@@ -120,7 +121,7 @@ Note the `chatWidget` div at the bottom; this will be used in Step 11.
     </footer>
 
     <!-- Leaflet JS -->
-    <script src="[https://unpkg.com/leaflet@1.9.4/dist/leaflet.js](https://unpkg.com/leaflet@1.9.4/dist/leaflet.js)"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </body>
 </html>
 ```
@@ -391,10 +392,10 @@ Append this to `frontend/app.js`:
 function loadGallery() {
     const galleryGrid = document.getElementById('galleryGrid');
     const images = [
-        '[https://picsum.photos/id/101/300/200](https://picsum.photos/id/101/300/200)',
-        '[https://picsum.photos/id/102/300/200](https://picsum.photos/id/102/300/200)',
-        '[https://picsum.photos/id/103/300/200](https://picsum.photos/id/103/300/200)',
-        '[https://picsum.photos/id/104/300/200](https://picsum.photos/id/104/300/200)'
+        'https://picsum.photos/id/101/300/200',
+        'https://picsum.photos/id/102/300/200',
+        'https://picsum.photos/id/103/300/200',
+        'https://picsum.photos/id/104/300/200'
     ];
     galleryGrid.innerHTML = '';
     images.forEach(url => {

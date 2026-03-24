@@ -8,6 +8,7 @@ Este guia acompanha os diapositivos teóricos sobre Páginas Web Dinâmicas.
 Irá construir uma aplicação web completa do zero, começando com um perfil estático e evoluindo-o para um sistema dinâmico com autenticação de utilizadores, mapas em tempo real e suporte por chat.
 
 **Tecnologias utilizadas:**
+
 * **Frontend:** HTML5, CSS3 (Tema Nord Light), Vanilla JavaScript.
 * **Backend 1:** Node.js (Express) para Autenticação e Chat.
 * **Backend 2:** Python (FastAPI) para Geolocalização e Processamento de Dados.
