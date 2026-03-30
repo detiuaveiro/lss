@@ -27,7 +27,7 @@ Before writing code, ensure your environment is ready.
 
 ### Step 1: Folder Structure
 
-1.  Create a main folder named `ex10`.
+1.  Create a main folder named `ex05`.
 2.  Inside it, create three subfolders: `frontend`, `auth-service`, and `geo-service`.
 3.  Create a `compose.yml` file in the root.
 

@@ -27,7 +27,7 @@ Antes de escrever código, certifique-se de que o seu ambiente está pronto.
 
 ### Passo 1: Estrutura de Pastas
 
-1.  Crie uma pasta principal chamada `ex10`.
+1.  Crie uma pasta principal chamada `ex05`.
 2.  Dentro dela, crie três subpastas: `frontend`, `auth-service` e `geo-service`.
 3.  Crie um ficheiro `compose.yml` na raiz.
 
