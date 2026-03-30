@@ -87,7 +87,7 @@ Perceber como ele usa `asyncio` para criar um servidor persistente que pode lida
 
 1.  Crie um novo diretório `ex01` e entre nele `cd ex01`.
 
-2.  Descarregue o [código](https://github.com/detiuaveiro/iei/tree/master/classes/class_08/02_support/ex01) da solução para este diretório.
+2.  Descarregue o [código](https://github.com/detiuaveiro/lss/tree/master/classes/class_06/02_support/ex01) da solução para este diretório.
 
 3.  Ative um `venv` e instale os requisitos:
 
@@ -167,7 +167,7 @@ Perceber como ele usa `asyncio` para criar um servidor persistente que pode lida
 
 1.  Crie um novo diretório `ex03` e entre nele `cd ex03`.
 
-2.  Descarregue o [código](https://github.com/detiuaveiro/iei/tree/master/classes/class_08/02_support/ex03) da solução para este diretório.
+2.  Descarregue o [código](https://github.com/detiuaveiro/lss/tree/master/classes/class_06/02_support/ex03) da solução para este diretório.
 
 3.  Ative um `venv` e instale os requisitos:
 
@@ -242,7 +242,7 @@ Perceber como ele usa `asyncio` para criar um servidor persistente que pode lida
 
 1.  Crie um novo diretório `ex04` e entre nele `cd ex04`.
 
-2.  Descarregue o [código](https://github.com/detiuaveiro/iei/tree/master/classes/class_08/02_support/ex04) para o mesmo diretório.
+2.  Descarregue o [código](https://github.com/detiuaveiro/lss/tree/master/classes/class_06/02_support/ex04) para o mesmo diretório.
 
 3.  **Inicie o Broker:**
 

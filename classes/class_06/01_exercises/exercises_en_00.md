@@ -84,7 +84,7 @@ Understand how it uses `asyncio` to create a persistent server that can handle m
 **Instructions:**
 
 1.  Create a new directory `ex01` and move into it `cd ex01`.
-2.  Download the solution [code](https://github.com/detiuaveiro/iei/tree/master/classes/class_08/02_support/ex01) into this directory.
+2.  Download the solution [code](https://github.com/detiuaveiro/lss/tree/master/classes/class_06/02_support/ex01) into this directory.
 3.  Activate a `venv` and install the requirements:
 
     ```bash
@@ -158,7 +158,7 @@ Understand how it uses `asyncio` to create a persistent server that can handle m
 **Instructions:**
 
 1.  Create a new directory `ex03` and move into it `cd ex03`.
-2.  Download the solution [code](https://github.com/detiuaveiro/iei/tree/master/classes/class_08/02_support/ex03) into this directory.
+2.  Download the solution [code](https://github.com/detiuaveiro/lss/tree/master/classes/class_06/02_support/ex03) into this directory.
 3.  Activate a `venv` and install the requirements:
 
     ```bash
@@ -230,7 +230,7 @@ Understand how it uses `asyncio` to create a persistent server that can handle m
 
 1.  Create a new directory `ex04` and move into it `cd ex04`.
 
-2.  Download the [code](https://github.com/detiuaveiro/iei/tree/master/classes/class_08/02_support/ex04) into the same directory.
+2.  Download the [code](https://github.com/detiuaveiro/lss/tree/master/classes/class_06/02_support/ex04) into the same directory.
 
 3.  **Start the Broker:**
 
