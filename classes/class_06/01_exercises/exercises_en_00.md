@@ -235,7 +235,7 @@ Understand how it uses `asyncio` to create a persistent server that can handle m
 3.  **Start the Broker:**
 
     ```bash
-    docker-compose up -d
+    docker compose up -d
     ```
 
 4.  **Test the Client:**

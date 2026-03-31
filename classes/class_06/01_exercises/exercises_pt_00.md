@@ -247,7 +247,7 @@ Perceber como ele usa `asyncio` para criar um servidor persistente que pode lida
 3.  **Inicie o Broker:**
 
     ```bash
-    docker-compose up -d
+    docker compose up -d
     ```
 
 4.  **Teste o Cliente:**
