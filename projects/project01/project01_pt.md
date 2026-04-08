@@ -4,7 +4,7 @@ title: Projecto 01
 
 # Projetos
 
-Formem grupos de dois ou três alunos (excecionalmente, os projetos podem ser feitos individualmente) e selecionem **um** dos seguintes projetos. Todos os projetos serão alojados no **GitHub**, utilizando o [GitHub Classroom](https://classroom.github.com/a/xN-SHTD1)). Consultem os detalhes [aqui](#acesso-ao-gitHub-classroom).
+Formem grupos de dois ou três alunos (excecionalmente, os projetos podem ser feitos individualmente) e selecionem **um** dos seguintes projetos. Todos os projetos serão alojados no **GitHub**, utilizando o [GitHub Classroom](https://classroom.github.com/a/xN-SHTD1)). Consultem os detalhes [aqui](#acesso-ao-github-classroom).
 
 O repositório deve conter todos os scripts relevantes, ficheiros de configuração e um `README.md` com instruções sobre como implementar o projeto. Deve também conter um relatório do projeto em formato `PDF`.
 
