@@ -31,7 +31,8 @@ Crie uma pasta `class08-lab` e um ficheiro `compose.yml`:
 services:
   # Representa o seu Servidor em Casa (o destino para backups)
   home-server:
-    image: lscr.io/linuxserver/openssh-server:latest
+    build:
+      context: ./home-server
     container_name: home-server
     environment:
       - PUID=1000
@@ -54,7 +55,7 @@ services:
     networks:
       lab-net:
         ipv4_address: 172.25.0.20
-    command: sh -c "apk add rsync openssh-client iperf3 mtr tcpdump bash curl && sleep infinity"
+    command: sh -c "apk add rsync openssh-client iperf3 mtr tcpdump bash curl sshpass && sleep infinity"
 
   # Representa um alvo de tráfego remoto na Internet
   internet-target:
@@ -80,6 +81,8 @@ services:
     container_name: uni-gateway
     ports:
       - "8081:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
     networks:
       lab-net:
         ipv4_address: 172.25.0.100
@@ -89,7 +92,40 @@ networks:
     external: true
 ```
 
-#### 3. Iniciar o Ambiente
+#### 3. Criar os Ficheiros de Configuração
+
+Crie uma subpasta `home-server` e um `Dockerfile` dentro dela:
+
+```dockerfile
+FROM lscr.io/linuxserver/openssh-server:latest
+RUN apk add --no-cache rsync
+```
+
+Crie um ficheiro `nginx.conf` na pasta principal `class08-lab`:
+
+```nginx
+events {
+    worker_connections 1024;
+}
+
+http {
+    upstream university_services {
+        server 172.25.0.40:5432;
+    }
+
+    server {
+        listen 80;
+
+        location / {
+            proxy_pass http://university_services;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+        }
+    }
+}
+```
+
+#### 4. Iniciar o Ambiente
 
 ```bash
 $ docker compose up -d
