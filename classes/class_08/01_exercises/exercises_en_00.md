@@ -39,9 +39,10 @@ services:
       - TZ=Europe/Lisbon
       - USER_NAME=student
       - PASSWORD_ACCESS=true
-      - USER_PASSWORD=pass
-    ports:
-      - "2222:22"
+      - USER_PASSWORD=studentpass
+      ports:
+      - "2222:2222"
+
     networks:
       lab-net:
         ipv4_address: 172.25.0.10
@@ -128,9 +129,10 @@ $ docker compose up -d
 **Real-world Scenario:** You have a 100MB project file. You only changed one paragraph. On eduroam, upload bandwidth is limited.
 
 1. Create a large file on your `laptop`: `docker exec -it laptop dd if=/dev/urandom of=/project.pdf bs=1M count=10`.
-2. Sync to your `home-server`:
+2. Sync to your `home-server` (pass `studentpass`):
    ```bash
-   $ docker exec -it laptop rsync -avz /project.pdf student@172.25.0.10:/config/
+   $ docker exec -it laptop rsync \
+   -avz -e 'ssh -p 2222' /project.pdf student@172.25.0.10:/config/
    ```
 3. Modify the file slightly and sync again. Notice how much faster it is.
 
@@ -143,13 +145,13 @@ $ docker compose up -d
 #### Exercise 4: Local Port Forwarding
 **Real-world Scenario:** You need to query the `private-db` for your thesis, but eduroam blocks port 5432. You have SSH access to your `home-server`.
 
-1. Open the tunnel from your **host**: `ssh -L 9000:172.25.0.40:5432 student@localhost -p 2222`.
+1. Open the tunnel from your **host**: `ssh -p 2222 -L 9000:172.25.0.40:5432 student@localhost`.
 2. Access `http://localhost:9000` on your machine. You have successfully "bridged" into the isolated DB.
 
 #### Exercise 5: Dynamic SOCKS Proxy
 **Real-world Scenario:** The University blocks a specific research site you need. You use your home connection to browse through it.
 
-1. Create the proxy: `ssh -D 1080 student@localhost -p 2222`.
+1. Create the proxy: `ssh -p 2222 -D 1080 student@localhost`.
 2. Configure your laptop's `curl` to use it:
    ```bash
    $ curl --proxy socks5h://localhost:1080 http://172.25.0.40:5432

@@ -31,6 +31,10 @@ Consider the **eduroam** network used at the University of Aveiro.
 
 ## The "eduroam" Example II
 
+![\ ](eduroam.jpg){ width=256px }
+
+## The "eduroam" Example III
+
 Why is eduroam "closed" or "restricted"?
 
 * **Security:** To prevent malware from spreading between thousands of students.

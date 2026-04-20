@@ -1,76 +1,56 @@
 #!/bin/bash
 
+# Lab Runner for Class 08: Advanced Communication, Performance and Security
+
 set -e
 
-# Configuration
-LAB_DIR="class08-restricted-lab"
-COMPOSE_FILE="docker-compose.yml"
+# Ensure we are in the script's directory
+cd "$(dirname "$0")"
 
 log() {
-    echo "--- $(date '+%Y-%m-%d %H:%M:%S') - $1 ---"
+    echo -e "\n\033[1;32m[LOG] $1\033[0m"
 }
 
-check_dependencies() {
-    log "Verifying System Dependencies"
-    if ! command -v docker &> /dev/null; then
-        echo "Critical Error: docker is not installed."
-        exit 1
-    fi
-    if ! docker compose version &> /dev/null; then
-        echo "Critical Error: docker compose is not installed."
-        exit 1
-    fi
-}
+# 1. Setup Network
+log "Creating lab-net network..."
+docker network create --subnet=172.25.0.0/16 lab-net 2>/dev/null || echo "Network already exists."
 
-setup_environment() {
-    log "Preparing Local Workspace: $LAB_DIR"
-    mkdir -p "$LAB_DIR"
-    cp docker-compose.yml nginx.conf "$LAB_DIR/"
-    cp -r prod-server backup-server "$LAB_DIR/"
-    cd "$LAB_DIR"
-}
+# 2. Launch Infrastructure
+log "Launching infrastructure with Docker Compose..."
+docker compose up -d
 
-deploy_infrastructure() {
-    log "Deploying Simulated Restricted Network (Docker)"
-    # Ensure network is clean
-    docker compose down -v --remove-orphans || true
-    # Start
-    docker compose up -d --build
-    log "Waiting for containers to initialize..."
-    sleep 5
-}
+log "Waiting for containers to initialize (15 seconds)..."
+sleep 15
 
-run_demos() {
-    log "Demonstration 1: Network Throughput Analysis"
-    log "Measuring capacity between University Laptop and Internet Target"
-    docker exec laptop iperf3 -c 172.25.0.30 -t 5
+# Part 1: Performance & Monitoring
+log "Exercise 1: Throughput Testing (iperf3)"
+docker exec laptop iperf3 -c 172.25.0.30 -t 5
 
-    log "Demonstration 2: Efficient Synchronization"
-    log "Scenario: Syncing a project file to Home Server"
-    docker exec laptop sh -c "dd if=/dev/urandom of=/data/thesis_v1.pdf bs=1M count=5"
-    log "Communicating deltas to 172.25.0.10"
-    docker exec laptop rsync -avz /data/thesis_v1.pdf student@172.25.0.10:/config/backup/
+log "Exercise 2: Real-time Analysis (mtr)"
+log "Running mtr for 5 cycles..."
+docker exec laptop mtr -c 5 --report 172.25.0.10
 
-    log "Demonstration 3: Bridging Restricted Port (Info)"
-    log "To access the Private DB (blocked on eduroam), run this on your REAL HOST:"
-    log "ssh -L 9000:172.25.0.40:5432 student@localhost -p 2222"
+# Part 2: Efficient Synchronization (rsync)
+log "Exercise 3: Smart Backups"
+log "Creating a 10MB project file on laptop..."
+docker exec laptop dd if=/dev/urandom of=/project.pdf bs=1M count=10
+log "Syncing to home-server (first time)..."
+# Automatically test with sshpass to verify setup
+docker exec laptop sshpass -p studentpass rsync -avz -e 'ssh -p 2222 -o StrictHostKeyChecking=no' /project.pdf student@172.25.0.10:/config/
+log "Success: Automated sync verified."
+echo "To run manually: docker exec -it laptop rsync -avz -e 'ssh -p 2222' /project.pdf student@172.25.0.10:/config/"
 
-    log "Demonstration 4: Load Balancing Gateway"
-    log "Validating University Gateway response"
-    curl -s http://localhost:8081 | grep "Server" || echo "Note: Manually configure NGINX backends for full demo."
-}
+# Part 3: Bypassing Limitations (SSH)
+log "Exercise 4 & 5: SSH Tunneling"
+log "To test Local Port Forwarding, run on your HOST (connects to 2222 on localhost, then 5432 on target):"
+echo "ssh -p 2222 -L 9000:172.25.0.40:5432 student@localhost"
+log "To test Dynamic SOCKS Proxy, run on your HOST:"
+echo "ssh -p 2222 -D 1080 student@localhost"
 
-conclusion() {
-    echo ""
-    log "Automation Complete"
-    echo "The lab environment is now active."
-    echo "Current Nodes: laptop (University), home-server (Private), private-db (Isolated), uni-gateway (Proxy)."
-    echo "To terminate the environment: cd $LAB_DIR && docker compose down"
-}
+# Part 4: Advanced Reliability
+log "Exercise 6: Load Balancing"
+log "Testing uni-gateway (load balancer) connectivity to private-db..."
+# Requesting secret.txt through the gateway
+curl -s http://localhost:8081/secret.txt | grep "SENSITIVE" && echo "Success: Gateway is forwarding to Private DB."
 
-# Main Lifecycle
-check_dependencies
-setup_environment
-deploy_infrastructure
-run_demos
-conclusion
+log "Lab execution complete."

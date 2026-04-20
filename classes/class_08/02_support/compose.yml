@@ -1,0 +1,61 @@
+services:
+  # Represents your Home Server (the destination for backups)
+  home-server:
+    build:
+      context: ./home-server
+    container_name: home-server
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Lisbon
+      - USER_NAME=student
+      - PASSWORD_ACCESS=true
+      - USER_PASSWORD=studentpass
+    ports:
+      - "2222:2222"
+    networks:
+      lab-net:
+        ipv4_address: 172.25.0.10
+
+  # Represents your Laptop (connected to restricted eduroam)
+  laptop:
+    image: alpine:latest
+    container_name: laptop
+    networks:
+      lab-net:
+        ipv4_address: 172.25.0.20
+    command: sh -c "apk add rsync openssh-client iperf3 mtr tcpdump bash curl sshpass && sleep infinity"
+
+  # Represents a remote traffic target
+  internet-target:
+    image: alpine:latest
+    container_name: internet-target
+    networks:
+      lab-net:
+        ipv4_address: 172.25.0.30
+    command: sh -c "apk add iperf3 && iperf3 -s"
+
+  # Represents a Private Database (isolated from everyone)
+  private-db:
+    image: alpine:latest
+    container_name: private-db
+    networks:
+      lab-net:
+        ipv4_address: 172.25.0.40
+    command: sh -c "apk add python3 && echo 'SENSITIVE_STUDENT_DATA' > secret.txt && python3 -m http.server 5432"
+
+  # Represents a Load Balancer for University Services
+  uni-gateway:
+    image: nginx:alpine
+    container_name: uni-gateway
+    ports:
+      - "8081:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      lab-net:
+        ipv4_address: 172.25.0.100
+
+networks:
+  lab-net:
+    external: true

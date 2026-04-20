@@ -39,9 +39,10 @@ services:
       - TZ=Europe/Lisbon
       - USER_NAME=student
       - PASSWORD_ACCESS=true
-      - USER_PASSWORD=pass
-    ports:
-      - "2222:22"
+      - USER_PASSWORD=studentpass
+      ports:
+      - "2222:2222"
+
     networks:
       lab-net:
         ipv4_address: 172.25.0.10
@@ -130,7 +131,7 @@ $ docker compose up -d
 1. Crie um ficheiro grande no seu `laptop`: `docker exec -it laptop dd if=/dev/urandom of=/projeto.pdf bs=1M count=10`.
 2. Sincronize para o seu `home-server`:
    ```bash
-   $ docker exec -it laptop rsync -avz /projeto.pdf student@172.25.0.10:/config/
+   $ docker exec -it laptop rsync -avz -e 'ssh -p 2222' /projeto.pdf student@172.25.0.10:/config/
    ```
 3. Modifique ligeiramente o ficheiro e sincronize novamente. Note quão mais rápido é.
 
@@ -141,15 +142,16 @@ $ docker compose up -d
 **Objetivo:** Alcançar o que está escondido ou bloqueado.
 
 #### Exercício 4: Local Port Forwarding
-**Cenário Real:** Precisa de consultar a `private-db` para a sua tese, mas a eduroam bloqueia a porta 5432. Tem acesso SSH ao seu `home-server`.
+**Real-world Scenario:** Precisa de consultar a `private-db` para a sua tese, mas a eduroam bloqueia a porta 5432. Tem acesso SSH ao seu `home-server`.
 
-1. Abra o túnel a partir da sua **máquina real** (host): `ssh -L 9000:172.25.0.40:5432 student@localhost -p 2222`.
+1. Abra o túnel a partir da sua **máquina real** (host): `ssh -p 2222 -L 9000:172.25.0.40:5432 student@localhost`.
 2. Aceda a `http://localhost:9000` na sua máquina. Conseguiu com sucesso estabelecer uma "ponte" para a BD isolada.
 
 #### Exercício 5: Proxy SOCKS Dinâmico
-**Cenário Real:** A Universidade bloqueia um site de investigação específico que você precisa. Usa a sua ligação de casa para navegar através dela.
+**Real-world Scenario:** A Universidade bloqueia um site de investigação específico que você precisa. Usa a sua ligação de casa para navegar através dela.
 
-1. Crie o proxy: `ssh -D 1080 student@localhost -p 2222`.
+1. Crie o proxy: `ssh -p 2222 -D 1080 student@localhost`.
+
 2. Configure o `curl` do seu portátil para o usar:
    ```bash
    $ curl --proxy socks5h://localhost:1080 http://172.25.0.40:5432

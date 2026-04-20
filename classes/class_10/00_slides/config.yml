@@ -9,6 +9,6 @@ sansfont: Noto Sans
 monofont: Noto Sans Mono
 theme: moloch
 themeoptions:
-    - sectionpage=progressbar
-    - numbering=fraction
-    - progressbar=frametitle
+  - sectionpage=progressbar
+  - numbering=fraction
+  - progressbar=frametitle
