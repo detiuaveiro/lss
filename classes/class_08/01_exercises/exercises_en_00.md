@@ -40,7 +40,7 @@ services:
       - USER_NAME=student
       - PASSWORD_ACCESS=true
       - USER_PASSWORD=studentpass
-      ports:
+    ports:
       - "2222:2222"
 
     networks:

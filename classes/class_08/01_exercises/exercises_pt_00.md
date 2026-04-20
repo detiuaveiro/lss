@@ -40,7 +40,7 @@ services:
       - USER_NAME=student
       - PASSWORD_ACCESS=true
       - USER_PASSWORD=studentpass
-      ports:
+    ports:
       - "2222:2222"
 
     networks:
@@ -129,9 +129,10 @@ $ docker compose up -d
 **Cenário Real:** Tem um ficheiro de projeto de 100MB. Apenas mudou um parágrafo. Na eduroam, a largura de banda de upload é limitada.
 
 1. Crie um ficheiro grande no seu `laptop`: `docker exec -it laptop dd if=/dev/urandom of=/projeto.pdf bs=1M count=10`.
-2. Sincronize para o seu `home-server`:
+2. Sincronize para o seu `home-server` (pass `studentpass`):
    ```bash
-   $ docker exec -it laptop rsync -avz -e 'ssh -p 2222' /projeto.pdf student@172.25.0.10:/config/
+   $ docker exec -it laptop rsync \
+   -avz -e 'ssh -p 2222' /projeto.pdf student@172.25.0.10:/config/
    ```
 3. Modifique ligeiramente o ficheiro e sincronize novamente. Note quão mais rápido é.
 
