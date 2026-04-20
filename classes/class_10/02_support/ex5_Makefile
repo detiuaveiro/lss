@@ -1,0 +1,17 @@
+# List all Markdown files
+SRC := $(wildcard *.md)
+# Define the output PDF names
+PDF := $(patsubst %.md,%.pdf,$(SRC))
+
+# Default rule
+all: $(PDF)
+
+# Rule to convert MD to PDF
+%.pdf: %.md
+	pandoc $< -o $@
+
+# Clean rule
+clean:
+	rm -f $(PDF)
+
+.PHONY: all clean
