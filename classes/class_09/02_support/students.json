@@ -1,0 +1,26 @@
+[
+  {
+    "id": "1",
+    "name": "Alice",
+    "grade": 18,
+    "city": "Aveiro"
+  },
+  {
+    "id": "2",
+    "name": "Bob",
+    "grade": 14,
+    "city": "Porto"
+  },
+  {
+    "id": "3",
+    "name": "Charlie",
+    "grade": 16,
+    "city": "Aveiro"
+  },
+  {
+    "id": "4",
+    "name": "David",
+    "grade": 10,
+    "city": "Coimbra"
+  }
+]

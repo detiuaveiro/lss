@@ -1,0 +1,46 @@
+\documentclass{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{tikz}
+\usepackage{fontspec}
+\setsansfont{Noto Sans}
+\usetikzlibrary{arrows.meta}
+\pagestyle{empty}
+\begin{document}
+\definecolor{MyTriangle}{RGB}{229,185,78}
+\definecolor{MyArrow}{RGB}{84,106,160}
+\centering
+\begin{tikzpicture}
+    \begin{scope}
+        \draw[very thick, MyTriangle!40] (0,-0.03) -- (15,-0.03);
+        \draw[very thick, MyTriangle!55] (0,-3) -- (15,-3);
+        \draw[very thick, MyTriangle!70] (0,-6) -- (15,-6);
+        \draw[very thick, MyTriangle!85] (0,-9) -- (15,-9);
+        \draw[very thick, MyTriangle] (0,-11.95) -- (15,-11.95);
+        \draw[very thick, MyTriangle] (15,-0.02) -- (15,-11.96);
+        \draw[very thick,white,fill=MyTriangle!55] (0,0) -- (-8,-12) -- (8,-12);
+        \filldraw[very thick,white,fill=MyTriangle!70] (0,0) -- (-6,-9) -- (6,-9);
+        \filldraw[very thick,white,fill=MyTriangle!85] (0,0) -- (-4,-6) -- (4,-6);
+        \filldraw[very thick,white,fill=MyTriangle] (0,0) -- (-2,-3) -- (2,-3);
+        \node at (0,-2) {\bfseries\sffamily\LARGE Sabedoria};
+        \node at (0,-4.5) {\bfseries\sffamily\LARGE Conhecimento};
+        \node at (0,-7.5) {\bfseries\sffamily\LARGE Informação};
+        \node at (0,-10.5) {\bfseries\sffamily\LARGE Dados};
+        \node[text width=8cm] at (7,-2) {\Large $\bullet$ compreensão, integrada, acionável};
+        \node[text width=8cm] at (9,-4.5) {\Large $\bullet$ contextual, sintetizado, aprendizagem};
+        \node[text width=8cm] at (11,-7.5) {\Large $\bullet$ útil, organizada, estruturada};
+        \node[text width=8cm] at (13,-10.5) {\Large $\bullet$ sinais, saber nada};
+    \end{scope}
+    \begin{scope}[xshift=-3.7cm,yshift=-3cm]
+        \draw[-{Triangle[width=18pt,length=12pt]}, line width=8pt, rounded corners=25pt, MyArrow] (0,0) -- (0,1) -- (2,1);
+        \node[text width=5cm] at (1,-.5) {\Large dada introspeção,\\torna-se};
+    \end{scope}
+    \begin{scope}[xshift=-5.7cm,yshift=-5.5cm]
+        \draw[-{Triangle[width=18pt,length=12pt]}, line width=8pt, rounded corners=25pt, MyArrow] (0,0) -- (0,1) -- (2,1);
+        \node[text width=5cm] at (1,-.5) {\Large dado significado,\\torna-se};
+    \end{scope}
+    \begin{scope}[xshift=-7.7cm,yshift=-8.5cm]
+        \draw[-{Triangle[width=18pt,length=12pt]}, line width=8pt, rounded corners=25pt, MyArrow] (0,0) -- (0,1) -- (2,1);
+        \node[text width=5cm] at (1,-.5) {\Large dado contexto,\\torna-se};
+    \end{scope}
+\end{tikzpicture}
+\end{document}
