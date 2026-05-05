@@ -1,322 +1,188 @@
 ---
-title: Representação e Comunicação de Informação Digital II
+title: Análise, Visualização e Comunicação de Dados
+subtitle: Laboratórios de Sistemas e Serviços
+author: Mário Antunes
+institute: Universidade de Aveiro
+date: 2026
+colorlinks: true
+highlight-style: tango
+toc: true
+toc-title: "Índice"
+mainfont: Noto Sans
+sansfont: Noto Sans
+monofont: Noto Sans Mono
+header-includes:
+ - \usetheme[sectionpage=progressbar,numbering=fraction,progressbar=frametitle]{metropolis}
 ---
 
-# Introdução
+# Dos Dados ao Conhecimento
 
-## Comunicar Informação Técnica
+## A jornada dos dados brutos ao conhecimento acionável.
 
-Como engenheiro, escrever código é apenas metade do trabalho.
+* **Dados:** Factos ou observações discretas e objetivas.
+* **Informação:** Dados processados para serem úteis; responde a "Quem, Quê, Onde, Quando".
+* **Conhecimento:** Aplicação de dados e informação; responde a "Como".
+* **Sabedoria:** Compreensão avaliada; responde a "Porquê".
 
-* A outra metade é **comunicar** o que esse código faz.
-* Audiência: Outros programadores, gestores, clientes ou o seu eu futuro.
-* Meio: Documentação, relatórios, teses ou apresentações.
-* Objetivo: Usar ferramentas que permitam versionamento, automação e qualidade profissional.
+## A Pirâmide DIKW
 
-## O Custo de Documentação Pobre I
+![Pirâmide DIKW](figures/dikw_pt.png){ width=512px }
 
-O que acontece quando não documentamos?
+* À medida que subimos na pirâmide, o **significado** e o **valor** aumentam.
+* Como engenheiros, construímos sistemas que automatizam esta transformação.
 
-* **Tempo Desperdiçado:** Programadores a gastar horas a tentar entender uma função.
-* **Erros:** Mau uso de uma API porque a documentação era pouco clara.
-* **Integração:** Novos membros da equipa a demorar meses em vez de semanas a serem produtivos.
+## A Pipeline de Ciência de Dados I
 
-## O Custo de Documentação Pobre II
+Um fluxo de trabalho padrão para tirar partido dos dados.
 
-* **Manutenção:** Voltar ao seu próprio código após 6 meses e não saber porque fez algo.
-* **Dívida Técnica:** Código/docs pouco claros levam a hacks e soluções temporárias.
-* **Silos:** O conhecimento fica preso na cabeça de uma única pessoa.
+1.  **Recolha:** Obter dados de sensores, APIs ou bases de dados.
+2.  **Limpeza:** Lidar com valores em falta, ruído e outliers.
+3.  **Exploração (EDA):** Compreender as propriedades estatísticas dos dados.
+4.  **Análise:** Construir modelos ou realizar consultas complexas.
+5.  **Visualização:** Comunicar os resultados de forma eficaz.
 
-# Markdown
+## A Pipeline de Ciência de Dados II
 
-## O que é o Markdown?
+* **Iteração:** A pipeline não é linear; muitas vezes volta-se à limpeza após a exploração.
+* **Automação:** Usar scripts (Python) e pipelines para tornar o processo repetível.
+* **Qualidade:** "Lixo à entrada, lixo à saída" – a fase de limpeza é a mais crítica.
 
-Uma linguagem de marcação leve com sintaxe de formatação em texto simples.
+# Carregamento e Manipulação de Dados
 
-* **Origem:** Criado por John Gruber em 2004.
-* **Filosofia:** "Legibilidade, acima de tudo."
-* **Formato:** Texto simples que pode ser convertido para muitos formatos (HTML, PDF, DOCX).
-* **Uso:** GitHub (READMEs), Documentação (MkDocs, Sphinx), Notas académicas.
+## O Conceito de DataFrame I
 
-## Flavors de Markdown
+Um DataFrame é a estrutura de dados central na ciência de dados moderna.
 
-O Markdown não é um padrão único, mas tem "sabores" (flavors):
+* **Modelo Conceptual:** Uma folha de cálculo em memória ou uma tabela SQL.
+* **Eixo 0:** Linhas (Amostras/Observações).
+* **Eixo 1:** Colunas (Variáveis/Características).
+* **Índice:** Rótulos únicos para identificar as linhas.
 
-* **CommonMark:** A tentativa de criar um padrão altamente compatível.
-* **GitHub Flavored Markdown (GFM):** Adiciona tabelas, listas de tarefas e links automáticos.
-* **Pandoc's Markdown:** O mais poderoso, adicionando citações, notas de rodapé e metadados.
+## O Conceito de DataFrame II
 
-## Sintaxe Markdown: Cabeçalhos
+* **Homogeneidade:** Cada coluna geralmente contém um único tipo de dados (Int, Float, String).
+* **Alinhamento:** Os dados são alinhados automaticamente com base em rótulos durante as operações.
+* **Bibliotecas:** Usado por Pandas (Python), Polars (Python/Rust) e Spark (Big Data).
 
-Usar o símbolo `#`:
+## Ferramentas: Pandas vs. Polars
 
-* `# Título (H1)`
-* `## Secção (H2)`
-* `### Subsecção (H3)`
-* `#### Sub-subsecção (H4)`
+| Característica | **Pandas** | **Polars** |
+| :--- | :--- | :--- |
+| Backend | Python / C | **Rust** |
+| Threading | Single-threaded | **Multi-threaded** |
+| Avaliação | Eager (Imediata) | **Lazy (Preguiçosa)** |
+| Memória | Muitas cópias | Eficiente (Arrow) |
 
-## Sintaxe Markdown: Ênfase
+* Use **Pandas** para conjuntos de dados pequenos e compatibilidade.
+* Use **Polars** para desempenho e conjuntos de dados massivos.
 
-* `*itálico*` ou `_itálico_`
-* `**negrito**` ou `__negrito__`
-* `***negrito itálico***`
-* `~~rasurado~~`
+# Limpeza de Dados
 
-## Sintaxe Markdown: Listas I
+## Valores em Falta (Imputação)
 
-**Listas Não Ordenadas:**
-* Item 1
-* Item 2
-  * Sub-item 2.1
-  * Sub-item 2.2
+Dados do mundo real são "sujos" e muitas vezes contêm buracos (`NaN`, `Null`).
 
-## Sintaxe Markdown: Listas II
+* **Drop:** Remover linhas com quaisquer valores em falta.
+* **Fill (Constante):** Substituir por zero ou uma string padrão.
+* **Fill (Estatístico):** Substituir pela Média, Mediana ou Moda.
+* **Média:** Bom para distribuições normais.
+* **Mediana:** Melhor quando existem outliers.
 
-**Listas Ordenadas:**
-1. Primeiro passo
-2. Segundo passo
-3. Terceiro passo
+## Deteção de Outliers com IQR
 
-## Sintaxe Markdown: Links e Imagens
+Outliers são valores extremos que podem enviesar a sua análise.
 
-* **Link:** `[Texto do Link](URL)`
-  * `[Universidade de Aveiro](https://www.ua.pt)`
-* **Imagem:** `![Texto Alt](Caminho/para/imagem)`
-  * `![Logótipo do Curso](../../assets/logo.svg)`
+* **O Método do Box Plot:** Usa quartis para definir o intervalo "normal".
+* **IQR:** $Q3 - Q1$.
+* **Limite Inferior:** $Q1 - 1.5 \times IQR$
+* **Limite Superior:** $Q3 + 1.5 \times IQR$
 
-## Sintaxe Markdown: Código
+---
 
-* **Inline:** Envolver com backticks: `` `print("Olá")` ``.
-* **Blocos:** Usar três backticks com identificador de linguagem.
+![Outliers no Box Plot](figures/03_boxplot.pdf){ width=256px }
 
-\```python
-def hello():
-    print("Olá Mundo")
-\```
+## Escalonamento de Dados (Scaling)
 
-## Sintaxe Markdown: Tabelas e Tarefas (GFM)
+Garantir que todas as variáveis têm um intervalo semelhante.
 
-| Tarefa  | Prioridade | Estado  |
-|---------|------------|---------|
-| Planear | Alta       | Feito   |
-| Escrever| Média      | Ativo   |
+* **Normalização:** Escalar dados para $[0, 1]$.
+  * $$X_{norm} = \frac{X - X_{min}}{X_{max} - X_{min}}$$
+* **Padronização:** Centrar os dados na Média=0 com Desvio Padrão=1.
+  * $$Z = \frac{X - \mu}{\sigma}$$
 
------
+# Análise Exploratória de Dados (EDA)
 
-* **Listas de Tarefas:**
-- [x] Completar Aula 09
-- [x] Pesquisar Aula 10
-- [ ] Escrever slides da Aula 10
+## Estatística Descritiva
 
-## Diagramas em Markdown: Mermaid.js I
+Resumir os dados com alguns números.
 
-Muitas plataformas (GitHub, GitLab, Obsidian) suportam **Mermaid** para diagramas.
+* **Média / Mediana / Moda:** Tendência central.
+* **Variância / Desvio Padrão:** Dispersão.
+* **Quartis:** Marcadores de 25%, 50%, 75%.
 
-\```mermaid
-graph TD
-    A[Início] --> B{São dados?}
-    B -- Sim --> C[Processar]
-    B -- Não --> D[Fim]
-\```
+## Correlação (Pearson)
 
-## Diagramas em Markdown: Mermaid.js II
+Medir a relação linear entre duas variáveis.
 
-O Mermaid suporta muitos tipos de diagramas:
-* **Fluxogramas**
-* **Diagramas de Sequência**
-* **Gráficos de Gantt**
-* **Diagramas de Classe**
-* **Diagramas de Entidade-Relacionamento**
+* **Intervalo:** $[-1, +1]$.
+* **+1:** Relação linear positiva perfeita.
+* **-1:** Relação linear negativa perfeita.
+* **0:** Nenhuma relação linear.
+* **Aviso:** "Correlação não implica causalidade."
 
-Permite manter os seus diagramas **versionados** juntamente com o seu código.
+# Visualização de Dados
 
-# LaTeX
+## O Poder dos Visuais
 
-## O que é o LaTeX?
+O cérebro humano está otimizado para o reconhecimento de padrões em imagens.
 
-Um sistema de composição de alta qualidade para documentação técnica e científica.
+* **Matplotlib:** O motor de baixo nível; controlo infinito.
+* **Seaborn:** Visualização estatística de alto nível; excelentes predefinições.
 
-* **Foco:** Separar o conteúdo do estilo.
-* **Força:** Notação matemática, citações e documentos grandes.
-* **Motor:** Baseado em TeX, criado por Donald Knuth.
-* **Padrão:** Usado para Teses de Mestrado, Dissertações de Doutoramento e Artigos Científicos.
+## Escolher o Gráfico Certo
 
-## Básicos de LaTeX: Estrutura
+* **Distribuição:** Histograma ou KDE.
+* **Comparação:** Gráfico de Barras ou Box Plot.
+* **Relação:** Gráfico de Dispersão ou Gráfico de Linhas.
+* **Densidade:** Violin Plot (Box Plot + KDE).
 
-```latex
-\documentclass{article}
-\usepackage[utf8]{inputenc}
+---
 
-\title{O Meu Relatório}
-\author{Mário Antunes}
+![Comparação de Gráficos](figures/04_violinplot.pdf){ width=256px }
 
-\begin{document}
-\maketitle
+## Exportação: Raster vs. Vetor
 
-\section{Introdução}
-Olá mundo!
-\end{document}
-```
+* **Raster (.PNG, .JPG):** Grelha de píxeis. Perde qualidade ao fazer zoom. Bom para web.
+* **Vetor (.PDF, .SVG):** Caminhos matemáticos. Escalabilidade infinita. Essencial para **Artigos Académicos**.
 
-## Básicos de LaTeX: Classes de Documento
+# Comunicação e Partilha de Dados
 
-O `\documentclass{...}` define o layout geral:
+## A Camada de Comunicação
 
-* **article:** Para relatórios curtos ou artigos.
-* **report:** Para documentos mais longos com capítulos (como uma Tese).
-* **book:** Para livros completos.
-* **beamer:** Para criar slides de apresentação.
+Documentação e APIs são como partilhamos o conhecimento.
 
-## Beamer: Apresentações em LaTeX
+* **Markdown:** Para documentação técnica (READMEs).
+* **LaTeX:** Para relatórios académicos formais.
+* **Jupyter:** Para relatórios interativos (Notebooks).
 
-O Beamer permite criar slides em PDF usando a sintaxe LaTeX.
+## Partilhar Dados: Serialização para Troca
 
-* **Frames:** Cada slide é um `\begin{frame} ... \end{frame}`.
-* **Temas:** Aspetos profissionais e académicos (ex: `Warsaw`, `Madrid`).
-* **Overlays:** Controlar quando o conteúdo aparece (ex: `\pause`).
-* **Consistência:** A matemática e o código nos seus slides serão idênticos ao seu artigo/tese.
+* **Serialização:** Converter um objeto num fluxo de bytes (JSON/Protobuf).
+* **Esquemas (Schemas):** Um contrato (acordo) entre produtor e consumidor.
+* **Metadados:** Unidades, origem e timestamps (ISO 8601).
 
-## Básicos de LaTeX: Pacotes
+## Partilhar Dados: APIs Web e IoT
 
-Os pacotes estendem as capacidades do LaTeX:
-
-* **graphicx:** Para incluir imagens (`\includegraphics`).
-* **hyperref:** Para links clicáveis e referências cruzadas.
-* **geometry:** Para alterar as margens da página.
-* **amsmath:** Para símbolos matemáticos avançados.
-* **biblatex:** Para gerir bibliografias.
-
-## Básicos de LaTeX: Matemática I
-
-O LaTeX é o padrão da indústria para escrever matemática.
-
-* **Inline:** $E = mc^2$.
-* **Display:** 
-  $$\int_{a}^{b} f(x) dx$$
-
-## Básicos de LaTeX: Matemática II
-
-* **Frações:** `\frac{numerador}{denominador}`
-* **Somas:** `\sum_{i=0}^{n} x_i`
-* **Letras Gregas:** `\alpha, \beta, \gamma, \pi`
-* **Sub/Super-escritos:** `x_i, x^2`
-* **Matrizes:** `\begin{pmatrix} a & b \\ c & d \end{pmatrix}`
-
-## Citações com BibTeX/BibLaTeX
-
-Gerir referências manualmente é um pesadelo.
-
-1.  Crie um ficheiro `.bib` com as suas referências.
-    ```bibtex
-    @article{einstein1905,
-      author = {Albert Einstein},
-      title = {On the Electrodynamics of Moving Bodies},
-      journal = {Annalen der Physik},
-      year = {1905}
-    }
-    ```
-2.  Cite-o: `Einstein mostrou que \cite{einstein1905}...`
-
-# Pandoc
-
-## A "faca suíça" dos Documentos
-
-O Pandoc é uma ferramenta de linha de comandos para converter ficheiros de um formato de marcação para outro.
-
-* **Entrada:** Markdown, LaTeX, HTML, DOCX, EPUB.
-* **Saída:** PDF, HTML, LaTeX, Slides (Beamer/RevealJS), DOCX.
-* **Comando:** `pandoc entrada.md -o saida.pdf`
-
-## Como o Pandoc Funciona I
-
-1. **Leitor (Reader):** Analisa a entrada (ex: Markdown).
-2. **Representação Intermédia:** Converte para uma "AST" (Abstract Syntax Tree) interna.
-3. **Escritor (Writer):** Gera a saída (ex: PDF via LaTeX).
-
-## Como o Pandoc Funciona II: Metadados
-
-* **Metadados YAML:** Use um `config.yml` ou um bloco no topo do `.md`.
-* Controla títulos, autores, datas e variáveis de template.
-* **Templates:** Pode fornecer o seu próprio template LaTeX ou HTML para controlar cada detalhe da saída.
-
-## Filtros Pandoc
-
-O poder do Pandoc pode ser estendido usando **filtros**.
-
-* Filtros são pequenos scripts que modificam a AST interna do documento antes de ser escrita.
-* **Tipos:** Filtros Python (`panflute`), filtros Lua (embutidos).
-* **Uso:**
-  * Numerar figuras automaticamente.
-  * Transformar formatos de tabelas.
-  * Injetar LaTeX personalizado para blocos específicos.
-
-# Documentos Úteis
-
-## O Currículo Moderno
-
-* **Formato:** Simples, pesquisável e profissional.
-* **Ferramentas:** Use templates LaTeX (ex: `moderncv`) ou Markdown + Pandoc.
-* **Secções Chave:** Educação, Experiência, Competências, Projetos.
-* **Dica:** Mantenha o seu CV num repositório Git e gere múltiplas versões (ex: detalhado vs 1 página).
-
-## A Tese de Mestrado: Estrutura Típica
-
-1.  **Pré-textuais:** Título, Resumo, Agradecimentos, Índice.
-2.  **Introdução:** Motivação, Problema, Objetivos, Contribuições.
-3.  **Estado da Arte:** Revisão da literatura e comparação.
-4.  **Solução Proposta/Metodologia:** Arquitetura, design e implementação.
-5.  **Avaliação:** Configuração experimental, resultados e discussão.
-6.  **Conclusão:** Sumário e Trabalho Futuro.
-7.  **Pós-textuais:** Bibliografia, Apêndices.
-
-## Tese de Mestrado: A "Contribuição"
-
-A parte mais importante da sua tese é a sua contribuição original.
-
-* Não é apenas "construir um sistema".
-* É "resolver um problema" ou "melhorar um processo" usando princípios de engenharia.
-* Deve declarar claramente **o que há de novo** no seu trabalho.
-
-## Relatórios de Projeto
-
-* **Sumário Executivo:** Para gestores ocupados.
-* **Metodologia:** Como o fez.
-* **Resultados:** O que descobriu.
-* **Recomendações:** O que deve ser feito a seguir.
-* **Automação:** Use um `Makefile` para gerar relatórios a partir de Markdown.
-
-## Documentação Python I: Ferramentas
-
-* **Sphinx:** O padrão da indústria para docs Python.
-* **MkDocs:** Moderno, rápido e usa Markdown.
-* **Docstrings:** Escreva documentação dentro do seu código.
-
-## Documentação Python II: Docstrings
-
-```python
-def calculate_area(radius: float) -> float:
-    """Calcula a área de um círculo.
-    
-    Args:
-        radius: O raio do círculo (deve ser positivo).
-        
-    Returns:
-        A área calculada.
-        
-    Raises:
-        ValueError: Se o raio for negativo.
-    """
-    if radius < 0:
-        raise ValueError("O raio não pode ser negativo")
-    return 3.14159 * (radius ** 2)
-```
+* **APIs REST:** O padrão para serviços web (HTTP GET/POST + JSON).
+* **MQTT:** Protocolo leve para IoT (Publish/Subscribe).
+* **WebSockets:** Comunicação em tempo real, full-duplex.
 
 # Sumário
 
 ## Sumário
 
-* **Comunicação:** É uma competência central de engenharia.
-* **Markdown:** Para notas diárias, READMEs e relatórios rápidos.
-* **LaTeX:** Para documentos académicos formais e técnicos de alta qualidade.
-* **Pandoc:** Para ligar todos os formatos e automatizar o seu fluxo de trabalho.
-* **Consistência:** Use templates profissionais e controlo de versões para tudo.
+* **DIKW:** Dados são a matéria-prima; Conhecimento é o objetivo.
+* **Pipeline:** Limpeza e EDA são as fases mais críticas.
+* **Ferramentas:** Domine Pandas/Polars para análise e Seaborn para visualização.
+* **Partilha:** Use formatos padrão, esquemas e APIs para comunicar resultados.
+* **Jupyter:** O laboratório para experimentação e storytelling.

@@ -1,10 +1,32 @@
 ---
-title: Representation and Communication of Digital Information I
+title: Representation and Storage of Digital Information
 ---
 
 # Exercises
 
-## Exercise 1: Processing Unstructured Data (Logs)
+## Exercise 1: Identifying Data Structure
+
+For each of the following data sources, classify them as **Structured**, **Semi-structured**, or **Unstructured**:
+
+1.  A relational database table containing student grades.
+2.  A collection of MP3 files from a podcast.
+3.  A `config.yaml` file for a web server.
+4.  A scanned PDF of a handwritten letter.
+5.  A JSON response from a weather API.
+6.  An Excel spreadsheet containing a list of products.
+
+---
+
+## Exercise 2: Character Encoding
+
+1.  How many bytes does the string "Hello!" take in ASCII?
+2.  How many bytes does the string "Hello!" take in UTF-8?
+3.  Why is UTF-8 preferred over ASCII for modern applications?
+4.  What happens if you try to save the character "ç" in a file encoded as pure ASCII?
+
+---
+
+## Exercise 3: Processing Unstructured Data (Logs)
 
 In this exercise, you will use Unix tools to extract information from a system log.
 Assume you have a file named `access.log` with the following content:
@@ -17,75 +39,46 @@ Assume you have a file named `access.log` with the following content:
 192.168.1.5 - - [20/Apr/2026:10:00:25] "GET /about.html" 200
 ```
 
-1.  Use `grep` to find all entries with a `403` (Forbidden) status code.
+1.  Use `grep` to find all entries with a `403` status code.
 2.  Use `awk` to print only the IP addresses (the first column).
-3.  Combine `awk`, `sort`, and `uniq` to count how many requests each IP address made.
+3.  Combine `awk`, `sort`, and `uniq -c` to count how many requests each IP address made.
 4.  Use `sed` to replace all occurrences of `GET` with `POST` in the output.
 
------
+---
 
-## Exercise 2: Processing JSON with `jq`
+## Exercise 4: JSON, XML, and YAML
 
-`jq` is a powerful tool for slicing, dicing, and transforming JSON data.
-Create a file named `data.json` with the following content:
-```json
-[
-  {"id": 1, "name": "Alice", "role": "admin", "active": true},
-  {"id": 2, "name": "Bob", "role": "user", "active": false},
-  {"id": 3, "name": "Charlie", "role": "user", "active": true},
-  {"id": 4, "name": "David", "role": "admin", "active": true}
-]
-```
+1.  Convert the following XML snippet into a valid JSON object:
+    ```xml
+    <sensor id="DHT11">
+        <location>Room 101</location>
+        <readings>
+            <reading timestamp="2026-05-01T12:00:00">25.5</reading>
+        </readings>
+    </sensor>
+    ```
+2.  Represent the same information in YAML format.
+3.  Use `jq` syntax to extract the `location` from your JSON object.
 
-1.  Use `jq` to prettify the JSON output.
-2.  Extract only the first element of the array.
-3.  Extract the `name` of all users.
-4.  Filter the users to show only those who are `active`.
-5.  Filter the users to show only those who have the `admin` role and are `active`.
+---
 
------
+## Exercise 5: CSV Parsing
 
-## Exercise 3: Working with CSV Data
-
-CSV is the standard for tabular data. Create a file `students.csv`:
+You have a CSV file `students.csv` with the following content:
 ```csv
 id,name,grade,city
 1,Alice,18,Aveiro
-2,Bob,14,Porto
+2,"Bob, Smith",14,Porto
 3,Charlie,16,Aveiro
-4,David,10,Coimbra
 ```
 
-1.  Use `column -s, -t students.csv` to view the CSV in a pretty table format.
-2.  Use `awk` (with `-F,`) to print only the names and grades of the students.
-3.  Use `grep` to find students from `Aveiro`.
-4.  Calculate the average grade using a combination of `awk` and arithmetic.
+1.  In row 2, why is the name field enclosed in double quotes?
+2.  Use `awk` (with `-F,`) to print only the names and grades.
+3.  Calculate the average grade using `awk`.
 
------
+---
 
-## Exercise 4: Python Serialization
+## Exercise 6: Python and Pydantic
 
-In this exercise, you will write a Python script to convert data between formats.
-
-1.  Create a Python script `convert.py` that:
-    *   Reads the `students.csv` file created in Exercise 3.
-    *   Converts the data into a list of dictionaries.
-    *   Saves the data into a new file named `students.json`.
-2.  Add functionality to the script to also save the data as a `YAML` file (requires `PyYAML`).
-
------
-
-## Exercise 5: Formatting and Interoperability
-
-1.  Look at the following YAML snippet:
-    ```yaml
-    server:
-      host: 127.0.0.1
-      port: 8080
-      debug: true
-      endpoints:
-        - /api/v1
-        - /api/v2
-    ```
-2.  Try to represent the same information in JSON format.
-3.  Discuss: Which format is easier to read? Which one is easier to write? Which one would you use for a web API?
+1.  Write a Python script that reads a JSON file containing a list of users and validates them using a Pydantic model with `id` (int), `name` (str), and `email` (EmailStr).
+2.  What happens if one of the emails in the JSON is invalid?

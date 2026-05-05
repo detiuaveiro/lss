@@ -1,322 +1,188 @@
 ---
-title: Representation and Communication of Digital Information II
+title: Data Analysis, Visualization, and Communication
+subtitle: Laboratórios de Sistemas e Serviços
+author: Mário Antunes
+institute: Universidade de Aveiro
+date: 2026
+colorlinks: true
+highlight-style: tango
+toc: true
+toc-title: "Table of Contents"
+mainfont: Noto Sans
+sansfont: Noto Sans
+monofont: Noto Sans Mono
+header-includes:
+ - \usetheme[sectionpage=progressbar,numbering=fraction,progressbar=frametitle]{metropolis}
 ---
 
-# Introduction
+# From Data to Knowledge
 
-## Communicating Technical Information
+## The journey from raw data to actionable knowledge.
 
-As an engineer, writing code is only half of the job.
+* **Data:** Discrete, objective facts or observations.
+* **Information:** Data that is processed to be useful; answers "Who, What, Where, When".
+* **Knowledge:** Application of data and information; answers "How".
+* **Wisdom:** Evaluated understanding; answers "Why".
 
-* The other half is **communicating** what that code does.
-* Audience: Other developers, managers, clients, or your future self.
-* Medium: Documentation, reports, theses, or presentations.
-* Objective: Use tools that allow for versioning, automation, and professional quality.
+## The DIKW Pyramid
 
-## The Cost of Poor Documentation I
+![DIKW Pyramid](figures/dikw_en.png){ width=512px }
 
-What happens when we don't document?
+* As we move up the pyramid, the **meaning** and **value** increase.
+* As engineers, we build systems that automate this transformation.
 
-* **Wasted Time:** Developers spending hours trying to understand a function.
-* **Errors:** Misusing an API because the documentation was unclear.
-* **Onboarding:** New team members taking months instead of weeks to be productive.
+## The Data Science Pipeline I
 
-## The Cost of Poor Documentation II
+A standard workflow for taking advantage of data.
 
-* **Maintenance:** Returning to your own code after 6 months and not knowing why you did something.
-* **Technical Debt:** Unclear code/docs lead to hacks and workarounds.
-* **Silos:** Knowledge is trapped in one person's head.
+1.  **Collection:** Gathering data from sensors, APIs, or databases.
+2.  **Cleaning:** Handling missing values, noise, and outliers.
+3.  **Exploration (EDA):** Understanding the statistical properties of the data.
+4.  **Analysis:** Building models or performing complex queries.
+5.  **Visualization:** Communicating the results effectively.
 
-# Markdown
+## The Data Science Pipeline II
 
-## What is Markdown?
+* **Iteration:** The pipeline is not linear; you often go back to cleaning after exploration.
+* **Automation:** Use scripts (Python) and pipelines to make this repeatable.
+* **Quality:** "Garbage in, garbage out" – the cleaning phase is the most critical.
 
-A lightweight markup language with plain-text-formatting syntax.
+# Data Loading & Manipulation
 
-* **Origin:** Created by John Gruber in 2004.
-* **Philosophy:** "Readability, above all else."
-* **Format:** Plain text that can be converted to many formats (HTML, PDF, DOCX).
-* **Usage:** GitHub (READMEs), Documentation (MkDocs, Sphinx), Academic notes.
+## The DataFrame Concept I
 
-## Markdown Flavors
+A DataFrame is the central data structure in modern data science.
 
-Markdown is not a single standard, but has "flavors":
+* **Conceptual Model:** An in-memory spreadsheet or SQL table.
+* **Axis 0:** Rows (Samples/Observations).
+* **Axis 1:** Columns (Variables/Features).
+* **Index:** Unique labels for identifying rows.
 
-* **CommonMark:** The attempt to create a highly compatible standard.
-* **GitHub Flavored Markdown (GFM):** Adds tables, task lists, and autolinks.
-* **Pandoc's Markdown:** The most powerful, adding citations, footnotes, and metadata.
+## The DataFrame Concept II
 
-## Markdown Syntax: Headers
+* **Homogeneity:** Each column usually contains a single data type (Int, Float, String).
+* **Alignment:** Data is automatically aligned based on labels during operations.
+* **Libraries:** Used by Pandas (Python), Polars (Python/Rust), and Spark (Big Data).
 
-Use the `#` symbol:
+## Tools: Pandas vs. Polars
 
-* `# Title (H1)`
-* `## Section (H2)`
-* `### Subsection (H3)`
-* `#### Sub-subsection (H4)`
+| Feature | **Pandas** | **Polars** |
+| :--- | :--- | :--- |
+| Backend | Python / C | **Rust** |
+| Threading | Single-threaded | **Multi-threaded** |
+| Evaluation | Eager | **Lazy** |
+| Memory | High copies | Efficient (Arrow) |
 
-## Markdown Syntax: Emphasis
+* Use **Pandas** for smaller datasets and compatibility.
+* Use **Polars** for performance and massive datasets.
 
-* `*italic*` or `_italic_`
-* `**bold**` or `__bold__`
-* `***bold italic***`
-* `~~strikethrough~~`
+# Data Cleaning
 
-## Markdown Syntax: Lists I
+## Missing Values (Imputation)
 
-**Unordered Lists:**
-* Item 1
-* Item 2
-  * Sub-item 2.1
-  * Sub-item 2.2
+Real-world data is messy and often contains holes (`NaN`, `Null`).
 
-## Markdown Syntax: Lists II
+* **Drop:** Remove rows with any missing values.
+* **Fill (Constant):** Replace with zero or a default string.
+* **Fill (Statistical):** Replace with Mean, Median, or Mode.
+* **Mean:** Good for normal distributions.
+* **Median:** Better when outliers are present.
 
-**Ordered Lists:**
-1. First step
-2. Second step
-3. Third step
+## Outlier Detection with IQR
 
-## Markdown Syntax: Links and Images
+Outliers are extreme values that can skew your analysis.
 
-* **Link:** `[Link Text](URL)`
-  * `[University of Aveiro](https://www.ua.pt)`
-* **Image:** `![Alt Text](Path/to/image)`
-  * `![Course Logo](../../assets/logo.svg)`
+* **The Box Plot Method:** Uses quartiles to define "normal" range.
+* **IQR:** $Q3 - Q1$.
+* **Lower Bound:** $Q1 - 1.5 \times IQR$
+* **Upper Bound:** $Q3 + 1.5 \times IQR$
 
-## Markdown Syntax: Code
+---
 
-* **Inline:** Surround with backticks: `` `print("Hello")` ``.
-* **Blocks:** Use triple backticks with language identifier.
+![Box Plot Outliers](figures/03_boxplot.pdf){ width=256px }
 
-\```python
-def hello():
-    print("Hello World")
-\```
+## Data Scaling
 
-## Markdown Syntax: Tables and Tasks (GFM)
+Making sure all variables have a similar range.
 
-| Task | Priority | Status |
-|------|----------|--------|
-| Plan | High     | Done   |
-| Write| Medium   | Active |
+* **Normalization:** Scale data to $[0, 1]$.
+  * $$X_{norm} = \frac{X - X_{min}}{X_{max} - X_{min}}$$
+* **Standardization:** Center data around Mean=0 with Std Dev=1.
+  * $$Z = \frac{X - \mu}{\sigma}$$
 
------
+# Exploratory Data Analysis (EDA)
 
-* **Task Lists:**
-- [x] Complete Class 09
-- [x] Research Class 10
-- [ ] Write Class 10 slides
+## Descriptive Statistics
 
-## Diagrams in Markdown: Mermaid.js I
+Summarizing data with a few numbers.
 
-Many platforms (GitHub, GitLab, Obsidian) support **Mermaid** for diagrams.
+* **Mean / Median / Mode:** Central tendency.
+* **Variance / Std Dev:** Dispersion.
+* **Quantiles:** 25%, 50%, 75% markers.
 
-\```mermaid
-graph TD
-    A[Start] --> B{Is it data?}
-    B -- Yes --> C[Process]
-    B -- No --> D[End]
-\```
+## Correlation (Pearson)
 
-## Diagrams in Markdown: Mermaid.js II
+Measuring the linear relationship between two variables.
 
-Mermaid supports many diagram types:
-* **Flowcharts**
-* **Sequence Diagrams**
-* **Gantt Charts**
-* **Class Diagrams**
-* **Entity Relationship Diagrams**
+* **Range:** $[-1, +1]$.
+* **+1:** Perfect positive linear relationship.
+* **-1:** Perfect negative linear relationship.
+* **0:** No linear relationship.
+* **Warning:** "Correlation does not imply causation."
 
-It allows you to keep your diagrams **version-controlled** alongside your code.
+# Data Visualization
 
-# LaTeX
+## The Power of Visuals
 
-## What is LaTeX?
+Human brains are optimized for pattern recognition in images.
 
-A high-quality typesetting system for technical and scientific documentation.
+* **Matplotlib:** The low-level engine; infinite control.
+* **Seaborn:** High-level statistical visualization; beautiful defaults.
 
-* **Focus:** Separating content from style.
-* **Strength:** Mathematical notation, citations, and large documents.
-* **Engine:** Based on TeX, created by Donald Knuth.
-* **Standard:** Used for MSc Theses, PhD Dissertations, and Scientific Papers.
+## Choosing the Right Plot
 
-## LaTeX Basics: Structure
+* **Distribution:** Histogram or KDE.
+* **Comparison:** Bar Chart or Box Plot.
+* **Relationship:** Scatter Plot or Line Plot.
+* **Density:** Violin Plot (Box Plot + KDE).
 
-```latex
-\documentclass{article}
-\usepackage[utf8]{inputenc}
+---
 
-\title{My Report}
-\author{Mário Antunes}
+![Plot Comparison](figures/04_violinplot.pdf){ width=256px }
 
-\begin{document}
-\maketitle
+## Exporting: Raster vs. Vector
 
-\section{Introduction}
-Hello world!
-\end{document}
-```
+* **Raster (.PNG, .JPG):** Grid of pixels. Quality drops when zoomed. Good for web.
+* **Vector (.PDF, .SVG):** Mathematical paths. Infinite scalability. Essential for **Academic Papers**.
 
-## LaTeX Basics: Document Classes
+# Data Communication & Sharing
 
-The `\documentclass{...}` defines the overall layout:
+## The Communication Layer
 
-* **article:** For short reports or papers.
-* **report:** For longer documents with chapters (like an MSc Thesis).
-* **book:** For full-length books.
-* **beamer:** For creating presentation slides.
+Documentation and APIs are how we share knowledge.
 
-## Beamer: Presentations in LaTeX
+* **Markdown:** For documentation (READMEs).
+* **LaTeX:** For formal academic reports.
+* **Jupyter:** For interactive reports (Notebooks).
 
-Beamer allows you to create PDF slides using LaTeX syntax.
+## Sharing Data: Serialization for Exchange
 
-* **Frames:** Each slide is a `\begin{frame} ... \end{frame}`.
-* **Themes:** Professional, academic looks (e.g., `Warsaw`, `Madrid`).
-* **Overlays:** Control when content appears (e.g., `\pause`).
-* **Consistency:** The math and code in your slides will look identical to your paper/thesis.
+* **Serialization:** Converting an object into a stream of bytes (JSON/Protobuf).
+* **Schemas:** A contract (agreement) between producer and consumer.
+* **Metadata:** Units, source, and timestamps (ISO 8601).
 
-## LaTeX Basics: Packages
+## Sharing Data: Web APIs and IoT
 
-Packages extend LaTeX's capabilities:
-
-* **graphicx:** For including images (`\includegraphics`).
-* **hyperref:** For clickable links and cross-references.
-* **geometry:** For changing page margins.
-* **amsmath:** For advanced mathematical symbols.
-* **biblatex:** For managing bibliographies.
-
-## LaTeX Basics: Mathematics I
-
-LaTeX is the industry standard for writing math.
-
-* **Inline:** $E = mc^2$.
-* **Display:** 
-  $$\int_{a}^{b} f(x) dx$$
-
-## LaTeX Basics: Mathematics II
-
-* **Fractions:** `\frac{numerator}{denominator}`
-* **Sums:** `\sum_{i=0}^{n} x_i`
-* **Greek Letters:** `\alpha, \beta, \gamma, \pi`
-* **Sub/Superscripts:** `x_i, x^2`
-* **Matrices:** `\begin{pmatrix} a & b \\ c & d \end{pmatrix}`
-
-## Citations with BibTeX/BibLaTeX
-
-Managing references manually is a nightmare.
-
-1.  Create a `.bib` file with your references.
-    ```bibtex
-    @article{einstein1905,
-      author = {Albert Einstein},
-      title = {On the Electrodynamics of Moving Bodies},
-      journal = {Annalen der Physik},
-      year = {1905}
-    }
-    ```
-2.  Cite it: `Einstein showed that \cite{einstein1905}...`
-
-# Pandoc
-
-## The "Swiss-army knife" of Documents
-
-Pandoc is a command-line tool to convert files from one markup format into another.
-
-* **Input:** Markdown, LaTeX, HTML, DOCX, EPUB.
-* **Output:** PDF, HTML, LaTeX, Slides (Beamer/RevealJS), DOCX.
-* **Command:** `pandoc input.md -o output.pdf`
-
-## How Pandoc Works I
-
-1. **Reader:** Parses the input (e.g., Markdown).
-2. **Intermediate Representation:** Converts to an internal "AST" (Abstract Syntax Tree).
-3. **Writer:** Generates the output (e.g., PDF via LaTeX).
-
-## How Pandoc Works II: Metadata
-
-* **YAML Metadata:** Use a `config.yml` or a block at the top of the `.md`.
-* It controls titles, authors, dates, and template variables.
-* **Templates:** You can provide your own LaTeX or HTML template to control every detail of the output.
-
-## Pandoc Filters
-
-Pandoc's power can be extended using **filters**.
-
-* Filters are small scripts that modify the document's internal AST before it is written.
-* **Types:** Python filters (`panflute`), Lua filters (built-in).
-* **Usage:**
-  * Automatically number figures.
-  * Transform table formats.
-  * Inject custom LaTeX for specific blocks.
-
-# Useful Documents
-
-## The Modern CV
-
-* **Format:** Keep it simple, searchable, and professional.
-* **Tools:** Use LaTeX templates (e.g., `moderncv`) or Markdown + Pandoc.
-* **Key Sections:** Education, Experience, Skills, Projects.
-* **Pro Tip:** Keep your CV in a Git repository and generate multiple versions (e.g., detailed vs 1-page).
-
-## The MSc Thesis: Typical Structure
-
-1.  **Front Matter:** Title, Abstract, Acknowledgments, ToC.
-2.  **Introduction:** Motivation, Problem, Objectives, Contributions.
-3.  **State of the Art:** Literature review and comparison.
-4.  **Proposed Solution/Methodology:** Architecture, design, and implementation.
-5.  **Evaluation:** Experimental setup, results, and discussion.
-6.  **Conclusion:** Summary and Future Work.
-7.  **Back Matter:** Bibliography, Appendices.
-
-## MSc Thesis: The "Contribution"
-
-The most important part of your thesis is your original contribution.
-
-* It's not just "building a system".
-* It's "solving a problem" or "improving a process" using engineering principles.
-* You must clearly state **what is new** in your work.
-
-## Project Reports
-
-* **Executive Summary:** For busy managers.
-* **Methodology:** How you did it.
-* **Findings:** What you discovered.
-* **Recommendations:** What should be done next.
-* **Automation:** Use a `Makefile` to generate reports from Markdown.
-
-## Python Documentation I: Tools
-
-* **Sphinx:** The industry standard for Python docs.
-* **MkDocs:** Modern, fast, and uses Markdown.
-* **Docstrings:** Write documentation inside your code.
-
-## Python Documentation II: Docstrings
-
-```python
-def calculate_area(radius: float) -> float:
-    """Calculates the area of a circle.
-    
-    Args:
-        radius: The radius of the circle (must be positive).
-        
-    Returns:
-        The calculated area.
-        
-    Raises:
-        ValueError: If radius is negative.
-    """
-    if radius < 0:
-        raise ValueError("Radius cannot be negative")
-    return 3.14159 * (radius ** 2)
-```
+* **REST APIs:** The standard for web services (HTTP GET/POST + JSON).
+* **MQTT:** Lightweight protocol for IoT (Publish/Subscribe).
+* **WebSockets:** Real-time, full-duplex communication.
 
 # Summary
 
 ## Summary
 
-* **Communication:** Is a core engineering skill.
-* **Markdown:** For daily notes, READMEs, and quick reports.
-* **LaTeX:** For formal academic and high-quality technical documents.
-* **Pandoc:** To bridge all formats and automate your workflow.
-* **Consistency:** Use professional templates and version control for everything.
+* **DIKW:** Data is the raw material; Knowledge is the goal.
+* **Pipeline:** Cleaning and EDA are the most critical phases.
+* **Tools:** Master Pandas/Polars for analysis and Seaborn for visualization.
+* **Sharing:** Use standard formats, schemas, and APIs to communicate results.
+* **Jupyter:** The laboratory for experimentation and storytelling.

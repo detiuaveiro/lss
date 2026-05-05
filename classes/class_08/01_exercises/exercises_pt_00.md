@@ -9,21 +9,19 @@ title: Comunicação, Desempenho e Segurança Avançada
 **Contexto do Lab:**
 Imagine que é um estudante na Universidade. Está ligado à rede **eduroam**, uma rede que é segura mas muito restritiva. Quer correr um projeto onde um sensor em sua casa sincroniza dados para um servidor, e precisa de aceder a uma base de dados privada a partir do seu portátil enquanto está na biblioteca da Universidade. As ligações diretas estão bloqueadas. Deve usar as suas competências para **medir**, **sincronizar** e criar **túneis** através destas limitações.
 
----
-
-### Parte 0: Configuração e Infraestrutura
+## Parte 0: Configuração e Infraestrutura
 
 **Objetivo de Aprendizagem:** Implementar uma simulação de "Rede Empresarial Restrita" usando contentores.
 
 Utilizaremos o Docker para criar o nosso mini-ecossistema universitário.
 
-#### 1. Criar a Rede do Laboratório
+### 1. Criar a Rede do Laboratório
 
 ```bash
 $ docker network create --subnet=172.25.0.0/16 lab-net
 ```
 
-#### 2. Lançar a Infraestrutura
+### 2. Lançar a Infraestrutura
 
 Crie uma pasta `class08-lab` e um ficheiro `compose.yml`:
 
@@ -92,13 +90,18 @@ networks:
     external: true
 ```
 
-#### 3. Criar os Ficheiros de Configuração
+### 3. Criar os Ficheiros de Configuração
 
 Crie uma subpasta `home-server` e um `Dockerfile` dentro dela:
 
 ```dockerfile
 FROM lscr.io/linuxserver/openssh-server:latest
 RUN apk add --no-cache rsync
+RUN mkdir -p /custom-cont-init.d && echo -e '#!/bin/bash\n\
+F=/config/ssh_host_keys/sshd_config\n\
+sed -i "s/^.*AllowTcpForwarding.*/AllowTcpForwarding yes/g" $F\n\
+grep -q "^AllowTcpForwarding yes" $F || echo "AllowTcpForwarding yes" >> $F\
+' > /custom-cont-init.d/99-fwd.sh && chmod +x /custom-cont-init.d/99-fwd.sh
 ```
 
 Crie um ficheiro `nginx.conf` na pasta principal `class08-lab`:
@@ -107,15 +110,12 @@ Crie um ficheiro `nginx.conf` na pasta principal `class08-lab`:
 events {
     worker_connections 1024;
 }
-
 http {
     upstream university_services {
         server 172.25.0.40:5432;
     }
-
     server {
         listen 80;
-
         location / {
             proxy_pass http://university_services;
             proxy_set_header Host $host;
@@ -125,19 +125,17 @@ http {
 }
 ```
 
-#### 4. Iniciar o Ambiente
+### 4. Iniciar o Ambiente
 
 ```bash
 $ docker compose up -d
 ```
 
----
-
-### Parte 1: Desempenho e Monitorização
+## Parte 1: Desempenho e Monitorização
 
 **Objetivo:** Provar porque é que uma rede parece "lenta" usando dados.
 
-#### Exercício 1: Teste de Débito (`iperf3`)
+### Exercício 1: Teste de Débito (`iperf3`)
 **Cenário Real:** Está a tentar descarregar um conjunto de dados grande na biblioteca, mas está a demorar uma eternidade. É do servidor ou do Wi-Fi?
 
 1. Execute o cliente a partir do seu `laptop` para o `internet-target`:
@@ -146,7 +144,7 @@ $ docker compose up -d
    ```
 2. **Análise:** Se o débito for 1Gbps, a rede está perfeita. Se for 1Mbps, encontrou o estrangulamento.
 
-#### Exercício 2: Análise em Tempo Real (`mtr`)
+### Exercício 2: Análise em Tempo Real (`mtr`)
 **Cenário Real:** A sua videochamada está sempre a cair. Suspeita de um router defeituoso no edifício da Universidade.
 
 1. Execute o `mtr` do seu `laptop` para o `home-server`:
@@ -155,13 +153,11 @@ $ docker compose up -d
    ```
 2. Olhe para a coluna de perda (loss). Se a perda começar no primeiro salto, o Access Point local está com problemas.
 
----
-
-### Parte 2: Sincronização Eficiente (`rsync`)
+## Parte 2: Sincronização Eficiente (`rsync`)
 
 **Objetivo:** Mover dados sem desperdiçar tempo ou largura de banda.
 
-#### Exercício 3: Backups Inteligentes
+### Exercício 3: Backups Inteligentes
 **Cenário Real:** Tem um ficheiro de projeto de 100MB. Apenas mudou um parágrafo. Na eduroam, a largura de banda de upload é limitada.
 
 1. Crie um ficheiro grande no seu `laptop`: `docker exec -it laptop dd if=/dev/urandom of=/projeto.pdf bs=1M count=10`.
@@ -172,20 +168,18 @@ $ docker compose up -d
    ```
 3. Modifique ligeiramente o ficheiro e sincronize novamente. Note quão mais rápido é.
 
----
-
-### Parte 3: Contornar Limitações (SSH)
+## Parte 3: Contornar Limitações (SSH)
 
 **Objetivo:** Alcançar o que está escondido ou bloqueado.
 
-#### Exercício 4: Local Port Forwarding
-**Real-world Scenario:** Precisa de consultar a `private-db` para a sua tese, mas a eduroam bloqueia a porta 5432. Tem acesso SSH ao seu `home-server`.
+### Exercício 4: Local Port Forwarding
+**Cenário Real:** Precisa de consultar a `private-db` para a sua tese, mas a eduroam bloqueia a porta 5432. Tem acesso SSH ao seu `home-server`.
 
 1. Abra o túnel a partir da sua **máquina real** (host): `ssh -p 2222 -L 9000:172.25.0.40:5432 student@localhost`.
 2. Aceda a `http://localhost:9000` na sua máquina. Conseguiu com sucesso estabelecer uma "ponte" para a BD isolada.
 
-#### Exercício 5: Proxy SOCKS Dinâmico
-**Real-world Scenario:** A Universidade bloqueia um site de investigação específico que você precisa. Usa a sua ligação de casa para navegar através dela.
+### Exercício 5: Proxy SOCKS Dinâmico
+**Cenário Real:** A Universidade bloqueia um site de investigação específico que você precisa. Usa a sua ligação de casa para navegar através dela.
 
 1. Crie o proxy: `ssh -p 2222 -D 1080 student@localhost`.
 
@@ -194,11 +188,9 @@ $ docker compose up -d
    $ curl --proxy socks5h://localhost:1080 http://172.25.0.40:5432
    ```
 
----
+## Parte 4: Fiabilidade Avançada
 
-### Parte 4: Fiabilidade Avançada
-
-#### Exercício 6: Equilíbrio de Carga (Load Balancing)
+### Exercício 6: Equilíbrio de Carga (Load Balancing)
 **Cenário Real:** Milhares de estudantes acedem ao portal de notas ao mesmo tempo.
 
 1. Use a `uni-gateway` para distribuir o tráfego e teste o que acontece se um servidor ficar offline.

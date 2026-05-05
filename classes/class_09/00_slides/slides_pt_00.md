@@ -1,494 +1,324 @@
 ---
 title: Representação e Armazenamento de Informação Digital
+subtitle: Laboratórios de Sistemas e Serviços
+author: Mário Antunes
+institute: Universidade de Aveiro
+date: 2026
+colorlinks: true
+highlight-style: tango
+toc: true
+toc-title: "Índice"
+mainfont: Noto Sans
+sansfont: Noto Sans
+monofont: Noto Sans Mono
+header-includes:
+ - \usetheme[sectionpage=progressbar,numbering=fraction,progressbar=frametitle]{metropolis}
 ---
 
 # Introdução
 
+## O Papel dos Dados na Engenharia I
+
+Como engenheiros, lidamos com dados em quase todas as tarefas.
+
+* **Leituras de Sensores:** Temperatura, pressão, localização.
+* **Configurações:** Como um sistema deve comportar-se.
+* **Logs:** O que aconteceu no passado.
+* **Comunicação:** Envio de mensagens entre serviços.
+* **Armazenamento:** Guardar o estado para uso posterior.
+
+## O Papel dos Dados na Engenharia II
+
+A qualidade dos nossos sistemas depende de como representamos estes dados.
+
+* **Eficiência:** Minimizar armazenamento e largura de banda.
+* **Fiabilidade:** Garantir que os dados não são corrompidos.
+* **Interoperabilidade:** Permitir que diferentes sistemas "falem" entre si.
+* **Manutenibilidade:** Facilitar a compreensão e alteração por humanos.
+
 ## Dados vs. Informação I
 
-Na era digital, estamos rodeados de dados, mas o que é que eles significam?
+É importante distinguir entre estes dois conceitos.
 
-* **Dados:** Factos e números em bruto sem contexto (ex: "38.5").
-* **Informação:** Dados que foram processados, organizados ou estruturados para serem significativos (ex: "A temperatura do paciente é 38.5°C").
-* **Conhecimento:** A capacidade de usar a informação para tomar decisões.
-* **Sabedoria:** O uso integrado do conhecimento.
+* **Dados:** Factos brutos, símbolos ou sinais sem contexto (ex: `[25, 26, 25, 24]`).
+* **Informação:** Dados que foram processados, organizados ou estruturados para terem significado (ex: "A temperatura média na sala foi de 25°C").
 
 ## Dados vs. Informação II
 
-Para transformar dados em informação, precisamos de:
-
-* **Estrutura:** Um formato predefinido para os dados.
-* **Contexto:** Informação sobre o que os dados representam.
-* **Metadados:** "Dados sobre dados" (ex: unidades, carimbos temporais, origem).
+* Dados são a entrada; Informação é a saída.
+* Informação requer **contexto**.
+* Sem um esquema ou metadados, os dados são apenas uma coleção de bits.
+* Nesta aula, focamo-nos em como transformar bits brutos em informação estruturada.
 
 ## A Pirâmide DIKW
 
 Um modelo para representar as relações estruturais e funcionais entre dados e sabedoria.
 
-* **Dados:** A fundação (símbolos).
-* **Informação:** Dados ligados (responde a quem, o quê, onde, quando).
-* **Conhecimento:** Informação aplicada (responde a como).
-* **Sabedoria:** Conhecimento avaliado (responde a porquê).
+* **Dados (Data):** A base (símbolos).
+* **Informação (Information):** Dados ligados (responde a quem, quê, onde, quando).
+* **Conhecimento (Knowledge):** Informação aplicada (responde a como).
+* **Sabedoria (Wisdom):** Conhecimento avaliado (responde a porquê).
 
-## Porquê a Representação Importa I
+---
 
-A forma como representamos os dados afeta todas as fases do ciclo de vida:
+![Pirâmide DIKW](figures/dikw_pt.png){ width=512px }
 
-* **Armazenamento:** Quanto espaço ocupa (compressão).
-* **Velocidade:** Quão rápido podemos ler ou escrever os dados.
-* **Interoperabilidade:** Conseguem sistemas diferentes entender os mesmos dados?
-* **Leitura Humana:** Pode um humano depurar ou editar o ficheiro facilmente?
+# Representação Digital
 
-## Porquê a Representação Importa II
+## Bits e Bytes I
 
-* **Escalabilidade:** O formato funciona para 1GB? 1TB?
-* **Segurança:** Os dados podem ser facilmente adulterados?
-* **Longevidade:** O formato será legível daqui a 20 anos?
-* **Validação:** Podemos verificar se os dados estão corretos?
+Ao nível mais baixo, toda a informação digital é binária.
 
-# Categorias de Dados
+* **Bit:** A menor unidade de informação (0 ou 1).
+* **Byte:** Um grupo de 8 bits.
+* **Capacidade:** Um byte pode representar $2^8 = 256$ valores diferentes.
+* **Hexadecimal:** Uma forma mais amigável para humanos escreverem bytes (ex: `0xFF`).
+
+## Bits e Bytes II
+
+Como representamos números?
+
+* **Inteiros:** Representação de vírgula fixa (ex: complemento para 2).
+* **Reais (Floats):** Representação de vírgula flutuante (IEEE 754).
+* **Endianness:** A ordem dos bytes na memória (Big-Endian vs. Little-Endian).
+* **Network Order:** Geralmente Big-Endian.
+
+## Codificação de Caracteres I: ASCII
+
+Como representamos texto?
+
+* **ASCII (1963):** American Standard Code for Information Interchange.
+* **Limite:** 7 bits (128 caracteres).
+* **Cobertura:** Alfabeto inglês, números e símbolos básicos.
+* **Problema:** Sem suporte para caracteres acentuados (á, ç), letras gregas ou Emojis.
+
+## Codificação de Caracteres II: Unicode
+
+A solução para a "Babel" de codificações.
+
+* **Objetivo:** Um padrão único para cada caracter em cada língua.
+* **Code Points:** Cada caracter tem um número único atribuído (ex: `U+0041` para 'A').
+* **Tamanho:** Suporta mais de 1 milhão de caracteres.
+
+## Codificação de Caracteres III: UTF-8
+
+A codificação mais popular para a web e sistemas modernos.
+
+* **Comprimento Variável:** Usa 1 a 4 bytes por caracter.
+* **Retrocompatível:** Os primeiros 128 caracteres são idênticos ao ASCII.
+* **Eficiência:** Texto em inglês ocupa 1 byte por char; scripts complexos ocupam mais.
+* **Padrão:** Deve ser a escolha por defeito em projetos de engenharia.
+
+# Hierarquia de Dados
 
 ## Classificação de Dados I
 
-Os dados são geralmente classificados em três categorias baseadas na sua estrutura:
+Os dados são geralmente classificados em três categorias com base na sua estrutura:
 
 1. **Dados Não Estruturados:** Sem formato predefinido.
-2. **Dados Semi-Estruturados:** Têm algumas propriedades organizacionais mas sem esquema rígido.
-3. **Dados Estruturados:** Seguem um modelo rigoroso e predefinido (geralmente tabular).
+2. **Dados Semi-Estruturados:** Têm propriedades organizacionais mas sem esquema rígido.
+3. **Dados Estruturados:** Seguem um modelo estrito e predefinido (geralmente tabular).
 
 ## Classificação de Dados II
 
-* **Escolha:** A categoria depende da natureza dos dados e de como serão usados.
-* **Migração:** Frequentemente extraímos dados estruturados de fontes não estruturadas (ex: processar logs).
-* **Ferramentas:** Cada categoria requer ferramentas e competências diferentes.
+Compreender como os dados estão organizados é o primeiro passo.
+
+* **Não Estruturados:** Texto, Binário, Multimédia.
+* **Semi-Estruturados:** Árvores hierárquicas ou pares Chave-Valor (JSON, XML).
+* **Estruturados:** Tabulares (Linhas e Colunas).
+
+## Ilustração da Estrutura
+
+![Espectro de Estrutura de Dados](figures/01.png){ width=256px }
+
+---
+
+![Exemplos de Formatos de Ficheiro](figures/02.png){ width=256px }
 
 # Dados Não Estruturados
 
-## Características de Dados Não Estruturados
+## Texto Simples vs. Binário
 
-Dados não estruturados são o tipo mais comum de dados no mundo.
+Como é que os dados são guardados no disco?
 
-* **Exemplos:** Documentos de texto, ficheiros PDF, emails, imagens, vídeos, logs.
-* **Formato:** Geralmente binário ou texto simples sem uma estrutura interna consistente.
-* **Desafio:** É difícil de pesquisar, indexar e analisar usando ferramentas tradicionais.
-* **Crescimento:** Estimado em 80% de todos os dados empresariais.
+* **Ficheiros de Texto:** Sequências de caracteres legíveis por humanos. Depuráveis e portáteis.
+* **Ficheiros Binários:** Sequências de bytes para leitura por máquina. Compactos e rápidos.
+* **Magic Numbers:** Primeiros bytes que identificam o formato (ex: `0x89 0x50 0x4E 0x47` para PNG).
 
-## Processamento de Dados Não Estruturados: Ferramentas Básicas I
+## Processamento de Dados Não Estruturados: Ferramentas Básicas
 
-Antes de usar ferramentas avançadas, usamos utilitários Unix básicos para explorar texto:
+Antes de usar ferramentas avançadas, usamos utilitários Unix básicos:
 
-* `head` / `tail`: Ver o início ou o fim de um ficheiro.
-* `cat` / `less`: Imprimir ou navegar no conteúdo do ficheiro.
+* `head` / `tail`: Ver o início ou fim de um ficheiro.
 * `wc`: Contar linhas, palavras e caracteres.
-* `file`: Identificar o tipo de dados (ex: texto, imagem, binário).
-
-## Processamento de Dados Não Estruturados: Ferramentas Básicas II
-
-Exemplo de exploração:
-```bash
-$ file data.log
-$ wc -l data.log
-$ head -n 5 data.log
-```
+* `file`: Identificar o tipo de dados.
+* `grep`: Procurar padrões.
 
 ## Expressões Regulares (Regex) I
 
-Para processar texto não estruturado, precisamos de uma forma de descrever padrões.
+Para processar texto não estruturado, precisamos de descrever padrões.
 
 * **Literal:** `abc` corresponde a "abc".
-* **Wildcard:** `.` corresponde a qualquer carácter.
-* **Quantificadores:**
-  * `*`: 0 ou mais.
-  * `+`: 1 ou mais.
-  * `?`: 0 ou 1.
-  * `{n,m}`: entre n e m.
+* **Wildcard:** `.` corresponde a qualquer caracter.
+* **Quantificadores:** `*` (0+), `+` (1+), `?` (0 ou 1).
+* **Classes de Caracteres:** `[a-z]`, `\d` (dígito), `\w` (palavra), `\s` (espaço).
 
 ## Expressões Regulares (Regex) II
 
-* **Âncoras:**
-  * `^`: Início da linha.
-  * `$`: Fim da linha.
-* **Classes de Caracteres:**
-  * `[a-z]`: Qualquer letra minúscula.
-  * `\d`: Qualquer dígito.
-  * `\w`: Qualquer carácter de palavra (letras, números, underscore).
-  * `\s`: Qualquer espaço em branco.
+* **Âncoras:** `^` (início), `$` (fim).
+* **Exemplo (Email):** `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
 
-## Exemplo de Regex: Validação de Email
+## Processamento de Logs: `awk` e `sed`
 
-Um padrão simplificado: `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
+Logs são texto "quase" não estruturado.
 
-* `^[a-zA-Z0-9._%+-]+`: Um ou mais caracteres no início.
-* `@`: O símbolo literal @.
-* `[a-zA-Z0-9.-]+`: O nome do domínio.
-* `\.`: Um ponto literal.
-* `[a-zA-Z]{2,}$`: O domínio de topo (pelo menos 2 letras) no fim.
+* **`awk`:** Processar colunas de texto.
+  * Exemplo: `awk '$9 == 404 {print $7}' access.log`
+* **`sed`:** Editor de fluxo para transformação.
+  * Exemplo: `sed 's/velho/novo/g' ficheiro.txt`
 
-# Processamento de Dados Não Estruturados
+## Formatos Multimédia: Imagens e Documentos
 
-## Processamento de Dados Não Estruturados: Logs I
+Representação de informação visual e complexa.
 
-Os logs são um exemplo clássico de dados "quase" não estruturados.
-
-* Cada ação num sistema gera uma entrada de log.
-* Frequentemente, são apenas linhas de texto num ficheiro.
-* **Ferramentas:** Usamos "power tools" de Unix para extrair informação.
-  * `grep`: Pesquisar padrões.
-  * `awk`: Processar colunas de texto.
-  * `sed`: Editor de fluxo para transformação de texto.
-
-## Processamento de Dados Não Estruturados: Logs II
-
-Exemplo de um Apache Access Log:
-`127.0.0.1 - - [20/Apr/2026:09:24:00 +0000] "GET /index.html HTTP/1.1" 200 612`
-
-* Parece estruturado, mas é apenas uma string.
-* Para saber qual o IP que mais visitou, precisamos de processar o texto.
-* `cat access.log | awk '{print $1}' | sort | uniq -c | sort -nr`
-
-## Processamento Avançado de Logs: `awk`
-
-O `awk` é uma linguagem de programação completa para processamento de texto.
-
-* Processa ficheiros linha a linha, divididos em campos ($1, $2, ...).
-* **Uso:** `awk '$9 == 404 {print $7}' access.log`
-* Este comando imprime o URL ($7) para todos os pedidos que resultaram num erro 404 ($9).
-
-## Edição de Fluxo: `sed`
-
-O `sed` é usado para transformar ou filtrar texto.
-
-* **Substituição:** `sed 's/velho/novo/g' ficheiro.txt`
-* **Eliminação:** `sed '1,5d' ficheiro.txt` (Eliminar linhas 1 a 5).
-* **Extração:** `sed -n 's/.*ID:\([0-9]*\).*/\1/p' log.txt`
-* O `sed` é extremamente rápido e pode processar ficheiros enormes que não cabem na memória.
+* **Raster:** Grelha de píxeis (PNG, JPEG). Com perdas vs. Sem perdas.
+* **Vectorial:** Caminhos matemáticos (SVG, PDF). Infinitamente escalável.
+* **PDF:** Contentor para texto, fontes e gráficos. Inclui **Metadados** (Autor, Data).
 
 # Dados Semi-Estruturados
 
-## O que são Dados Semi-Estruturados? I
+## Características
 
-Não residem numa tabela fixa mas contêm etiquetas ou marcadores para separar os elementos de dados.
+Dados que usam "tags" ou "marcadores" para separar elementos semânticos.
 
-* **Flexibilidade:** Pode representar facilmente relações hierárquicas e aninhadas.
-* **Auto-Descritivo:** As etiquetas fornecem metadados dentro do próprio ficheiro.
-* **Formatos Comuns:** JSON, XML, YAML.
+* **Flexibilidade:** Representa hierarquia e aninhamento.
+* **Formatos:** CSV, XML, JSON, YAML.
 
-## O que são Dados Semi-Estruturados? II
+## CSV (Comma Separated Values)
 
-* **Uso:**
-  * APIs Web (REST/GraphQL).
-  * Ficheiros de configuração.
-  * Bases de dados NoSQL (MongoDB, CouchDB).
-  * Troca de dados entre sistemas heterogéneos.
+A forma mais simples de trocar dados tabulares como texto.
 
-## JSON (JavaScript Object Notation) I
+* **Conceito:** Cada linha é um registo; campos separados por um delimitador (`,`, `;` ou tab).
+* **Prós:** Suporte universal, leve.
+* **Contras:** Sem tipos, sem aninhamento, problemas com aspas (campos com delimitadores devem estar `"entre aspas"`).
 
-O padrão "de facto" para comunicação web moderna.
+## XML (eXtensible Markup Language)
 
-* **Formato:** Pares Chave-Valor e Arrays.
-* **Prós:** Leve, fácil de ler para humanos, fácil de processar para máquinas.
-* **Tipos de Dados:** String, Número, Booleano, Nulo, Objeto, Array.
+Um padrão antigo e robusto que usa tags aninhadas.
 
-## JSON (JavaScript Object Notation) II: Tipos de Dados
+* **Prós:** Suporta esquemas complexos (XSD) e namespaces.
+* **Contras:** Verboso, excesso de tags, mais lento a processar.
+* **Exemplo:** `<user id="1"><name>mario</name></user>`
 
-* **String:** `"mario"`
-* **Número:** `123`, `12.3`
-* **Booleano:** `true`, `false`
-* **Nulo:** `null`
-* **Objeto:** `{"chave": "valor"}`
-* **Array:** `[1, 2, 3]`
+## JSON (JavaScript Object Notation)
 
-## JSON (JavaScript Object Notation) III: Exemplo
+O rei da comunicação web moderna (APIs).
+
+* **Tipos:** Objetos `{}`, Arrays `[]`, Strings, Números, Booleanos, Null.
+* **Prós:** Menor que o XML, nativo para Dicionários e Listas em Python.
+* **Validação:** Use **JSON Schema** para definir regras.
+
+## YAML (YAML Ain't Markup Language)
+
+O padrão para configuração e DevOps.
+
+* **Sintaxe:** Baseia-se na indentação em vez de parênteses ou tags.
+* **Funcionalidades:** Suporta comentários `#`, âncoras e strings multi-linha.
+* **Uso:** Docker, Kubernetes, GitHub Actions.
+
+# Comparação Multi-formato
+
+## Registo de Empregado: CSV
+
+Sem aninhamento nativo. Lista de "Skills" requer um separador (ex: pipe `|`).
+
+```csv
+id,nome,skills,ativo
+1,"Jane Doe","Python|SQL",true
+2,"Bob Smith","Java|C++",false
+```
+
+## Registo de Empregado: XML
+
+```xml
+<employees>
+    <employee id="1">
+        <name>Jane Doe</name>
+        <skills><skill>Python</skill><skill>SQL</skill></skills>
+        <active>true</active>
+    </employee>
+</employees>
+```
+
+## Registo de Empregado: JSON
 
 ```json
-{
-  "user": "mario",
-  "id": 123,
-  "active": true,
-  "roles": ["admin", "teacher"],
-  "address": {
-    "city": "Aveiro",
-    "zip": "3810"
-  }
+{"employees": [{
+      "id": 1, "name": "Jane Doe",
+      "skills": ["Python", "SQL"], "active": true
+    }]
 }
 ```
 
-## JSON Schema
-
-Para garantir que um ficheiro JSON está correto, usamos um **JSON Schema**.
-
-* Define a estrutura, campos obrigatórios e tipos de dados.
-* Permite a validação automática antes do processamento.
-
-```json
-{
-  "type": "object",
-  "properties": {
-    "user": {"type": "string"},
-    "id": {"type": "integer", "minimum": 1}
-  },
-  "required": ["user", "id"]
-}
-```
-
-## XML (eXtensible Markup Language) I
-
-Um padrão mais antigo e verboso focado na estrutura de documentos.
-
-* **Formato:** Etiquetas aninhadas `<tag>conteúdo</tag>`.
-* **Prós:** Extremamente robusto, suporta esquemas complexos (XSD), muito rigoroso.
-* **Contras:** "Pesado" (muito overhead de metadados), mais difícil de ler que JSON.
-
-## XML (eXtensible Markup Language) II: Atributos
-
-Ao contrário do JSON, o XML pode armazenar dados em **atributos**.
-
-```xml
-<user id="123" status="active">
-  <name>mario</name>
-</user>
-```
-
-* **Etiquetas:** Boas para dados hierárquicos.
-* **Atributos:** Bons para metadados sobre uma etiqueta.
-
-## XML (eXtensible Markup Language) III: Esquema (XSD)
-
-* **XSD (XML Schema Definition):** Uma forma de definir as regras para um ficheiro XML.
-* Define quais as etiquetas permitidas, a sua ordem e o tipo de dados que contêm.
-* Isto permite a **validação automática** dos dados.
-
-## XML (eXtensible Markup Language) IV: Namespaces
-
-O XML usa **Namespaces** para evitar colisões de etiquetas ao combinar documentos diferentes.
-
-```xml
-<root xmlns:h="http://www.w3.org/TR/html4/"
-      xmlns:f="https://www.w3schools.com/furniture">
-  <h:table>...</h:table>
-  <f:table>...</f:table>
-</root>
-```
-
-* `h:table` refere-se a uma tabela HTML.
-* `f:table` refere-se a uma tabela de mobiliário.
-
-## YAML (YAML Ain't Markup Language) I
-
-Desenhado para ser o formato de dados mais amigável para humanos.
-
-* **Formato:** Usa indentação em vez de chavetas ou etiquetas.
-* **Prós:** Muito limpo, fácil de escrever, suporta comentários.
-* **Uso:** Ficheiros de configuração (Docker, Kubernetes, GitHub Actions).
-* **Aviso:** A indentação é crítica (como em Python).
-
-## YAML (YAML Ain't Markup Language) II: Funcionalidades
-
-* **Listas:** Começadas com um traço `-`.
-* **Comentários:** Usar `#`.
-* **Strings multi-linha:** Usar `|` (manter quebras de linha) ou `>` (agrupar quebras de linha).
-
------
-
-* **Âncoras e Aliases:** Reutilizar dados dentro do mesmo ficheiro.
+## Registo de Empregado: YAML
 
 ```yaml
-defaults: &base
-  adapter: postgres
-  host: localhost
-
-development:
-  <<: *base
-  database: dev_db
+employees:
+  - id: 1
+    name: Jane Doe
+    skills: [Python, SQL]
+    active: true
 ```
 
-## YAML (YAML Ain't Markup Language) III: Exemplo
+# Serialização Binária
 
-```yaml
-user: mario
-id: 123
-active: true
-roles:
-  - admin
-  - teacher
-address:
-  city: Aveiro
-  zip: 3810
-```
+## Eficiência sobre Legibilidade
 
-# Dados Estruturados
+Quando o desempenho é mais importante que a legibilidade humana.
 
-## Características de Dados Estruturados
+* **BSON:** JSON Binário (usado em MongoDB). Suporta mais tipos (ex: Data).
+* **MessagePack:** Serialização binária pequena e rápida.
+* **Parquet:** Formato de armazenamento colunar. Eficiente para análise de big data.
 
-Dados que encaixam perfeitamente numa tabela (linhas e colunas).
+## Protocol Buffers (Protobuf)
 
-* **Esquema:** Cada linha deve ter as mesmas colunas.
-* **Eficiência:** Muito rápido de pesquisar e processar usando SQL ou dataframes.
-* **Exemplos:** CSV, TSV, Bases de Dados Relacionais (SQL).
+Formato de serialização da Google.
 
-## CSV (Comma Separated Values) I
+1.  **Definir:** Estrutura num ficheiro `.proto`.
+2.  **Compilar:** Gerar código para a sua linguagem.
+3.  **Serializar:** Dados binários altamente compactos para transmissão.
 
-O formato mais simples e comum para troca de dados tabulares.
+# Ferramentas e Validação
 
-* **Formato:** Cada linha é um registo; campos são separados por uma vírgula (`,`).
-* **Prós:** Suporte universal (Excel, Python, R, Bases de Dados).
-* **Contras:** Sem forma padrão de lidar com caracteres especiais ou dados aninhados.
+## Trabalhar com Dados: `jq` e `yq`
 
-## CSV (Comma Separated Values) II: O "Problema"
+Ferramentas de linha de comando para processar JSON e YAML.
 
-E se um campo contiver uma vírgula?
-`1,Mario Antunes,"Aveiro, Portugal",true`
+* **`jq`:** `cat data.json | jq '.user'`
+* **`yq`:** `yq eval '.port = 8080' config.yml`
 
-* Campos com vírgulas ou aspas devem ser **protegidos com aspas**.
-* Diferentes países usam diferentes delimitadores (ex: `;` em vez de `,`).
-* **TSV (Tab Separated Values):** Usa tabs para evitar o problema da vírgula.
-
-## CSV (Comma Separated Values) III: Codificações
-
-Os ficheiros CSV sofrem frequentemente de problemas de codificação.
-
-* **UTF-8:** O padrão moderno (suporta todas as línguas).
-* **ISO-8859-1 (Latin-1):** Comum em ficheiros antigos de Windows/Excel.
-* **Problema:** Abrir um ficheiro Latin-1 como UTF-8 resulta em "mojibake" (ex: `Ã¡` em vez de `á`).
-
-## Formatos Binários Estruturados (Brevemente)
-
-Para Big Data, o CSV é demasiado lento e grande.
-
-* **Apache Parquet:** Um formato de armazenamento colunar. Eficiente para ler colunas específicas.
-* **Apache Avro:** Um formato baseado em linhas com um esquema. Ótimo para fluxos de dados.
-* **Prós:** Compressão, segurança de tipos, significativamente mais rápido que texto.
-
-# Exploração de Dados
-
-## Trabalhar com Dados: `jq` I
-
-`jq` é como o `sed` para dados JSON. É essencial para engenheiros de CLI.
-
-* Permite filtrar, transformar e formatar JSON a partir da linha de comandos.
-* **Uso:** `cat data.json | jq '.user'`
-* **Formatação:** `cat data.json | jq '.'` (Prettify).
-
-## Trabalhar com Dados: `jq` II: Filtragem
-
-`cat users.json | jq '.[] | select(.active == true) | .name'`
-
-1. `.[]`: Iterar sobre o array.
-2. `select(...)`: Filtrar baseado numa condição.
-3. `.name`: Extrair apenas o campo do nome.
-
-## Trabalhar com Dados: `yq`
-
-`yq` é a versão YAML do `jq`.
-
-* Frequentemente usado para editar ficheiros de configuração programaticamente.
-* `yq eval '.server.port = 8081' config.yml`
-* Essencial para pipelines CI/CD (GitHub Actions).
-
-## Dados em Python I: CSV
-
-```python
-import csv
-
-# Leitura
-with open('data.csv', 'r', encoding='utf-8') as f:
-    reader = csv.DictReader(f)
-    for row in reader:
-        print(row['name'], row['age'])
-
-# Escrita
-with open('out.csv', 'w', newline='', encoding='utf-8') as f:
-    writer = csv.writer(f)
-    writer.writerow(['id', 'name'])
-    writer.writerow([1, 'mario'])
-```
-
-## Dados em Python II: JSON
-
-```python
-import json
-
-# Parsing de uma string
-obj = json.loads('{"id": 1, "name": "mario"}')
-
-# Guardar num ficheiro
-with open('data.json', 'w') as f:
-    json.dump(obj, f, indent=4)
-```
-
-## Dados em Python III: YAML
-
-```python
-import yaml # Requer PyYAML
-
-# Carregar
-with open('config.yml', 'r') as f:
-    config = yaml.safe_load(f)
-
-# Exportar
-print(yaml.dump(config))
-```
-
-## Serialização vs Deserialização I
-
-* **Serialização:** Converter um objeto em memória (ex: um dicionário Python) num formato que possa ser armazenado ou transmitido (ex: uma string JSON).
-* **Deserialização:** O processo inverso: converter uma string ou ficheiro de volta num objeto em memória.
-
-## Serialização vs Deserialização II
-
-Porque precisamos disto?
-
-* **Persistência:** Guardar o estado de um programa no disco.
-* **Transmissão:** Enviar um objeto pela rede (API).
-* **Independência de Linguagem:** Um programa Python pode enviar um JSON para um programa Java.
-
-# Validação de Dados
-
-## Porquê Validar Dados?
-
-Dados maus levam a resultados maus ("Garbage In, Garbage Out").
-
-* **Tipos:** É um número? É uma data?
-* **Intervalos:** A idade está entre 0 e 120?
-* **Obrigatoriedade:** O campo do email está presente?
-* **Relações:** O ID do departamento existe?
-
-## Validação com Pydantic I
+## Validação de Dados com Pydantic
 
 **Pydantic** é a forma moderna de validar dados em Python.
 
 ```python
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr
 
 class User(BaseModel):
     id: int
-    name: str = Field(min_length=3)
+    name: str
     email: EmailStr
-    age: int = Field(gt=0, lt=120)
+
+# Valida e converte tipos automaticamente
+u = User(id="1", name="Mario", email="mario@ua.pt")
 ```
-
-## Validação com Pydantic II
-
-```python
-# Dados válidos
-u = User(id=1, name="Mario", email="mario@ua.pt", age=30)
-
-# Dados inválidos (lança ValidationError)
-try:
-    u2 = User(id=1, name="Ma", email="not-an-email", age=-5)
-except Exception as e:
-    print(e)
-```
-
-* O Pydantic converte automaticamente os tipos onde possível (ex: `"123"` para `123`).
 
 # Sumário
 
 ## Sumário
 
-* **Categorias:** Não estruturados (logs), semi-estruturados (JSON/YAML), estruturados (CSV).
-* **Padrões:** Usar Regex para processamento de texto e `awk`/`sed` para logs.
-* **Escolha:** JSON para APIs, YAML para configuração e CSV para dados em massa.
-* **Ferramentas:** Dominar `jq` para JSON e `yq` para YAML.
-* **Programático:** Usar as bibliotecas padrão de Python e **Pydantic** para uma manipulação de dados robusta.
-* **Validação:** Validar sempre os dados no ponto de entrada do sistema.
+* **Categorias:** Não estruturados (logs), Semi-estruturados (JSON/YAML), Estruturados (CSV).
+* **Fundamentos:** Compreender bits, bytes e codificações de caracteres (UTF-8).
+* **Processamento:** Usar Regex, `awk` e `sed` para texto; `jq`/`yq` para formatos.
+* **Escolha:** Usar JSON para APIs, YAML para config e CSV/Parquet para dados em massa.
+* **Validação:** Validar sempre os dados (ex: Pydantic) para garantir a integridade do sistema.
