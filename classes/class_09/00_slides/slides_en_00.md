@@ -61,7 +61,51 @@ A model to represent the structural and functional relationships between data an
 
 ---
 
-![DIKW Pyramid](figures/dikw_en.png){ width=512px }
+\begin{center}
+\begin{tikzpicture}[scale=0.45, transform shape]
+    \begin{scope}
+        % Base Lines
+        \draw[very thick, MyTriangle!40] (0,-0.03) -- (15,-0.03);
+        \draw[very thick, MyTriangle!55] (0,-3) -- (15,-3);
+        \draw[very thick, MyTriangle!70] (0,-6) -- (15,-6);
+        \draw[very thick, MyTriangle!85] (0,-9) -- (15,-9);
+        \draw[very thick, MyTriangle] (0,-11.95) -- (15,-11.95);
+        \draw[very thick, MyTriangle] (15,-0.02) -- (15,-11.96);
+
+        % Triangles (with cycle)
+        \draw[very thick,white,fill=MyTriangle!55] (0,0) -- (-8,-12) -- (8,-12) -- cycle;
+        \filldraw[very thick,white,fill=MyTriangle!70] (0,0) -- (-6,-9) -- (6,-9) -- cycle;
+        \filldraw[very thick,white,fill=MyTriangle!85] (0,0) -- (-4,-6) -- (4,-6) -- cycle;
+        \filldraw[very thick,white,fill=MyTriangle] (0,0) -- (-2,-3) -- (2,-3) -- cycle;
+
+        % Pyramid Labels
+        \node at (0,-2) {\bfseries\sffamily\Large Wisdom};
+        \node at (0,-4.5) {\bfseries\sffamily\Large Knowledge};
+        \node at (0,-7.5) {\bfseries\sffamily\Large Information};
+        \node at (0,-10.5) {\bfseries\sffamily\Large Data};
+
+        % Definitions
+        \node[text width=8cm, anchor=west] at (3,-2) {\large $\bullet$ understanding, integrated, actionable};
+        \node[text width=8cm, anchor=west] at (4.5,-4.5) {\large $\bullet$ contextual, synthesized, learning};
+        \node[text width=8cm, anchor=west] at (6.5,-7.5) {\large $\bullet$ useful, organized, structured};
+        \node[text width=8cm, anchor=west] at (8.5,-10.5) {\large $\bullet$ signals, know nothing};
+    \end{scope}
+
+    % Arrows & Labels
+    \begin{scope}[xshift=-3.7cm,yshift=-3cm]
+        \draw[-{Triangle[width=14pt,length=10pt]}, line width=6pt, rounded corners=15pt, MyArrow, line cap=round, line join=round] (0,0) -- (0,1.2) -- (2,1.2);
+        \node[anchor=east, align=right] at (-0.3,0.6) {\large given insight,\\becomes};
+    \end{scope}
+    \begin{scope}[xshift=-5.7cm,yshift=-5.5cm]
+        \draw[-{Triangle[width=14pt,length=10pt]}, line width=6pt, rounded corners=15pt, MyArrow, line cap=round, line join=round] (0,0) -- (0,1.2) -- (2,1.2);
+        \node[anchor=east, align=right] at (-0.3,0.6) {\large given meaning,\\becomes};
+    \end{scope}
+    \begin{scope}[xshift=-7.7cm,yshift=-8.5cm]
+        \draw[-{Triangle[width=14pt,length=10pt]}, line width=6pt, rounded corners=15pt, MyArrow, line cap=round, line join=round] (0,0) -- (0,1.2) -- (2,1.2);
+        \node[anchor=east, align=right] at (-0.3,0.6) {\large given context,\\becomes};
+    \end{scope}
+\end{tikzpicture}
+\end{center}
 
 # Digital Representation
 

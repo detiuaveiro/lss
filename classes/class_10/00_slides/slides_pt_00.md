@@ -26,7 +26,51 @@ header-includes:
 
 ## A Pirâmide DIKW
 
-![Pirâmide DIKW](figures/dikw_pt.png){ width=512px }
+\begin{center}
+\begin{tikzpicture}[scale=0.35, transform shape]
+    \begin{scope}
+        % Base Lines
+        \draw[very thick, MyTriangle!40] (0,-0.03) -- (15,-0.03);
+        \draw[very thick, MyTriangle!55] (0,-3) -- (15,-3);
+        \draw[very thick, MyTriangle!70] (0,-6) -- (15,-6);
+        \draw[very thick, MyTriangle!85] (0,-9) -- (15,-9);
+        \draw[very thick, MyTriangle] (0,-11.95) -- (15,-11.95);
+        \draw[very thick, MyTriangle] (15,-0.02) -- (15,-11.96);
+
+        % Triangles (with cycle)
+        \draw[very thick,white,fill=MyTriangle!55] (0,0) -- (-8,-12) -- (8,-12) -- cycle;
+        \filldraw[very thick,white,fill=MyTriangle!70] (0,0) -- (-6,-9) -- (6,-9) -- cycle;
+        \filldraw[very thick,white,fill=MyTriangle!85] (0,0) -- (-4,-6) -- (4,-6) -- cycle;
+        \filldraw[very thick,white,fill=MyTriangle] (0,0) -- (-2,-3) -- (2,-3) -- cycle;
+
+        % Pyramid Labels
+        \node at (0,-2) {\bfseries\sffamily\Large Sabedoria};
+        \node at (0,-4.5) {\bfseries\sffamily\Large Conhecimento};
+        \node at (0,-7.5) {\bfseries\sffamily\Large Informação};
+        \node at (0,-10.5) {\bfseries\sffamily\Large Dados};
+
+        % Definitions
+        \node[text width=8cm, anchor=west] at (3,-2) {\large $\bullet$ compreensão, integrada, acionável};
+        \node[text width=8cm, anchor=west] at (4.5,-4.5) {\large $\bullet$ contextual, sintetizado, aprendizagem};
+        \node[text width=8cm, anchor=west] at (6.5,-7.5) {\large $\bullet$ útil, organizada, estruturada};
+        \node[text width=8cm, anchor=west] at (8.5,-10.5) {\large $\bullet$ sinais, saber nada};
+    \end{scope}
+
+    % Arrows & Labels
+    \begin{scope}[xshift=-3.7cm,yshift=-3cm]
+        \draw[-{Triangle[width=14pt,length=10pt]}, line width=6pt, rounded corners=15pt, MyArrow, line cap=round, line join=round] (0,0) -- (0,1.2) -- (2,1.2);
+        \node[anchor=east, align=right] at (-0.3,0.6) {\large dada introspeção,\\torna-se};
+    \end{scope}
+    \begin{scope}[xshift=-5.7cm,yshift=-5.5cm]
+        \draw[-{Triangle[width=14pt,length=10pt]}, line width=6pt, rounded corners=15pt, MyArrow, line cap=round, line join=round] (0,0) -- (0,1.2) -- (2,1.2);
+        \node[anchor=east, align=right] at (-0.3,0.6) {\large dado significado,\\torna-se};
+    \end{scope}
+    \begin{scope}[xshift=-7.7cm,yshift=-8.5cm]
+        \draw[-{Triangle[width=14pt,length=10pt]}, line width=6pt, rounded corners=15pt, MyArrow, line cap=round, line join=round] (0,0) -- (0,1.2) -- (2,1.2);
+        \node[anchor=east, align=right] at (-0.3,0.6) {\large dado contexto,\\torna-se};
+    \end{scope}
+\end{tikzpicture}
+\end{center}
 
 * À medida que subimos na pirâmide, o **significado** e o **valor** aumentam.
 * Como engenheiros, construímos sistemas que automatizam esta transformação.

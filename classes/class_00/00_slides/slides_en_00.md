@@ -47,9 +47,11 @@ Covering the following topics:
 
 # Grading
 
-- 50% Theory + 50% Practice
-- *Discrete:* 25% Project 1 + 25% Project 2 + 50% Exam
-- *Final:* 50% Final Exame + 50% Project
+* 50% Theory + 50% Practice
+* *Discrete:* 25% Project 1 + 25% Project 2 + 25% Test 1 + 25% Test 2
+* *Final:* 50% Final Exam + 50% Project
+
+Students can select either discrete or final evaluation.
 
 # Class Schedule i
 

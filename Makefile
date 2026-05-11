@@ -3,13 +3,13 @@ SHELL := /bin/bash
 .PHONY: all clean
 
 all clean:
-	@mapfile -d '' mkfiles < <(find . -mindepth 2 -name "Makefile" -print0); \
+	@mapfile -d '' mkfiles < <(find . -mindepth 2 -name "Makefile" -print0 | sort -z); \
 	tasks=(); \
 	unique_dirs=(); \
 	for mkfile in "$${mkfiles[@]}"; do \
 		dir=$$(dirname "$$mkfile"); \
 		unique_dirs+=("$$dir"); \
-		mapfile -d '' mdfiles < <(find "$$dir" -maxdepth 1 -name "*.md" ! -name "README.md" -print0); \
+		mapfile -d '' mdfiles < <(find "$$dir" -maxdepth 1 -name "*.md" ! -name "README.md" -print0 | sort -z); \
 		for mdfile in "$${mdfiles[@]}"; do \
 			tasks+=("$$dir:$$(basename "$$mdfile")"); \
 		done; \

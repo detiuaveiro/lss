@@ -50,12 +50,16 @@ Can find the spreadsheet [here](lss.ods).
 
 ## Grading
 
-- 50% Practical Projects + 50% Individual Exam
-- **Practical Component:**
-    - 25% Project 1 (Mid-semester: Topics C1-C3)
-    - 25% Project 2 (Final Project: Integrated topics)
-- **Theoretical Component:**
-    - 50% Final Exam (Topics C1-C6)
+* 50% Theory + 50% Practice
+* *Discrete:* 25% Project 1 + 25% Project 2 + 25% Test 1 + 25% Test 2
+* *Final:* 50% Final Exam + 50% Project
+
+Students can select either discrete or final evaluation.
+
+### Deadlines:
+
+* **Project 1** -- 13/05
+* **Test 1** -- 20/05
 
 ## Classes
 

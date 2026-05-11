@@ -47,9 +47,11 @@ Vamos abordar os seguintes tópicos:
 
 # Avaliação
 
-- 50% Teórica + 50% Prática
-- *Discreta:* 25% Projeto 1 + 25% Projeto 2 + 50% Exame
-- *Época Final:* 50% Exame Final + 50% Projeto
+* 50% Teórica + 50% Prática
+* *Discreta:* 25% Projeto 1 + 25% Projeto 2 + 25% Teste 1 + 25% Teste 2
+* *Final:* 50% Exame Final + 50% Projeto
+
+Os alunos podem escolher entre a avaliação discreta e a avaliação final.
 
 # Calendarização i
 
