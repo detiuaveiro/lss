@@ -1,4 +1,4 @@
-# Makefile
+# Makefile (Master)
 SHELL := /bin/bash
 .PHONY: all clean
 
@@ -10,9 +10,17 @@ all clean:
 		dir=$$(dirname "$$mkfile"); \
 		unique_dirs+=("$$dir"); \
 		mapfile -d '' mdfiles < <(find "$$dir" -maxdepth 1 -name "*.md" ! -name "README.md" -print0 | sort -z); \
-		for mdfile in "$${mdfiles[@]}"; do \
-			tasks+=("$$dir:$$(basename "$$mdfile")"); \
-		done; \
+		if [[ "$$dir" == *"booklet"* ]]; then \
+			if [ $${#mdfiles[@]} -gt 0 ] && [ -n "$${mdfiles[0]}" ]; then \
+				tasks+=("$$dir:$$(basename "$$dir").pdf"); \
+			fi; \
+		else \
+			for mdfile in "$${mdfiles[@]}"; do \
+				if [ -n "$$mdfile" ]; then \
+					tasks+=("$$dir:$$(basename "$$mdfile")"); \
+				fi; \
+			done; \
+		fi; \
 	done; \
 	total=$${#tasks[@]}; \
 	if [ "$@" = "clean" ]; then \
@@ -32,7 +40,11 @@ all clean:
 		for ((i=0; i<total; i++)); do \
 			task=$${tasks[i]}; \
 			dir=$${task%%:*}; file=$${task#*:}; \
-			target=$${file%.md}.pdf; \
+			if [[ "$$file" == *.pdf ]]; then \
+				target="$$file"; \
+			else \
+				target="$${file%.md}.pdf"; \
+			fi; \
 			current=$$((i + 1)); \
 			percent=$$((current * 100 / total)); \
 			term_width=$$(tput cols); \
