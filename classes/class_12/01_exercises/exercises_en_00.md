@@ -4,55 +4,84 @@ title: Relational Databases and SQL II
 
 # Exercises
 
-## Exercise 1: Aggregations
+## Lab 0: Environment Setup
 
-Use the `university.db` created in the previous class (or recreate it using the provided solution).
+This class uses **SQLite**, **PostgreSQL**, and **Redis**. To avoid installation issues, we recommend using **Docker**.
 
-1.  Count how many students are in the database.
-2.  Count how many students are in the `Computer Science` department.
-3.  Calculate the average age of all students.
-4.  Find the minimum and maximum age in the database.
-5.  Show the number of students per department using `GROUP BY`.
-
------
-
-## Exercise 2: Subqueries and Advanced Joins
-
-1.  Find the names of students who are in a department that has more than 2 students.
-2.  Select departments that do not have any students (use a subquery with `NOT IN`).
-3.  Create a view named `student_details` that joins students and departments.
+1.  Navigate to the `02_support` folder.
+2.  Run `docker compose up -d` to start the PostgreSQL and Redis services.
+3.  For the Python labs, you can use your local environment (if you have the required libraries) or install them via:
+    ```bash
+    pip install -r requirements.txt
+    ```
 
 -----
 
-## Exercise 3: Performance and Indexes
+## Lab 1: "The Need for Speed" (Indexing Impact)
 
-1.  Explain the difference between a `Sequential Scan` and an `Index Scan`.
-2.  Create an index on the `name` column of the `students` table.
-3.  In SQLite, use `EXPLAIN QUERY PLAN` followed by a SELECT query to see if the index is being used.
+In this lab, you will measure the performance gain of using an index on a large dataset.
+
+1.  **Setup:** Run `python3 lab_utils.py` to generate `lab_indexing.db` with 100,000 records.
+2.  **Task:** Open the database using `sqlite3 lab_indexing.db`.
+3.  **Measurement:** Turn on the timer and search for a specific name (one that doesn't exist to force a full scan).
     ```sql
-    EXPLAIN QUERY PLAN SELECT * FROM students WHERE name = 'Alice';
+    .timer on
+    SELECT * FROM users WHERE name = 'nonexistent';
     ```
+4.  **Optimization:** Create an index on the `name` column and run the query again.
+    ```sql
+    CREATE INDEX idx_users_name ON users(name);
+    SELECT * FROM users WHERE name = 'nonexistent';
+    ```
+5.  **Observation:** Compare the execution times. How many times faster was the indexed query?
 
 -----
 
-## Exercise 4: Working with Large Datasets (Titanic)
+## Lab 2: "The Breach" (Security & Prepared Statements)
 
-1.  Import the `dataset/titanic.csv` into a new SQLite database named `titanic.db`.
-    *   Hint: Use `.mode csv` and `.import dataset/titanic.csv passengers` inside sqlite3.
-2.  Write queries to answer:
-    *   What was the survival rate of the passengers?
-    *   What was the average age of survivors vs. non-survivors?
-    *   Which passenger class (`Pclass`) had the highest number of survivors?
-    *   Did women and children really have a higher chance of survival? (Group by Sex and a calculated Age category).
+In this lab, you will perform a SQL Injection attack and then fix it.
 
------
-
-## Exercise 5: Security Challenge (SQL Injection)
-
-1.  Look at this Python code:
+1.  **Setup:** Run `python3 lab_utils.py` to ensure `lab_security.db` is ready.
+2.  **Attack:** Create a small Python script (or use the one in `solutions/`) that uses string concatenation for a login query.
+    *   **Hint:** Try to log in as `admin` without knowing the password by using `' OR '1'='1` as the username.
     ```python
-    user_id = input("Enter user ID: ")
-    cursor.execute(f"SELECT * FROM users WHERE id = {user_id}")
+    username = "admin' --"
+    query = f"SELECT * FROM accounts WHERE username = '{username}'"
     ```
-2.  What could a malicious user type to delete the entire `users` table?
-3.  Rewrite the code to be secure using a prepared statement.
+3.  **Fix:** Rewrite the login function to use **Prepared Statements**.
+    *   **Hint:** Use `?` placeholders in SQLite.
+    ```python
+    cursor.execute("SELECT * FROM accounts WHERE username = ?", (username,))
+    ```
+4.  **Verification:** Try the attack again on the secure version. Does it still work?
+
+-----
+
+## Lab 3: "Portable Power" (Standalone SQL)
+
+Compare the behavior of file-based (SQLite) and in-memory (H2/SQLite) databases.
+
+1.  **SQLite (File):** Create a table in a file-based DB, exit, and re-open it.
+2.  **SQLite (Memory):** Run `sqlite3 :memory:`, create a table, exit, and re-open.
+3.  **Observation:** What happened to the data in the memory-only database? When would you use this in a real project?
+
+-----
+
+## Lab 4: "The Hybrid Arch" (Dockerized SQL + NoSQL)
+
+Implement a simple "Cache-Aside" pattern using PostgreSQL and Redis.
+
+1.  **Setup:** Start the environment using `docker compose up -d`.
+2.  **Implementation:** Create a script that tries to fetch a user from **Redis** first. If it's a "Miss", fetch it from **PostgreSQL** and store it in Redis for next time.
+3.  **Hint (Python):**
+    ```python
+    import redis, psycopg2
+    r = redis.Redis(host='localhost', port=6379)
+    # Try Redis
+    data = r.get("user:1")
+    if not data:
+        # Fetch from Postgres if Redis is empty
+        # ... fetch logic ...
+        r.setex("user:1", 60, "result_from_db")
+    ```
+4.  **Measurement:** Measure the time for the first request (Cache Miss) vs. the second request (Cache Hit).

@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: university
+    ports:
+      - "5432:5432"
+
+  python-lab:
+    image: python:3.11-slim
+    volumes:
+      - .:/lab
+    working_dir: /lab
+    command: tail -f /dev/null

@@ -4,72 +4,132 @@ title: Bases de Dados Relacionais e SQL I
 
 # Exercícios
 
-## Exercício 1: Configurar o SQLite
+## Exercício 0: Configuração do Ambiente
 
-O SQLite é uma base de dados leve, baseada em ficheiros. Não requer um servidor.
+Antes de começar, certifique-se de que tem o SQLite instalado no seu sistema.
 
-1.  Abra o seu terminal.
-2.  Crie um novo ficheiro de base de dados chamado `university.db`:
+### Opção A: Instalação Manual
+Se estiver a utilizar um sistema operativo baseado em Debian (como o Ubuntu), pode instalá-lo utilizando o `apt`:
+
+1.  Atualize a lista de pacotes:
     ```bash
-    $ sqlite3 university.db
+    sudo apt update
     ```
-3.  Está agora na consola do SQLite (`sqlite>`). Escreva `.help` para ver os comandos disponíveis.
-4.  Escreva `.tables` para ver as tabelas atuais (deve estar vazio).
+2.  Instale o SQLite3:
+    ```bash
+    sudo apt install sqlite3
+    ```
+3.  Verifique a instalação:
+    ```bash
+    sqlite3 --version
+    ```
+
+### Opção B: Docker (Recomendado)
+Se tiver o Docker instalado, pode utilizar o ambiente pré-configurado na pasta `02_support`:
+1.  Navegue até `02_support`.
+2.  Execute `docker compose up -d`.
+3.  Aceda ao contentor Python: `docker compose exec python-lab bash`.
 
 -----
 
-## Exercício 2: Definir o Esquema (DDL)
+## Exercício 1: SQLite com Python
 
-1.  Crie uma tabela para `departments` (departamentos):
-    ```sql
-    CREATE TABLE departments (
-        id INTEGER PRIMARY KEY,
-        name TEXT NOT NULL UNIQUE
-    );
+Nesta aula, utilizaremos o módulo nativo do Python `sqlite3` para interagir com uma base de dados SQLite.
+
+1.  Crie um novo ficheiro Python chamado `university_db.py`.
+2.  Importe o módulo `sqlite3` e estabeleça uma ligação:
+    ```python
+    import sqlite3
+
+    # Ligar (ou criar) o ficheiro da base de dados
+    conn = sqlite3.connect('university.db')
+    cursor = conn.cursor()
+    
+    # O seu código será inserido aqui
+    
+    conn.close()
     ```
-2.  Crie uma tabela para `students` (estudantes) com uma chave estrangeira para os departamentos:
-    ```sql
-    CREATE TABLE students (
-        id INTEGER PRIMARY KEY,
-        name TEXT NOT NULL,
-        age INTEGER,
-        dept_id INTEGER,
-        FOREIGN KEY (dept_id) REFERENCES departments(id)
-    );
-    ```
-3.  Verifique se as tabelas foram criadas usando `.tables` e `.schema students`.
 
 -----
 
-## Exercício 3: Gerir Dados (DML)
+## Exercício 2: Definir o Esquema Universitário (DDL)
 
-1.  Insira três departamentos: `Computer Science`, `Physics`, e `Mathematics`.
-2.  Insira pelo menos cinco estudantes, atribuindo-os a diferentes departamentos.
-    ```sql
-    INSERT INTO students (name, age, dept_id) VALUES ('Alice', 20, 1);
-    ```
-3.  Tente inserir um estudante com uma idade de -5 (se adicionou uma restrição CHECK) ou um estudante com um ID duplicado. Observe o que acontece.
+Utilizando `cursor.execute()`, crie as seguintes tabelas baseadas no cenário universitário:
+
+1.  `University` (id, name)
+2.  `Department` (id, name, univ_id)
+3.  `Teacher` (id, name, dept_id)
+4.  `Course` (id, name, dept_id, teacher_id)
+5.  `Student` (id, name)
+6.  `Enrollment` (stud_id, course_id)
+
+**Exemplo:**
+```python
+cursor.execute('''
+CREATE TABLE IF NOT EXISTS University (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL
+)
+''')
+conn.commit()
+```
 
 -----
 
-## Exercício 4: Consultar Dados
+## Exercício 3: Inserir Dados (DML)
 
-Escreva consultas SQL para:
-1.  Selecionar todos os estudantes.
-2.  Selecionar estudantes com mais de 21 anos.
-3.  Selecionar nomes de estudantes por ordem alfabética.
-4.  Atualizar a idade de um estudante.
-5.  Apagar um estudante da base de dados.
+Insira dados de teste nas suas tabelas. Tente utilizar consultas parametrizadas para prevenir SQL injection.
+
+1.  Insira 1 University.
+2.  Insira 2 Departments.
+3.  Insira 3 Teachers.
+4.  Insira 4 Courses.
+5.  Insira 5 Students e inscreva-os em várias cadeiras.
+
+**Exemplo:**
+```python
+teachers = [('Dr. Smith', 1), ('Prof. Jones', 1), ('Dr. Taylor', 2)]
+cursor.executemany('INSERT INTO Teacher (name, dept_id) VALUES (?, ?)', teachers)
+conn.commit()
+```
 
 -----
 
-## Exercício 5: Junção de Tabelas (Joins)
+## Exercício 4: Consultar Dados (DQL)
 
-1.  Execute um `INNER JOIN` para mostrar o nome de cada estudante ao lado do nome do seu departamento.
-    ```sql
-    SELECT students.name, departments.name
-    FROM students
-    INNER JOIN departments ON students.dept_id = departments.id;
-    ```
-2.  Execute um `LEFT JOIN` entre departamentos e estudantes. O que acontece aos departamentos que não têm estudantes?
-3.  (Opcional) Use `.mode column` e `.headers on` no SQLite para tornar o output mais legível.
+Escreva código Python para executar e imprimir os resultados das seguintes consultas:
+
+1.  Selecionar todos os professores e os nomes dos seus respetivos departamentos.
+2.  Encontrar todos os alunos inscritos numa cadeira específica (ex: 'Relational Databases').
+3.  Listar os cursos oferecidos por um departamento específico.
+4.  Atualizar o nome de um professor.
+5.  Apagar um curso e observar se a integridade referencial (foreign keys) é mantida.
+
+**Dica:** Para ver os resultados, utilize `cursor.fetchall()`.
+
+-----
+
+## Exercício 5: Controlo de Transações (TCL)
+
+Demonstre a propriedade "Tudo ou Nada":
+
+1.  Inicie uma transação.
+2.  Tente inserir um aluno e uma inscrição.
+3.  Provoque propositadamente um erro (ex: inserir numa tabela inexistente).
+4.  Utilize `conn.rollback()` no bloco `except` e verifique que o aluno NÃO foi adicionado.
+
+-----
+
+## Exercício 6: Desafio de Normalização
+
+Considere a seguinte tabela não normalizada `raw_data`:
+
+| StudentName | Course | Instructor | InstructorOffice | Grade |
+| :--- | :--- | :--- | :--- | :--- |
+| Alice | Databases | Dr. Smith | Room 101 | A |
+| Alice | Physics | Dr. Brown | Room 202 | B |
+| Bob | Databases | Dr. Smith | Room 101 | C |
+
+1.  Identifique as redundâncias e potenciais anomalias de atualização.
+2.  Decomponha esta tabela para a 3NF (Terceira Forma Normal) utilizando as tabelas que definimos no Exercício 2.
+3.  Escreva um script Python que leia dados de uma lista de tuplos (representando a tabela acima) e povoe as suas tabelas normalizadas.

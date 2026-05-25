@@ -4,55 +4,84 @@ title: Bases de Dados Relacionais e SQL II
 
 # Exercícios
 
-## Exercício 1: Agregações
+## Lab 0: Configuração do Ambiente
 
-Use a base de dados `university.db` criada na aula anterior (ou recrie-a usando a solução fornecida).
+Esta aula utiliza **SQLite**, **PostgreSQL** e **Redis**. Para evitar problemas de instalação, recomendamos o uso do **Docker**.
 
-1.  Conte quantos estudantes existem na base de dados.
-2.  Conte quantos estudantes existem no departamento de `Computer Science`.
-3.  Calcule a idade média de todos os estudantes.
-4.  Encontre a idade mínima e máxima na base de dados.
-5.  Mostre o número de estudantes por departamento usando `GROUP BY`.
-
------
-
-## Exercício 2: Subqueries e Joins Avançados
-
-1.  Encontre os nomes dos estudantes que estão num departamento que tem mais de 2 estudantes.
-2.  Selecione os departamentos que não têm nenhum estudante (use uma subquery com `NOT IN`).
-3.  Crie uma vista (`VIEW`) chamada `student_details` que junte as tabelas de estudantes e departamentos.
+1.  Navegue até à pasta `02_support`.
+2.  Execute `docker compose up -d` para iniciar os serviços de PostgreSQL e Redis.
+3.  Para os labs em Python, pode usar o seu ambiente local ou instalar as bibliotecas necessárias:
+    ```bash
+    pip install -r requirements.txt
+    ```
 
 -----
 
-## Exercício 3: Desempenho e Índices
+## Lab 1: "The Need for Speed" (Impacto da Indexação)
 
-1.  Explique a diferença entre um `Sequential Scan` e um `Index Scan`.
-2.  Crie um índice na coluna `name` da tabela `students`.
-3.  No SQLite, use `EXPLAIN QUERY PLAN` seguido de uma consulta SELECT para ver se o índice está a ser utilizado.
+Neste lab, irá medir o ganho de performance ao usar um índice num conjunto de dados grande.
+
+1.  **Configuração:** Execute `python3 lab_utils.py` para gerar a BD `lab_indexing.db` com 100.000 registos.
+2.  **Tarefa:** Abra a base de dados usando `sqlite3 lab_indexing.db`.
+3.  **Medição:** Ligue o temporizador e procure por um nome específico (um que não exista para forçar um scan completo).
     ```sql
-    EXPLAIN QUERY PLAN SELECT * FROM students WHERE name = 'Alice';
+    .timer on
+    SELECT * FROM users WHERE name = 'nao_existe';
     ```
+4.  **Otimização:** Crie um índice na coluna `name` e execute a consulta novamente.
+    ```sql
+    CREATE INDEX idx_users_name ON users(name);
+    SELECT * FROM users WHERE name = 'nao_existe';
+    ```
+5.  **Observação:** Compare os tempos de execução. Quantas vezes mais rápida foi a consulta indexada?
 
 -----
 
-## Exercício 4: Trabalhar com Conjuntos de Dados Grandes (Titanic)
+## Lab 2: "The Breach" (Segurança e Prepared Statements)
 
-1.  Importe o ficheiro `dataset/titanic.csv` para uma nova base de dados SQLite chamada `titanic.db`.
-    *   Dica: Use `.mode csv` e `.import dataset/titanic.csv passengers` dentro do sqlite3.
-2.  Escreva consultas para responder:
-    *   Qual foi a taxa de sobrevivência dos passageiros?
-    *   Qual foi a idade média dos sobreviventes vs. não sobreviventes?
-    *   Qual a classe de passageiro (`Pclass`) que teve o maior número de sobreviventes?
-    *   Será que as mulheres e crianças tiveram realmente uma maior probabilidade de sobrevivência? (Agrupe por Sexo e uma categoria de Idade calculada).
+Neste lab, irá realizar um ataque de SQL Injection e depois corrigi-lo.
 
------
-
-## Exercício 5: Desafio de Segurança (SQL Injection)
-
-1.  Observe este código Python:
+1.  **Configuração:** Execute `python3 lab_utils.py` para garantir que a BD `lab_security.db` está pronta.
+2.  **Ataque:** Crie um pequeno script Python (ou use o existente em `solutions/`) que use concatenação de strings para uma consulta de login.
+    *   **Dica:** Tente fazer login como `admin` sem saber a password usando `' OR '1'='1` como username.
     ```python
-    user_id = input("Introduza o ID do utilizador: ")
-    cursor.execute(f"SELECT * FROM users WHERE id = {user_id}")
+    username = "admin' --"
+    query = f"SELECT * FROM accounts WHERE username = '{username}'"
     ```
-2.  O que poderia um utilizador mal-intencionado escrever para apagar a tabela `users` inteira?
-3.  Reescreva o código para ser seguro usando um prepared statement.
+3.  **Correção:** Recreve a função de login para usar **Prepared Statements**.
+    *   **Dica:** Use marcadores `?` no SQLite.
+    ```python
+    cursor.execute("SELECT * FROM accounts WHERE username = ?", (username,))
+    ```
+4.  **Verificação:** Tente o ataque novamente na versão segura. Ainda funciona?
+
+-----
+
+## Lab 3: "Portable Power" (SQL Autónomo)
+
+Compare o comportamento de bases de dados baseadas em ficheiros (SQLite) e em memória (H2/SQLite).
+
+1.  **SQLite (Ficheiro):** Crie uma tabela numa BD baseada em ficheiro, saia e reabra.
+2.  **SQLite (Memória):** Execute `sqlite3 :memory:`, crie uma tabela, saia e reabra.
+3.  **Observação:** O que aconteceu aos dados na base de dados apenas em memória? Quando usaria isto num projeto real?
+
+-----
+
+## Lab 4: "The Hybrid Arch" (SQL + NoSQL em Docker)
+
+Implemente um padrão simples de "Cache-Aside" usando PostgreSQL e Redis.
+
+1.  **Configuração:** Inicie o ambiente usando `docker compose up -d`.
+2.  **Implementação:** Crie um script que tente procurar um utilizador no **Redis** primeiro. Se for um "Miss", procure no **PostgreSQL** e guarde no Redis para a próxima vez.
+3.  **Dica (Python):**
+    ```python
+    import redis, psycopg2
+    r = redis.Redis(host='localhost', port=6379)
+    # Tenta Redis
+    data = r.get("user:1")
+    if not data:
+        # Procura no Postgres se o Redis estiver vazio
+        # ... lógica de fetch ...
+        r.setex("user:1", 60, "resultado_da_db")
+    ```
+4.  **Medição:** Meça o tempo para o primeiro pedido (Cache Miss) vs. o segundo pedido (Cache Hit).
