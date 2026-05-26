@@ -34,6 +34,6 @@ Não se esqueçam de contactar o vosso professor em caso de dúvidas. Instruçõ
 * **Descrição:** Implementar um sistema de licitações onde os utilizadores podem participar em leilões ao vivo. Utilizem **WebSockets** para transmitir novas licitações para todos os participantes imediatamente. O sistema deve lidar com a concorrência de licitações utilizando um broker de mensagens (como o Redis) e persistir os resultados finais numa base de dados.
 * **Tópicos Principais:** WebSockets, Redis (Pub/Sub), SQL, Transações Atómicas.
 
-### 6. Plataforma de Leilões Online em Tempo Real
-* **Descrição:** Implementar um sistema de licitações onde os utilizadores podem participar em leilões ao vivo. Utilizem **WebSockets** para transmitir novas licitações para todos os participantes imediatamente. O sistema deve lidar com a concorrência de licitações utilizando um broker de mensagens e persistir os resultados finais numa base de dados.
-* **Tópicos Principais:** WebSockets, Redis (Pub/Sub), SQL, Transações Atómicas.
+### 6. Dashboard de Geo-Dados (Tráfego ou Meteorologia)
+* **Descrição:** Construam um *web dashboard* que visualiza dados geográficos. Devem criar um script **Python** que usa uma API para obter dados meteorológicos ou de tráfego, ou (usando **Pandas** ou **Polars**) que processa um *dataset* (ex: um CSV de estações meteorológicas ou incidentes de tráfego com coordenadas Lat/Lon) e exporta-o para JSON. Depois, façam o *deploy* de um contentor **Web Server** (Nginx ou Apache) alojando uma página HTML. Esta página deve usar a biblioteca JavaScript **Leaflet** para ler esses dados JSON e mostrar marcadores num mapa interativo.
+* **Tópicos Principais:** Web Programming (HTML/JS/Leaflet), Formatação de Dados (CSV para JSON), Docker, Web Servers.

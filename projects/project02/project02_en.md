@@ -36,6 +36,6 @@ Further instructions may be added.
 * **Description:** Implement a bidding system where users can participate in live auctions. Use **WebSockets** to broadcast new bids to all participants immediately. The system must handle bid concurrency using a message broker (like Redis) and persist the final results in a database.
 * **Core Topics:** WebSockets, Redis (Pub/Sub), SQL, Atomic Transactions.
 
-### 6. Real-time Online Auction Platform
-* **Description:** Implement a bidding system where users can participate in live auctions. Use **WebSockets** to broadcast new bids to all participants immediately. The system must handle bid concurrency using a message broker and persist the final results in a database.
-* **Core Topics:** WebSockets, Redis (Pub/Sub), SQL, Atomic Transactions.
+### 6. Geo-Data Dashboard (Traffic or Weather)
+* **Description:** Build a web dashboard that visualizes geographical data. You must create a **Python** script that uses an API to get Weather or traffic data or (using **Pandas** or **Polars**) that processes a dataset (e.g., a CSV of weather stations or traffic incidents with Lat/Lon coordinates) and exports it to JSON. Then, deploy a **Web Server** container (Nginx or Apache) hosting an HTML page. This page must use the **Leaflet** JavaScript library to read that JSON data and display markers on an interactive map.
+* **Core Topics:** Web Programming (HTML/JS/Leaflet), Data Formatting (CSV to JSON), Docker, Web Servers.

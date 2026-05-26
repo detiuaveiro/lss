@@ -1,7 +1,0 @@
-app:
-  name: MyAwesomeApp
-  version: 1.0.2
-database:
-  host: localhost
-  port: 5432
-debug: true
