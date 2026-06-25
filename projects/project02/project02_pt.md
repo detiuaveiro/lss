@@ -6,7 +6,7 @@ title: Projecto 02
 
 Formem grupos de dois ou três alunos (excecionalmente, os projetos podem ser feitos individualmente) e selecionem **um** dos seguintes projetos. Todos os projetos serão submetidos via **eLearning** num único ficheiro comprimido (ZIP), seguindo uma estrutura de repositório padrão.
 
-O ficheiro ZIP deve conter todos os scripts relevantes, ficheiros de configuração, um `docker-compose.yml` e um `README.md` com instruções sobre como implementar o projeto. Deve também conter um relatório do projeto em formato `PDF`.
+O ficheiro ZIP deve conter todos os scripts relevantes, ficheiros de configuração, um `compose.yml` e um `README.md` com instruções sobre como implementar o projeto.
 
 Este é um projeto de quatro semanas (data limite: 22/06/2026). Têm até ao final desta semana para notificar o vosso professor (por e-mail) sobre os elementos do grupo e o tema escolhido (a lista de temas pode ser encontrada [aqui](#temas)).
 

@@ -68,16 +68,16 @@ O conteúdo dinâmico é gerado "on-the-fly" pelo servidor. Quando o servidor re
 \begin{tikzpicture}[
     node distance=1.8cm,
     block/.style={draw, rectangle, minimum width=2.2cm, minimum height=0.8cm, fill=gray!10, font=\sffamily\tiny, align=center},
-    server/.style={draw, rectangle, minimum width=6cm, minimum height=4.5cm, fill=blue!5, dashed, rounded corners=5pt},
+    server/.style={draw, rectangle, minimum width=4.5cm, minimum height=4.5cm, fill=blue!5, dashed, rounded corners=5pt},
     arrow/.style={-stealth, thick}
 ]
     \node (sbox) [server] {};
     \node [above=0.2cm of sbox, font=\sffamily\bfseries\small] {Arquitetura Interna do Servidor};
 
     \node (req) [left=1.2cm of sbox] {Pedido HTTP};
-    \node (static) [block, fill=green!15] at (-1.2, 1.2) {Ficheiros no Disco\\(HTML/Imagens)};
-    \node (app) [block, fill=orange!15] at (-1.2, 0) {Motor de Execução\\(Lógica da App)};
-    \node (db) [block, fill=red!15] at (-1.2, -1.2) {Sistema de Base\\de Dados};
+    \node (static) [block, fill=green!15] at (0, 1.2) {Ficheiros no Disco\\(HTML/Imagens)};
+    \node (app) [block, fill=orange!15] at (0, 0) {Motor de Execução\\(Lógica da App)};
+    \node (db) [block, fill=red!15] at (0, -1.2) {Sistema de Base\\de Dados};
     \node (resp) [right=1.2cm of sbox] {Resposta};
 
     \draw [arrow] (req.east) -- ([xshift=0.3cm]req.east) |- (static.west);

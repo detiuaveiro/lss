@@ -56,15 +56,6 @@ Can find the spreadsheet [here](lss.ods).
 
 Students can select either discrete or final evaluation.
 
-### Deadlines:
-
-* **Project 1** -- 13/05
-* **Test 1** -- 20/05
-
-## Classes
-
-**TODO**
-
 ## Bibliography
 
 - Tanenbaum, A. S., & Wetherall, D. J. (2011). *Computer Networks* (5th Edition). Pearson.

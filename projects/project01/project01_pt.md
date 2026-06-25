@@ -6,7 +6,7 @@ title: Projecto 01
 
 Formem grupos de dois ou três alunos (excecionalmente, os projetos podem ser feitos individualmente) e selecionem **um** dos seguintes projetos. Todos os projetos serão alojados no **GitHub**, utilizando o [GitHub Classroom](https://classroom.github.com/a/xN-SHTD1)). Consultem os detalhes [aqui](#acesso-ao-github-classroom).
 
-O repositório deve conter todos os scripts relevantes, ficheiros de configuração e um `README.md` com instruções sobre como implementar o projeto. Deve também conter um relatório do projeto em formato `PDF`.
+O repositório deve conter todos os scripts relevantes, ficheiros de configuração e um `README.md` com instruções sobre como implementar o projeto.
 
 Este é um projeto de três semanas (data limite: 13/05/2026). Têm até ao final desta semana para notificar o vosso professor (por e-mail) sobre os elementos do grupo e o tema escolhido (a lista de temas pode ser encontrada [aqui](#temas)).
 

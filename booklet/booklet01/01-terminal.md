@@ -174,6 +174,23 @@ Uma das filosofias fundamentais do Unix é: "Cria programas que façam apenas um
 
 Exemplo prático: `ls /etc | grep "conf"` irá listar todos os ficheiros em `/etc` e filtrar apenas aqueles que contêm a palavra "conf".
 
+### Redirecionamento de Erros e Fluxos Avançados
+
+Por padrão, a shell do Linux lida com três fluxos de dados padrão, identificados por descritores numéricos (*file descriptors*):
+- **`stdin` (0):** Entrada padrão.
+- **`stdout` (1):** Saída padrão (onde os comandos enviam o output normal).
+- **`stderr` (2):** Saída de erros padrão (onde mensagens de erro e alertas são enviados).
+
+Quando usamos `>` ou `>>`, estamos a redirecionar apenas a saída padrão (`stdout` / fluxo `1`). Para manipular o fluxo de erros de forma independente, existem operadores avançados:
+
+- **Redirecionar Erros (`2>`):** Guarda apenas as mensagens de erro num ficheiro separado.
+  * *Exemplo:* `ls /root 2> erros.txt` (se o utilizador não tiver permissões, a mensagem de erro é guardada no ficheiro).
+- **Fusão de Fluxos (`2>&1`):** Redireciona o fluxo de erros para o mesmo destino da saída padrão.
+  * *Exemplo:* `comando > output.log 2>&1` (tanto a saída normal como as de erro serão gravadas no mesmo ficheiro `output.log`).
+  * Em shells modernas como o Bash, pode-se usar a sintaxe compactada: `comando &> output.log`.
+- **Supressão de Saída (`/dev/null`):** O dispositivo especial `/dev/null` atua como um sumidouro virtual que descarta instantaneamente todos os dados que recebe.
+  * *Exemplo:* `cron_job.sh > /dev/null 2>&1` (silencia completamente qualquer output e erro gerado por um script, impedindo o envio de emails do Cron).
+
 ### Agendamento com Cron
 
 O **Cron** é um serviço que corre em segundo plano e permite agendar tarefas (conhecidas como *cron jobs*). A configuração é feita através do comando `crontab -e`. A sintaxe utiliza cinco campos para definir o momento da execução: minuto, hora, dia do mês, mês e dia da semana.

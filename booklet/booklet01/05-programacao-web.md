@@ -53,7 +53,7 @@ Para gerir esta concorrência sem múltiplas threads, o JavaScript utiliza o **E
     \draw [arrow] (queue.west) -- (loop.east);
     
     % Path going around to avoid overlap
-    \draw [arrow] (loop.west) -- ++(-2.5cm, 0) |- (stack.west)
+    \draw [arrow] (loop.west) -- ++(-3.2cm, 0) |- (stack.west)
         node[near end, left, font=\tiny, text width=1.5cm, align=right] {Mover se\\Pilha Vazia};
 
 \end{tikzpicture}

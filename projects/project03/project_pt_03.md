@@ -4,14 +4,13 @@ title: Projeto Final
 
 # Projetos
 
-**Este projeto é estritamente individual.** Seleciona **um** dos seguintes projetos. Todos os projetos serão alojados no **GitHub**, utilizando o [GitHub Classroom](https://classroom.github.com/a/L2vg5ol1). Consulta [aqui](#acesso-ao-github-classroom) os detalhes.
+**Este projeto é estritamente individual.** Seleciona **um** dos seguintes projetos.
 
 O repositório deve conter todos os scripts relevantes, ficheiros de configuração e um ficheiro `README.md` com instruções detalhadas sobre como fazer o deploy do projeto.
-Deve também conter um relatório do projeto em formato `PDF`.
 
-Este é o **projeto final**, desenhado para integrar as diversas competências adquiridas ao longo do semestre (Shell Scripting, Docker, Python, Análise de Dados e Tecnologias Web) integrando os conceitos do **Projeto 01** e **Projeto 02**.
+Este é o **projeto final**, desenhado para integrar as diversas competências adquiridas ao longo do semestre (Shell Scripting, Docker, Python, Análise de Dados e Tecnologias Web).
 
-Este é um projeto com a duração de três semanas (prazo limite **09/07/2026**). Tens até ao final desta semana para notificar o teu professor (via e-mail) sobre o tema escolhido (a lista de temas pode ser consultada [aqui](#temas)).
+Este é um projeto com a duração de três semanas (prazo limite **22/06/2026**). Tens até ao final desta semana para notificar o teu professor (via e-mail) sobre o tema escolhido (a lista de temas pode ser consultada [aqui](#temas)).
 
 Não te esqueças de contactar o teu professor em caso de dúvidas.
 Instruções adicionais podem ser adicionadas.
@@ -41,63 +40,3 @@ Instruções adicionais podem ser adicionadas.
 ### 6. Sistema de Gestão de Energia Doméstica Inteligente com Wiki Técnica
 * **Descrição**: Cria um rastreador de energia doméstica inteligente apoiado por documentação técnica interativa. Simuladores publicam métricas de consumo de energia doméstica de hora a hora via **MQTT** para um *broker* **Mosquitto**. Um serviço de recolha **FastAPI** armazena esta telemetria no **PostgreSQL**. O **Grafana** é implementado para exibir tendências de energia e despoletar alertas quando os limites são violados. Para documentar a arquitetura técnica, um contentor **BookStack** ou **DokuWiki** é implementado juntamente com o sistema, pré-populado através de um volume montado com pelo menos 5 páginas markdown detalhando subredes de rede de contentores, esquemas de bases de dados e instruções de configuração. Um **script Bash** corre periodicamente para verificar o uso de CPU e memória de todos os contentores, registando a pegada de recursos.
 * **Competências Chave**: MQTT (Mosquitto), PostgreSQL, Grafana, Implementação de Wiki (BookStack/DokuWiki), Volumes e Redes Docker, Telemetria de Recursos com Bash.
-
-## Acesso ao GitHub Classroom
-
-Aqui estão instruções detalhadas para aceder ao GitHub Classroom.
-A maioria dos estudantes pode saltar vários passos, visto que estes foram concluídos em projetos anteriores.
-
-### 1. Juntar-se ao Trabalho e Criar a Tua Equipa
-
-1.  **Aceder ao link:** Ir para [aqui](https://classroom.github.com/a/L2vg5ol1)
-2.  **Encontrar o teu nome:** Selecionar o teu nome da lista de estudantes.
-    > **Não encontras o teu nome?** Todos os nomes registados no PACO foram adicionados. Se o teu estiver em falta, por favor contacta o **[Prof. Mário Antunes](mailto:mario.antunes@ua.pt)**.
-3.  **Criar uma equipa:** Seguir esta estrutura exata de nomenclatura: `[nmec]_project03`
-      * *(Exemplo: `132745_project03`)*
-
------
-
-## 2. Acesso à Organização e Repositório
-
-1.  **Aceitar o convite por email:** Depois de se juntar a uma equipa, todos os membros receberão um convite por email para se juntarem à organização GitHub `detiuaveiro`.
-2.  **Deves aceitar este convite** antes de poderes continuar.
-3.  **Atualizar a página:** Voltar à página do GitHub Classroom e atualizá-la.
-4.  **Verificar o acesso:** Deves agora ver e ter acesso ao repositório de trabalho da tua equipa.
-
------
-
-## 3. Configurar uma Chave SSH para Acesso
-
-Isto permitir-te-á clonar e enviar alterações para o repositório a partir da tua linha de comandos sem teres de introduzir a tua palavra-passe de cada vez.
-
-1.  **Verificar se existe uma chave SSH:**
-    Abre o teu terminal e executa este comando:
-
-    ```bash
-    cat ~/.ssh/id_ed25519.pub
-    ```
-
-2.  **Gerar uma chave (se necessário):**
-
-      * Se vires uma chave (a começar por `ssh-ed25519...`), copia a linha inteira e salta para o passo 3.
-      * Se vires um erro como "No such file or directory," executa o seguinte comando para criar uma nova chave:
-        ```bash
-        ssh-keygen -q -t ed25519 -N ''
-        ```
-      * Depois de gerada, corre `cat ~/.ssh/id_ed25519.pub` novamente para ver a tua nova chave e copiá-la.
-
-3.  **Adicionar a chave à tua conta GitHub:**
-
-      * Vai às **Definições** do teu GitHub.
-      * No menu esquerdo, clica em **SSH and GPG keys**.
-      * Clica no botão **New SSH key**.
-      * Dá-lhe um **Título** (ex: "O Meu Portátil UA").
-      * Cola a chave que copiaste no campo **Key**.
-      * Garante que o "Key type" está definido para **Authentication Key**.
-      * Clica em **Add SSH key**.
-
-4.  **Autorizar a chave para SSO:**
-
-      * Depois de adicionar a chave, encontra-a na tua lista na mesma página.
-      * Clica em **Configure SSO**.
-      * Seleciona a organização **detiuaveiro**, preenche os teus dados de login e concede acesso.

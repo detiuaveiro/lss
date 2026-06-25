@@ -7,7 +7,6 @@ title: Project 01
 Form groups of two or three students (exceptionally, projects can be done individually) and select **one** of the following projects. All projects will be hosted on **GitHub**, using [GitHub Classroom](https://classroom.github.com/a/xN-SHTD1)). Check [here](#github-classroom-access) for details.
 
 The repository must contain all relevant scripts, configuration files, and a `README.md` with instructions on how to deploy the project.
-It should also contain a project report in `PDF` format.
 
 This is a three-week project (deadline 13/05/2026). You have until the end of this week to notify your professor (via e-mail) of your group members and chosen topic (the list of topics can be found [here](#topics)).
 

@@ -6,10 +6,9 @@ title: Project 02
 
 Form groups of two or three students (exceptionally, projects can be done individually) and select **one** of the following projects. Due to all underlying issues with GitHub and GitHub Classroom; all projects will be submitted via **eLearning** in a single compressed file (ZIP), following a standard repository structure.
 
-The ZIP file must contain all relevant scripts, configuration files, a `docker-compose.yml`, and a `README.md` with instructions on how to deploy the project.
-It should also contain a project report in `PDF` format.
+The ZIP file must contain all relevant scripts, configuration files, a `compose.yml`, and a `README.md` with instructions on how to deploy the project.
 
-This is a four-week project (deadline 18/06/2026). You have until the end of this week to notify your professor (via e-mail) of your group members and chosen topic (the list of topics can be found [here](#topics)).
+This is a four-week project (deadline 22/06/2026). You have until the end of this week to notify your professor (via e-mail) of your group members and chosen topic (the list of topics can be found [here](#topics)).
 
 Do not forget to contact your professor with any questions.
 Further instructions may be added.
@@ -39,3 +38,15 @@ Further instructions may be added.
 ### 6. Geo-Data Dashboard (Traffic or Weather)
 * **Description:** Build a web dashboard that visualizes geographical data. You must create a **Python** script that uses an API to get Weather or traffic data or (using **Pandas** or **Polars**) that processes a dataset (e.g., a CSV of weather stations or traffic incidents with Lat/Lon coordinates) and exports it to JSON. Then, deploy a **Web Server** container (Nginx or Apache) hosting an HTML page. This page must use the **Leaflet** JavaScript library to read that JSON data and display markers on an interactive map.
 * **Core Topics:** Web Programming (HTML/JS/Leaflet), Data Formatting (CSV to JSON), Docker, Web Servers.
+
+
+## Evaluation
+
+| Component           | Description                                                                    | Value |
+| :------------------ | :----------------------------------------------------------------------------- | ----: |
+| Code quality        | How well the project is coded and documented.                                  |   0.2 |
+| Repository quality  | How well the repository is structured and organized.                           |   0.1 |
+| Project functional  | Whether the project achieves the desired objectives.                           |   0.3 |
+| Solution quality    | How effective and creative the solution is (AI-based solutions are penalized). |   0.3 |
+| Additional features | If the students have added additional features not requested in the guide.     |   0.1 |
+

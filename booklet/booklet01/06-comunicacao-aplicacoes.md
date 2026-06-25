@@ -47,7 +47,7 @@ O **UDP (User Datagram Protocol)**, por outro lado, é um protocolo sem conexão
 ```{=latex}
 \begin{center}
 \begin{tikzpicture}[
-    node distance=2.5cm,
+    node distance=3.5cm,
     box/.style={draw, rectangle, minimum width=2.5cm, minimum height=1cm, fill=blue!10, font=\sffamily\tiny, align=center},
     arrow/.style={-stealth, thick}
 ]
@@ -63,7 +63,7 @@ O **UDP (User Datagram Protocol)**, por outro lado, é um protocolo sem conexão
     \begin{scope}[yshift=-2.5cm]
         \node (c2) [box] {Cliente UDP};
         \node (s2) [box, right=of c2] {Servidor UDP};
-        \draw [arrow] (c2.east) -- (s2.west) node[midway, above, font=\tiny] {Datagrama (Disparar e esquecer)};
+        \draw [arrow] (c2.east) -- (s2.west) node[midway, above, font=\tiny, align=center] {Datagrama\\(Disparar e esquecer)};
     \end{scope}
 \end{tikzpicture}
 \end{center}
@@ -108,7 +108,7 @@ A solução moderna é o **I/O Assíncrono**, personificado pela biblioteca `asy
     \draw [arrow] (queue.west) -- (loop.east);
     
     % Path going around to avoid overlap
-    \draw [arrow] (loop.west) -- ++(-2.5cm, 0) |- (stack.west)
+    \draw [arrow] (loop.west) -- ++(-3.2cm, 0) |- (stack.west)
         node[near end, left, font=\tiny, text width=1.5cm, align=right] {Mover se\\Pilha Vazia};
 
 \end{tikzpicture}
@@ -151,10 +151,10 @@ Os **WebSockets** resolvem este problema ao estabelecer uma ligação **persiste
     \node (socket) [draw, dashed, inner sep=15pt, fit=(client) (server), yshift=-1.2cm, label={[font=\tiny\itshape, yshift=-0.2cm]below:Canal Bidirecional Aberto (Full-Duplex)}] {};
 
     % Messages
-    \draw [stealth-stealth, line width=1.2pt, orange] ([yshift=-1.0cm]client.east) -- ([yshift=-1.0cm]server.west) 
-        node[midway, above, font=\tiny, black] {Mensagem (Servidor $\to$ Cliente)};
-    \draw [stealth-stealth, line width=1.2pt, orange] ([yshift=-1.4cm]client.east) -- ([yshift=-1.4cm]server.west) 
-        node[midway, below, font=\tiny, black] {Mensagem (Cliente $\to$ Servidor)};
+    \draw [stealth-, line width=1.2pt, orange] ([yshift=-1.0cm]client.east) -- ([yshift=-1.0cm]server.west) 
+        node[midway, above, font=\tiny, black] {Servidor $\to$ Cliente};
+    \draw [-stealth, line width=1.2pt, orange] ([yshift=-1.4cm]client.east) -- ([yshift=-1.4cm]server.west) 
+        node[midway, below, font=\tiny, black] {Cliente $\to$ Servidor};
 
 \end{tikzpicture}
 \end{center}

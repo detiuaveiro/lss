@@ -4,14 +4,13 @@ title: Extra Project
 
 # Projects
 
-**This project is strictly individual.** Select **one** of the following projects. All projects will be hosted on **GitHub**, using [GitHub Classroom](https://classroom.github.com/a/XSWNtxkp). Check [here](#github-classroom-access) for details.
+**This project is strictly individual.** Select **one** of the following projects.
 
-The repository must contain all relevant scripts, configuration files, and a `README.md` with instructions on how to deploy the project.
-It should also contain a project report in `PDF` format.
+The repository must contain all relevant scripts, configuration files, and a `README.md` with instructions on how to deploy the project
 
-This is the **extra project**, designed to integrate the various skills acquired throughout the semester (Shell Scripting, Docker, Python, Data Analysis, and Web Technologies) from both **Project 01** and **Project 02** for students undergoing recovery phase evaluation.
+This is the **extra project**, designed to integrate the various skills acquired throughout the semester (Shell Scripting, Docker, Python, Data Analysis, and Web Technologies).
 
-This is a three-week project (deadline **23/07/2026**). You have until the end of this week to notify your professor (via e-mail) of your chosen topic (the list of topics can be found [here](#topics)).
+This is a three-week project (deadline **07/07/2026**). You have until the end of this week to notify your professor (via e-mail) of your chosen topic (the list of topics can be found [here](#topics)).
 
 Do not forget to contact your professor with any questions.
 Further instructions may be added.
@@ -42,62 +41,3 @@ Further instructions may be added.
 * **Description**: Create a smart warehouse tracking pipeline supported by interactive wiki documentation. Simulators publish barcode scan signals and inventory movements via **MQTT** to a **Mosquitto** broker. A **FastAPI** collector stores this telemetry in **PostgreSQL**. **Grafana** is deployed to display inventory trends and trigger alerts when stock levels fall below thresholds. To document the system's operational architecture, a **BookStack** or **DokuWiki** container is deployed alongside the system, pre-populated via a mounted volume with at least 5 markdown pages detailing container networking subnets, inventory database schemas, and setup instructions. A **Bash script** runs periodically to check CPU and memory usage of the containers, logging the resource footprint.
 * **Core Skills**: MQTT (Mosquitto), PostgreSQL, Grafana, Wiki Deployment (BookStack/DokuWiki), Docker Volumes & Networking, Bash Resource Telemetry.
 
-## GitHub Classroom Access
-
-Here are detailed instructions to access GitHub Classroom.
-Most students can skip several steps, given that these were completed in previous projects.
-
-### 1. Join the Assignment and Form Your Team
-
-1.  **Access the link:** Go to [here](https://classroom.github.com/a/XSWNtxkp)
-2.  **Find your name:** Select your name from the student list.
-    > **Can't find your name?** All names registered on PACO were added. If yours is missing, please contact **[Prof. Mário Antunes](mailto:mario.antunes@ua.pt)**.
-3.  **Create a team:** Follow this exact naming structure: `[nmec]_project04`
-      * *(Example: `132745_project04`)*
-
------
-
-## 2. Access the Organization and Repository
-
-1.  **Accept the email invite:** After joining a team, all members will receive an email invitation to join the `detiuaveiro` GitHub organization.
-2.  **You must accept this invitation** before you can continue.
-3.  **Refresh the page:** Go back to the GitHub Classroom page and refresh it.
-4.  **Verify access:** You should now see and have access to your team's working repository.
-
------
-
-## 3. Configure an SSH Key for Access
-
-This will allow you to clone and push to the repository from your command line without entering your password every time.
-
-1.  **Check for an existing SSH key:**
-    Open your terminal and run this command:
-
-    ```bash
-    cat ~/.ssh/id_ed25519.pub
-    ```
-
-2.  **Generate a key (if needed):**
-
-      * If you see a key (starting with `ssh-ed25519...`), copy the entire line and skip to step 3.
-      * If you see an error like "No such file or directory," run the following command to create a new key:
-        ```bash
-        ssh-keygen -q -t ed25519 -N ''
-        ```
-      * After it's generated, run `cat ~/.ssh/id_ed25519.pub` again to view your new key and copy it.
-
-3.  **Add the key to your GitHub account:**
-
-      * Go to your GitHub **Settings**.
-      * On the left menu, click **SSH and GPG keys**.
-      * Click the **New SSH key** button.
-      * Give it a **Title** (e.g., "My UA Laptop").
-      * Paste the key you copied into the **Key** field.
-      * Make sure the "Key type" is set to **Authentication Key**.
-      * Click **Add SSH key**.
-
-4.  **Authorize the key for SSO:**
-
-      * After adding the key, find it in your list on the same page.
-      * Click **Configure SSO**.
-      * Select the **detiuaveiro** organization, fill in your login details, and grant access.
